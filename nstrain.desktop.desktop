@@ -1,0 +1,12 @@
+
+[Desktop Entry]
+Name=NSTrain
+X-GNOME-FullName=NSTrain
+Comment=Train Scheduler Application
+Categories=GNOME;Utility;
+Exec=nstrain
+Icon=app-icon
+Terminal=false
+Type=Application
+Version=0.05
+Name[en_US]=nstrain.desktop
