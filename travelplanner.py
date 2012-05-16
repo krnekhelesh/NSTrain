@@ -13,7 +13,7 @@ from traveldetails import TravelDetails
 TRAVEL_DETAILS_UI_FILE = "traveldetails.ui"
 
 class TravelPlanner:
-	def __init__(self, builder, station_store, station_list):
+	def __init__(self, builder, station_store, station_list, splashwindow):
 		self.travelplanner_xml_init()
 		self.travelplanner_url = 'http://webservices.ns.nl/ns-api-treinplanner?fromStation=DT&toStation=UT'
 		travelplanner_xml = self.get_travelplanner_xml(self.travelplanner_url)
@@ -50,6 +50,7 @@ class TravelPlanner:
 		self.searchbutton.connect("clicked", self.on_search_clicked, station_list)
 
 		if self.travelplanner_list == []:
+			splashwindow.hide_splash()
 			print "[ERROR]: API Error, empty travel_planner list %s" % self.travelplanner_list
 			show_dialog7 = Dialog()
 			show_dialog7.error_dialog("Oops!","API Error", '''It seems that the website ns.nl has changed the API required to access the data.

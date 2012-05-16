@@ -11,6 +11,8 @@ from departuretrains import DepartureTrains
 from travelplanner import TravelPlanner
 from dialog import Dialog
 from help import show_uri, get_help_uri
+from splash import Splash
+from time import sleep
 
 # Glade UI file paths
 MAIN_UI_FILE = "main.ui"
@@ -20,6 +22,12 @@ START_WIZARD_UI_FILE = "startwizard.ui"
 class nstrain:
 	# Iniatialising Function
 	def __init__(self):
+		self.splashwindow = Splash()
+		self.splashwindow.show_splash()
+		while Gtk.events_pending():
+			Gtk.main_iteration()
+		sleep(3)
+
 		# Importing the Glade user interface files and their objects
 		self.builder = Gtk.Builder()
 		self.builder.add_from_file(MAIN_UI_FILE)
@@ -42,8 +50,9 @@ class nstrain:
 		self.username = self.builder.get_object('name')
 
 		# Gathering Stations codes (after authentication) and populating the station_store (before the startup wizard)
-		self.stat = NsApiStations()
+		self.stat = NsApiStations(self.splashwindow)
 		if self.stat.station_list == []:
+			self.splashwindow.hide_splash()
 			print "[ERROR]: Station list %s" % self.stat.station_list
 			show_dialog = Dialog()
 			show_dialog.error_dialog("Oops!","API Error", '''It seems that the website ns.nl has changed the API required to access the data.
@@ -55,7 +64,6 @@ Hang in there for us please. The program will now quit.
 			sys.exit(0)
 		else:
 			self.station_model_populate()
-
 			self.station_completion = self.builder.get_object('completion1')
 			self.station_completion.set_model(self.station_store)
 			self.station_completion.set_text_column(0)
@@ -74,20 +82,23 @@ Hang in there for us please. The program will now quit.
 				self.readstation = self.open_user_info.readline()
 				self.readstartion = self.readstation.strip('\n')
 				self.username.set_markup('''Welcome, <b>%s</b>''' % self.readname)
+
 				try:
 					self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.readstation, self.station_completion)
 				except:
 					print "[ERROR]: Departure failed"
 				try:
-					self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list)
+					self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.splashwindow)
 				except:
 					print "[ERROR]: Travel planner failed"
 				self.window.show_all()
+				self.splashwindow.hide_splash()
 			else:
 				print 
 				print "[INFO] : Start Wizard starting"
 				print
 				self.start_wizard.show_all()
+				self.splashwindow.hide_splash()
 
 	# Function to collect start wizard data, write data into a file and close the wizard
 	def finish_start_wizard(self, button):
@@ -102,7 +113,7 @@ Hang in there for us please. The program will now quit.
 		except:
 			print "[ERROR]: Departure failed"
 		try:
-			self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list)
+			self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.splashwindow)
 		except:
 			print "[ERROR]: Travel planner failed"
 		self.username.set_markup('''Welcome, <b>%s</b>''' % self.writename)
@@ -127,9 +138,25 @@ Hang in there for us please. The program will now quit.
 	def destroy(self, window):
 		Gtk.main_quit()
 
+'''
+if __name__ == "__main__":
+	splashscreen = Splash()
+	#If you don't do this, the splash screen will show, but wont render it's contents
+	while Gtk.events_pending():
+		Gtk.main_iteration()
+	#Here you can do all that nasty things that take some time.
+	sleep(3) 
+	app = nstrain()
+	#We don't need splScr anymore.
+	splashscreen.hide_splash()
+	Gtk.main()
+'''
+
+
 def main():
 	app = nstrain()
 	Gtk.main()
 
 if __name__ == "__main__":
-    sys.exit(main())
+	sys.exit(main())
+
