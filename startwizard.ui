@@ -56,6 +56,9 @@ information about yourself.</property>
             <property name="margin_top">15</property>
             <property name="xalign">0</property>
             <property name="label" translatable="yes">Name</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -85,6 +88,9 @@ information about yourself.</property>
             <property name="margin_top">5</property>
             <property name="xalign">0</property>
             <property name="label" translatable="yes">Station</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -100,6 +106,7 @@ information about yourself.</property>
             <property name="margin_right">15</property>
             <property name="margin_top">5</property>
             <property name="invisible_char">•</property>
+            <property name="placeholder_text">Enter preferred departure station</property>
           </object>
           <packing>
             <property name="expand">False</property>

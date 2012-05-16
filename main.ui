@@ -1,7 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
-  <object class="GtkEntryCompletion" id="completion1"/>
+  <object class="GtkAdjustment" id="adjustment1">
+    <property name="upper">24</property>
+    <property name="value">1</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment2">
+    <property name="upper">60</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment3">
+    <property name="lower">2012</property>
+    <property name="upper">2024</property>
+    <property name="value">2012</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment4">
+    <property name="lower">1</property>
+    <property name="upper">12</property>
+    <property name="value">1</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment5">
+    <property name="lower">1</property>
+    <property name="upper">31</property>
+    <property name="value">1</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkEntryCompletion" id="completion1">
+    <property name="inline_completion">True</property>
+  </object>
+  <object class="GtkEntryCompletion" id="completion2">
+    <property name="inline_completion">True</property>
+  </object>
+  <object class="GtkEntryCompletion" id="completion3">
+    <property name="inline_completion">True</property>
+  </object>
+  <object class="GtkEntryCompletion" id="completion4">
+    <property name="inline_completion">True</property>
+  </object>
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">NSTrain</property>
@@ -55,6 +98,7 @@
                 <property name="label" translatable="yes">toolbutton2</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-help</property>
+                <signal name="clicked" handler="help_function" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -123,7 +167,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">From</property>
+                    <property name="label" translatable="yes">From*</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -187,7 +231,7 @@
                     <property name="can_focus">False</property>
                     <property name="margin_top">15</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">To</property>
+                    <property name="label" translatable="yes">To*</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -214,12 +258,12 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="label24">
+                  <object class="GtkLabel" id="label25">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_top">15</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Time</property>
+                    <property name="label" translatable="yes">Date - yyyy/mm/dd</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -231,14 +275,69 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="entry5">
+                  <object class="GtkBox" id="box6">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can_focus">False</property>
                     <property name="margin_left">15</property>
                     <property name="margin_right">15</property>
                     <property name="margin_top">5</property>
-                    <property name="invisible_char">•</property>
-                    <property name="text" translatable="yes">HH:MM</property>
+                    <child>
+                      <object class="GtkSpinButton" id="spinbutton3">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">year</property>
+                        <property name="margin_right">15</property>
+                        <property name="invisible_char">•</property>
+                        <property name="xalign">0.5</property>
+                        <property name="placeholder_text">yyyy</property>
+                        <property name="adjustment">adjustment3</property>
+                        <property name="climb_rate">1</property>
+                        <property name="numeric">True</property>
+                        <property name="wrap">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="spinbutton4">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">month</property>
+                        <property name="margin_right">15</property>
+                        <property name="invisible_char">•</property>
+                        <property name="xalign">0.5</property>
+                        <property name="adjustment">adjustment4</property>
+                        <property name="climb_rate">1</property>
+                        <property name="numeric">True</property>
+                        <property name="wrap">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="spinbutton5">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">date</property>
+                        <property name="invisible_char">•</property>
+                        <property name="xalign">0.5</property>
+                        <property name="adjustment">adjustment5</property>
+                        <property name="climb_rate">1</property>
+                        <property name="numeric">True</property>
+                        <property name="wrap">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -247,12 +346,12 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="label25">
+                  <object class="GtkLabel" id="label24">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_top">15</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Date</property>
+                    <property name="label" translatable="yes">Time - hh:mm</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -264,56 +363,47 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox" id="box6">
+                  <object class="GtkBox" id="box8">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">15</property>
                     <property name="margin_right">15</property>
                     <property name="margin_top">5</property>
                     <child>
-                      <object class="GtkEntry" id="entry6">
+                      <object class="GtkSpinButton" id="spinbutton1">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">hour</property>
                         <property name="margin_right">15</property>
-                        <property name="max_length">4</property>
                         <property name="invisible_char">•</property>
-                        <property name="text" translatable="yes">YYYY</property>
+                        <property name="xalign">0.5</property>
+                        <property name="adjustment">adjustment1</property>
+                        <property name="climb_rate">1</property>
+                        <property name="numeric">True</property>
+                        <property name="wrap">True</property>
                       </object>
                       <packing>
-                        <property name="expand">True</property>
+                        <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="entry7">
+                      <object class="GtkSpinButton" id="spinbutton2">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="margin_left">15</property>
-                        <property name="margin_right">15</property>
-                        <property name="max_length">2</property>
+                        <property name="tooltip_text" translatable="yes">minutes</property>
                         <property name="invisible_char">•</property>
-                        <property name="text" translatable="yes">MM</property>
+                        <property name="xalign">0.5</property>
+                        <property name="adjustment">adjustment2</property>
+                        <property name="climb_rate">1</property>
+                        <property name="numeric">True</property>
+                        <property name="wrap">True</property>
                       </object>
                       <packing>
-                        <property name="expand">True</property>
+                        <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkEntry" id="entry8">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="margin_left">15</property>
-                        <property name="max_length">2</property>
-                        <property name="invisible_char">•</property>
-                        <property name="text" translatable="yes">DD</property>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
                       </packing>
                     </child>
                   </object>
@@ -332,7 +422,6 @@
                       <object class="GtkRadioButton" id="radiobutton1">
                         <property name="label" translatable="yes">Departure</property>
                         <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="use_action_appearance">False</property>
@@ -375,10 +464,24 @@
                   <object class="GtkButtonBox" id="buttonbox1">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">15</property>
-                    <property name="margin_right">15</property>
                     <property name="margin_top">15</property>
-                    <property name="layout_style">end</property>
+                    <child>
+                      <object class="GtkLabel" id="label26">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">* required fields</property>
+                        <attributes>
+                          <attribute name="style" value="italic"/>
+                          <attribute name="weight" value="normal"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
                     <child>
                       <object class="GtkButton" id="button3">
                         <property name="label" translatable="yes">Search</property>
@@ -391,7 +494,7 @@
                       <packing>
                         <property name="expand">True</property>
                         <property name="fill">True</property>
-                        <property name="position">0</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
@@ -763,7 +866,7 @@
                     <property name="homogeneous">True</property>
                     <child>
                       <object class="GtkButton" id="button2">
-                        <property name="label" translatable="yes">Previous</property>
+                        <property name="label" translatable="yes">Earlier</property>
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -790,7 +893,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="button1">
-                        <property name="label" translatable="yes">Next</property>
+                        <property name="label" translatable="yes">Later</property>
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>

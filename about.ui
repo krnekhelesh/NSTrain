@@ -10,10 +10,10 @@
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">NSTrain</property>
-    <property name="version">0.1</property>
+    <property name="version">0.2</property>
     <property name="comments" translatable="yes">Netherlands Train Scheduler
 Not officially affliated with NS Railways</property>
-    <property name="website">https://sourceforge.net/projects/nstrain/</property>
+    <property name="website">https://github.com/krnekhelesh/NSTrain</property>
     <property name="website_label" translatable="yes">Homepage</property>
     <property name="license" translatable="yes">This work is licensed under the Creative Commons 
 Attribution-ShareAlike 3.0 Unported (CC-BY-SA 3.0) License. 

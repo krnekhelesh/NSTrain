@@ -1,0 +1,18 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="departures">
+
+<info>
+  <link type="guide" xref="index#contents"/>
+  <credit type="author">
+    <name>Your Name</name>
+    <email>Your E-mail</email>
+    <years>2010</years>
+  </credit>
+  <desc>Help using the departures feature</desc>
+</info>
+
+<title>Departures Train</title>
+<p>This section shows you how to use the departures train feature of NSTrain.</p>
+
+</page>

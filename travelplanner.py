@@ -1,48 +1,204 @@
 #! /usr/bin/env python
 
-import os, sys
+from gi.repository import Gtk
+import os
+import sys
 import urllib2
 import xml.dom.minidom
+from datetime import datetime
+
+from dialog import Dialog
+from traveldetails import TravelDetails
+
+TRAVEL_DETAILS_UI_FILE = "traveldetails.ui"
 
 class TravelPlanner:
-	def __init__(self):
-		try:
-			self.authenticate_developer_api()
-		except Exception, e:
-			print "[ERROR]: HTTP Error! Travel Planner Authentication failed!"
-			
+	def __init__(self, builder, station_store, station_list):
 		self.travelplanner_xml_init()
 		self.travelplanner_url = 'http://webservices.ns.nl/ns-api-treinplanner?fromStation=DT&toStation=UT'
 		travelplanner_xml = self.get_travelplanner_xml(self.travelplanner_url)
-		self.handle_departure_xml(travelplanner_xml)
-		print self.travelplanner_list[0]
+		self.handle_travelplanner_xml(travelplanner_xml)
 
-	def authenticate_developer_api(self):
-		print "[INFO] : Retrieving Travel Planner - Authentication iniatiated.."
-		self.theurl = 'http://webservices.ns.nl/ns-api-treinplanner?fromStation=DT&toStation=UT'
-		self.username = 'krnekhelesh@gmail.com'
-		self.password = 'RaLy9GRBjePqDKTrVt76YmDBuw_r043HwXUe-P4i6xwXmRR8SYz1cg'
+		self.builder4 = Gtk.Builder()
+		self.builder4.add_from_file(TRAVEL_DETAILS_UI_FILE)
+		self.builder4.connect_signals(self)
 
-		passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
-		# this creates a password manager
-		passman.add_password(None, self.theurl, self.username, self.password)
-		# because we have put None at the start it will always
-		# use this username/password combination for  urls
-		# for which `theurl` is a super-url
+		self.next_traveloption_button = self.builder4.get_object('button8')
+		self.next_traveloption_button.connect("clicked", self.next_traveloption)
+		self.prev_traveloption_button = self.builder4.get_object('button7')
+		self.prev_traveloption_button.connect("clicked", self.prev_traveloption)
 
-		authhandler = urllib2.HTTPBasicAuthHandler(passman)
-		# create the AuthHandler
+		self.choose_traveloption_button = []
+		self.choose_traveloption_button.append(self.builder4.get_object('button1'))
+		self.choose_traveloption_button.append(self.builder4.get_object('button2'))
+		self.choose_traveloption_button.append(self.builder4.get_object('button3'))
+		self.choose_traveloption_button.append(self.builder4.get_object('button4'))
+		self.choose_traveloption_button.append(self.builder4.get_object('button5'))
+		
+		for i in range(len(self.choose_traveloption_button)):
+			self.choose_traveloption_button[i].connect("clicked", self.choose_traveloption, i)
 
-		opener = urllib2.build_opener(authhandler)
+		self.statustext = builder.get_object('label26')
+		self.statusflag = 0
 
-		urllib2.install_opener(opener)
-		# All calls to urllib2.urlopen will now use our handler
-		# Make sure not to include the protocol in with the URL, or
-		# HTTPPasswordMgrWithDefaultRealm will be very confused.
-		# You must (of course) use it when fetching the page though.
+		self.travel = TravelDetails(self.builder4)
 
-		pagehandle = urllib2.urlopen(self.theurl)
-		# authentication is now handled automatically for us
+		#for i in range(len(self.travelplanner_list)):
+		#	print "[Meldings] %s" % self.travelplanner_list[i][0]
+
+		self.searchbutton = builder.get_object('button3')
+		self.searchbutton.connect("clicked", self.on_search_clicked, station_list)
+
+		if self.travelplanner_list == []:
+			print "[ERROR]: API Error, empty travel_planner list %s" % self.travelplanner_list
+			show_dialog7 = Dialog()
+			show_dialog7.error_dialog("Oops!","API Error", '''It seems that the website ns.nl has changed the API required to access the data.
+This should either be resolved online or by a new version update of NSTrain. 
+
+Hang in there for us please.
+
+<span style="italic">Error Info: Empty Travel Planner List %s</span>''' % self.travelplanner_list)
+			self.statustext.set_markup('''<span foreground="red" weight="bold">Please note that the travel planner is temporarily unavailable. Please try again later</span>''')
+			self.statusflag = 1
+			self.searchbutton.set_label("Search Disabled!")
+
+		station_completion2 = builder.get_object('completion2')
+		station_completion2.set_model(station_store)
+		station_completion2.set_text_column(0)
+
+		station_completion3 = builder.get_object('completion3')
+		station_completion3.set_model(station_store)
+		station_completion3.set_text_column(0)
+
+		station_completion4 = builder.get_object('completion4')
+		station_completion4.set_model(station_store)
+		station_completion4.set_text_column(0)
+
+		self.fromstation_entry = builder.get_object('entry2')
+		self.fromstation_entry.set_completion(station_completion2)
+		self.fromstation_entry.set_placeholder_text("station name")
+		self.fromstation_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_GO_FORWARD)
+
+		self.viastation_entry = builder.get_object('entry3')
+		self.viastation_entry.set_completion(station_completion3)
+		self.viastation_entry.set_placeholder_text("station name - Optional")
+		self.viastation_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_GO_FORWARD)
+
+		self.tostation_entry = builder.get_object('entry4')
+		self.tostation_entry.set_completion(station_completion4)
+		self.tostation_entry.set_placeholder_text("station name")
+		self.tostation_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_GO_FORWARD)
+
+		t = datetime.time(datetime.now())
+		self.time_hour_entry = builder.get_object('spinbutton1')
+		self.time_hour_entry.set_value(t.hour)
+		
+		self.time_minute_entry = builder.get_object('spinbutton2')
+		self.time_minute_entry.set_value(t.minute)
+
+		d = datetime.date(datetime.now())
+		self.year_entry = builder.get_object('spinbutton3')
+		self.year_entry.set_value(d.year)
+
+		self.month_entry = builder.get_object('spinbutton4')
+		self.month_entry.set_value(d.month)
+
+		self.date_entry = builder.get_object('spinbutton5')
+		self.date_entry.set_value(d.day)
+
+		self.departure_time_chosen = builder.get_object('radiobutton1')
+		self.arrival_time_chosen = builder.get_object('radiobutton2')
+
+	# Function to show the travel plans when the search button is clicked. (first get the inputs, processes it into a url and then get the travel plans)
+	def on_search_clicked(self, widget, station_list):
+		flag = 0
+
+		fromstation_name_entry = self.fromstation_entry.get_text()
+		viastation_name_entry = self.viastation_entry.get_text()
+		tostation_name_entry = self.tostation_entry.get_text()
+		time_hour_name_entry = self.time_hour_entry.get_value_as_int()
+		time_minute_name_entry = self.time_minute_entry.get_value_as_int()
+		year_name_entry = self.year_entry.get_value_as_int()
+		month_name_entry = self.month_entry.get_value_as_int()
+		day_name_entry = self.date_entry.get_value_as_int()
+
+		fromstation_code = "INIT"
+		tostation_code = "INIT"
+		viastation_code = "INIT"
+
+		for stationname in range(len(station_list)):
+			if fromstation_name_entry == station_list[stationname][0]:
+				fromstation_code = station_list[stationname][1]
+			if tostation_name_entry == station_list[stationname][0]:
+				tostation_code = station_list[stationname][1]
+			if viastation_name_entry == station_list[stationname][0]:
+				viastation_code = station_list[stationname][1]
+
+		basic_url = 'http://webservices.ns.nl/ns-api-treinplanner?'
+		url = basic_url
+
+		if fromstation_code != "INIT":
+			url = url + 'fromStation=%s' % fromstation_code
+
+		if tostation_code != "INIT":
+			url = url + '&' + 'toStation=%s'% tostation_code
+
+		if viastation_code != "INIT":
+			url = url + '&' + 'viaStation=%s' % viastation_code
+
+		if self.departure_time_chosen.get_active():
+			url = url + '&' + 'departure=true'
+		else:
+			url = url + '&' + 'departure=false'
+
+		url = url + '&' + 'dateTime=%s-%s-%sT%s:%s' % (year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
+
+		print "[DEBUG]: search url is %s" % url
+
+		# ensuring that these two inputs are valid since they are required for the API call
+		if fromstation_code != "INIT" and tostation_code != "INIT" and self.statusflag == 0:
+			try:
+				travelplanner_xml = self.get_travelplanner_xml(url)
+				self.handle_travelplanner_xml(travelplanner_xml)
+				flag = 2
+			except:
+				print "[ERROR]: Wierd website API error...excuse me"
+				flag = 1
+
+		# If and only when the data is gathered properly, then proceed to show them to the user
+		if flag == 2:
+			self.start = 0
+			self.end = 5
+			self.startpage = 1
+			self.endpage = len(self.travelplanner_list)/5
+			self.travel.set_traveloption_title(fromstation_name_entry, tostation_name_entry, year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
+			self.travel.get_traveloption(self.travelplanner_list, self.start, self.startpage, self.endpage)
+			self.travel.show_window()
+
+	# Function to display the currently chosen travel option
+	def choose_traveloption(self, button, button_number):
+		index  = button_number + self.start
+		self.travel.get_travelstop(self.travelplanner_list, index)
+
+	# Function to display the next 5 travel options
+	def next_traveloption(self, button):
+		if self.end+5 <= len(self.travelplanner_list):
+			self.start = self.start + 5
+			self.end = self.end + 5
+			self.startpage = self.startpage + 1
+			self.travel.get_traveloption(self.travelplanner_list, self.start, self.startpage, self.endpage)
+		else:
+			print "[ERROR]: Exceeded maximum length of traveloption_list"
+
+	# Function to display the previous 5 travel options
+	def prev_traveloption(self, button):
+		if self.start-5 >= 0:
+			self.start = self.start - 5
+			self.end = self.end - 5
+			self.startpage = self.startpage - 1
+			self.travel.get_traveloption(self.travelplanner_list, self.start, self.startpage, self.endpage)
+		else:
+			print "[ERROR]: Below zero index..."
 
 	# Function to iniatilize xml related variables
 	def travelplanner_xml_init(self):
@@ -57,14 +213,13 @@ class TravelPlanner:
 
 	# Function to get the xml file from the url
 	def get_travelplanner_xml(self, url):
-		print "[DEBUG]: url is %s" % (url)
 		xmlfile = urllib2.urlopen(url)
 		doc = xml.dom.minidom.parse(xmlfile)
 		node = doc.documentElement
 		return node
 
 		# Function to handle the entire xml object
-	def handle_departure_xml(self, xml):
+	def handle_travelplanner_xml(self, xml):
 		api_flag = 0
 		try:
 			traveloptions = xml.getElementsByTagName("ReisMogelijkheid")
@@ -78,7 +233,7 @@ class TravelPlanner:
 			api_flag = 1
 
 		if api_flag == 1:
-			sys.exit(0)
+			print "[ERROR]: API Error..failed at handle_travelplanner_xml"
 
 	def handle_travelplanner_traveloptions(self, traveloptions):
 		self.travelplanner_list = []
@@ -88,13 +243,13 @@ class TravelPlanner:
 
 	def handle_travelplanner_traveloption(self, traveloption):
 		self.handle_travelplanner_meldings(traveloption)
-		
+
 		try:
 			no_of_transfers = self.getElement(traveloption.getElementsByTagName("AantalOverstappen")[0])
 			self.list.append(no_of_transfers)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve no of transfers"
-			no_of_transfer = "0"
+			no_of_transfers = "Error"
 			self.list.append(no_of_transfers)
 
 		try:
@@ -102,7 +257,7 @@ class TravelPlanner:
 			self.list.append(planned_traveltime)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve planned travel time"
-			planned_traveltime = "0"
+			planned_traveltime = "Error"
 			self.list.append(planned_traveltime)
 
 		try:
@@ -110,7 +265,7 @@ class TravelPlanner:
 			self.list.append(actual_traveltime)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve actual travel time"
-			actual_traveltime = "0"
+			actual_traveltime = "Error"
 			self.list.append(actual_traveltime)
 
 		try:
@@ -118,7 +273,7 @@ class TravelPlanner:
 			self.list.append(optimum)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve optimum status"
-			optimum = "0"
+			optimum = "Error"
 			self.list.append(optimum)
 
 		try:
@@ -126,7 +281,7 @@ class TravelPlanner:
 			self.list.append(planned_departuretime)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve planned departure time"
-			planned_departuretime = "0"
+			planned_departuretime = "XXXX-XX-XXTXX:XX:XX"
 			self.list.append(planned_departuretime)
 
 		try:
@@ -134,7 +289,7 @@ class TravelPlanner:
 			self.list.append(actual_departuretime)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve actual departure time"
-			actual_departuretime = "0"
+			actual_departuretime = "XXXX-XX-XXTXX:XX:XX"
 			self.list.append(actual_departuretime)
 
 		try:
@@ -142,7 +297,7 @@ class TravelPlanner:
 			self.list.append(planned_arrivaltime)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve planned arrival time"
-			planned_arrivaltime = "0"
+			planned_arrivaltime = "XXXX-XX-XXTXX:XX:XX"
 			self.list.append(planned_arrivaltime)
 
 		try:
@@ -150,7 +305,7 @@ class TravelPlanner:
 			self.list.append(actual_arrivaltime)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve actual arrival time"
-			actual_arrivaltime = "0"
+			actual_arrivaltime = "XXXX-XX-XXTXX:XX:XX"
 			self.list.append(actual_arrivaltime)
 
 		try:
@@ -162,6 +317,23 @@ class TravelPlanner:
 			self.list.append(status)
 
 		self.handle_travelplanner_travelsections(traveloption)
+
+		try:
+			departure_delay = self.getElement(traveloption.getElementsByTagName("VertrekVertraging")[0])
+			self.list.append(departure_delay)
+		except:
+			#print "[ERROR]: API ERROR - Cannot retrieve departure delay"
+			departure_delay = "0"
+			self.list.append(departure_delay)
+
+		try:
+			arrival_delay = self.getElement(traveloption.getElementsByTagName("AankomstVertraging")[0])
+			self.list.append(arrival_delay)
+		except:
+			#print "[ERROR]: API ERROR - Cannot retrieve arrival delay"
+			arrival_delay = "0"
+			self.list.append(arrival_delay)
+
 		self.travelplanner_list.append(self.list)
 
 	def handle_travelplanner_meldings(self, traveloption):
@@ -173,7 +345,7 @@ class TravelPlanner:
 				self.meldingtemp = []
 			self.list.append(self.melding)
 		except:
-			print "I am so dead"
+			print "I am in exception"
 
 	def handle_travelplanner_melding(self, melding):
 		try:
@@ -197,7 +369,7 @@ class TravelPlanner:
 			self.meldingtemp.append(melding_message)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve melding_message (Melding)"
-			melding_message = "0"
+			melding_message = "Not Available"
 			self.meldingtemp.append(melding_message)
 
 		self.melding.append(self.meldingtemp)
@@ -216,7 +388,7 @@ class TravelPlanner:
 			self.reisdeeltemp.append(train_carrier)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve train_carrier (REISDEEL)"
-			train_carrier = "0"
+			train_carrier = "Error"
 			self.reisdeeltemp.append(train_carrier)
 
 		try:
@@ -224,7 +396,7 @@ class TravelPlanner:
 			self.reisdeeltemp.append(train_type)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve train_type (REISDEEL)"
-			train_type = "0"
+			train_type = "Error"
 			self.reisdeeltemp.append(train_type)
 
 		try:
@@ -232,7 +404,7 @@ class TravelPlanner:
 			self.reisdeeltemp.append(train_number)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve train_number (REISDEEL)"
-			train_number = "0"
+			train_number = "Error"
 			self.reisdeeltemp.append(train_number)
 
 		try:
@@ -240,7 +412,7 @@ class TravelPlanner:
 			self.reisdeeltemp.append(trainstatus)
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve status"
-			trainstatus = "0"
+			trainstatus = "Error"
 			self.reisdeeltemp.append(trainstatus)
 
 		self.reisdeel.append(self.reisdeeltemp)
@@ -280,7 +452,7 @@ class TravelPlanner:
 			#	print name[1]
 		except:
 			#print "[ERROR]: API ERROR - Cannot retrieve train_platform (REISSTOP)"
-			train_platform = "Not Available"
+			train_platform = ""
 			self.reisstoptemp.append(train_platform)
 
 		self.reisstop.append(self.reisstoptemp)
@@ -295,9 +467,3 @@ class TravelPlanner:
 			if node.nodeType == node.TEXT_NODE:
 				rc = rc + node.data
 		return rc
-def main():
-	app = TravelPlanner()
-	#Gtk.main()
-
-if __name__ == "__main__":
-    sys.exit(main())

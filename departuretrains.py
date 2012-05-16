@@ -5,42 +5,21 @@ import os, sys
 import urllib2
 import xml.dom.minidom
 
-from dialog import Dialog
-
 class DepartureTrains:
 	# Iniatialising Function (first authenticate, get ui objects, load user config)
 	def __init__(self, builder, station_list, user_station, station_completion):
-		try:
-			self.authenticate_developer_api()
-			#print "Authentication trying"
-		except Exception, e:
-			print "[ERROR]: HTTP Error! Departures Authentication failed!"
-			show_dialog = Dialog()
-			show_dialog.error_dialog("Oops!","HTTP Error 400", '''Unfortunately we have hit a snag. Either your internet or the website ns.nl seems
-down. Please try again later. The program will now exit.
-
-<span style="italic">Error Info: Departure Trains Access Error.</span>''')
-			sys.exit(0)
-
 		self.departure_xml_init()
 		self.departure_url = 'http://webservices.ns.nl/ns-api-avt?station=UT'
 		departure_xml = self.get_departure_xml(self.departure_url)
 		self.handle_departure_xml(departure_xml)
 
 		if self.train_list == []:
-			show_dialog2 = Dialog()
-			show_dialog2.error_dialog("Oops! - Except","API Error", '''It seems that the website ns.nl has changed the API required to access the data.
-This should either be resolved online or by a new version update of NSTrain. 
-
-Hang in there for us please. The program will not quit.
-
-<span style="italic">Error Info: Empty Departure Train List %s</span>''' % self.train_list)
-			sys.exit(0)
+			print "[ERROR]: Empty departure train list %s" % self.train_list
 
 		self.station_entry = builder.get_object('entry1')
 		self.station_entry.set_text("Enter departure station")
 		self.station_entry.set_completion(station_completion)
-		self.station_entry.set_icon_from_stock(Gtk.EntryIconPosition.PRIMARY, Gtk.STOCK_FIND)
+		self.station_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_FIND)
 		self.station_entry.connect("activate", self.get_departure_station_entry, station_list)
 		
 		self.next_deptrain_button = builder.get_object('button1')
@@ -94,27 +73,30 @@ Hang in there for us please. The program will not quit.
 
 	# Function to get the departure input from the entry box and display results properly
 	def get_departure_station_entry(self, entry, station_list):
-		station_name_entry = self.station_entry.get_text()
-		print " "
-		print "[DEBUG]: Departure Station Name: %s" % station_name_entry
+		try:
+			station_name_entry = self.station_entry.get_text()
+			print " "
+			print "[DEBUG]: Departure Station Name: %s" % station_name_entry
 
-		for stationname in range(len(station_list)):
-			if station_name_entry == station_list[stationname][0]:
-				station_code_entry = station_list[stationname][1]
-				print "[DEBUG]: Departure Station Code: %s" % station_code_entry
-				
-		self.search_url = 'http://webservices.ns.nl/ns-api-avt?station=%s' % station_code_entry
-		departure_xml = self.get_departure_xml(self.search_url)
-		self.handle_departure_xml(departure_xml)
+			for stationname in range(len(station_list)):
+				if station_name_entry == station_list[stationname][0]:
+					station_code_entry = station_list[stationname][1]
+					print "[DEBUG]: Departure Station Code: %s" % station_code_entry
+					
+			self.search_url = 'http://webservices.ns.nl/ns-api-avt?station=%s' % station_code_entry
+			departure_xml = self.get_departure_xml(self.search_url)
+			self.handle_departure_xml(departure_xml)
 
-		self.start = 0
-		self.end = 5
-		self.startpage = 1
-		self.endpage = len(self.train_list)/5
-		self.pagelabel.set_text("%s of %s" % (self.startpage, self.endpage))
-		self.get_departure_time()
-		self.get_departure_train()
-		self.get_departure_track()
+			self.start = 0
+			self.end = 5
+			self.startpage = 1
+			self.endpage = len(self.train_list)/5
+			self.pagelabel.set_text("%s of %s" % (self.startpage, self.endpage))
+			self.get_departure_time()
+			self.get_departure_train()
+			self.get_departure_track()
+		except:
+			print "[ERROR]: Invalid station name!"
 
 	# Function to manipulate the time string
 	def get_departure_time(self):
@@ -174,8 +156,6 @@ Hang in there for us please. The program will not quit.
 			self.get_departure_track()
 		else:
 			print "[ERROR]: Exceeded maximum length of train_list"
-			#show_dialog3 = Dialog()
-			#show_dialog3.info_dialog("Whoops", "Departure Train List", "You have reached the last set of departure trains.")
 
 	# Function to display previous results
 	def prev_departure(self, button):
@@ -189,36 +169,6 @@ Hang in there for us please. The program will not quit.
 			self.get_departure_track()
 		else:
 			print "[ERROR]: Below zero index..."
-			#show_dialog4 = Dialog()
-			#show_dialog4.info_dialog("Whoops", "Departure Train List", "You have reached the first set of departure trains.")
-
-	# Function to authenticate the developer API
-	def authenticate_developer_api(self):
-		print "[INFO] : Retrieving Departure Trains - Authentication iniatiated.."
-		self.theurl = 'http://webservices.ns.nl/ns-api-avt?station=DT'
-		self.username = 'krnekhelesh@gmail.com'
-		self.password = 'RaLy9GRBjePqDKTrVt76YmDBuw_r043HwXUe-P4i6xwXmRR8SYz1cg'
-
-		passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
-		# this creates a password manager
-		passman.add_password(None, self.theurl, self.username, self.password)
-		# because we have put None at the start it will always
-		# use this username/password combination for  urls
-		# for which `theurl` is a super-url
-
-		authhandler = urllib2.HTTPBasicAuthHandler(passman)
-		# create the AuthHandler
-
-		opener = urllib2.build_opener(authhandler)
-
-		urllib2.install_opener(opener)
-		# All calls to urllib2.urlopen will now use our handler
-		# Make sure not to include the protocol in with the URL, or
-		# HTTPPasswordMgrWithDefaultRealm will be very confused.
-		# You must (of course) use it when fetching the page though.
-
-		# authentication is now handled automatically for us
-		pagehandle = urllib2.urlopen(self.theurl)
 
 	# Function to iniatilize xml related variables
 	def departure_xml_init(self):
@@ -227,7 +177,6 @@ Hang in there for us please. The program will not quit.
 
 	# Function to get the xml file from the url
 	def get_departure_xml(self, url):
-		print "[DEBUG]: url is %s" % (url)
 		xmlfile = urllib2.urlopen(url)
 		doc = xml.dom.minidom.parse(xmlfile)
 		node = doc.documentElement
@@ -238,7 +187,6 @@ Hang in there for us please. The program will not quit.
 		api_flag = 0
 		try:
 			trains = xml.getElementsByTagName("VertrekkendeTrein")
-			#print trains
 			if trains == []:
 				print "[ERROR]: API ERROR - Cannot retrieve departure trains (EMPTY)"
 				api_flag = 1
@@ -247,17 +195,9 @@ Hang in there for us please. The program will not quit.
 		except:
 			print "[ERROR]: API ERROR - Cannot retrieve departure trains"
 			api_flag = 1
-		#print api_flag
+
 		if api_flag == 1:
-			show_dialog5 = Dialog()
-			show_dialog5.error_dialog("Oops! - Except","API Error", '''It seems that the website ns.nl has changed the API required to access the data.
-This should either be resolved online or by a new version update of NSTrain. 
-
-Hang in there for us please. The program will not quit.
-
-<span style="italic">Error Info: Empty Departure Train List %s</span>''' % trains)
-			sys.exit(0)
-
+			print "[ERROR]: API Error..failed at handle_departure_xml exception"
 
 	# Function to read through every departing train object
 	def handle_departure_trains(self, trains):
@@ -350,7 +290,7 @@ Hang in there for us please. The program will not quit.
 		except Exception, e:
 			tip = "No Tip Available"
 			self.list.append(tip)
-		#print "severe %s" % severe_api_flag
+
 		if severe_api_flag == 0:
 			self.train_list.append(self.list)
 

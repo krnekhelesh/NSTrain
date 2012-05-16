@@ -1,0 +1,18 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="topic1">
+
+<info>
+  <link type="guide" xref="index#contents"/>
+  <credit type="author">
+    <name>Your Name</name>
+    <email>Your E-mail</email>
+    <years>2010</years>
+  </credit>
+  <desc>Optional short description of Topic 1 for contents page</desc>
+</info>
+
+<title>Departures Train</title>
+<p>This section shows you how to use the departures train feature of NSTrain.</p>
+
+</page>

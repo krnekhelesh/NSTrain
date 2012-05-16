@@ -18,6 +18,7 @@ class NsApiStations:
 down. Please try again later. The program will now exit.
 
 <span style="italic">Error Info: NS API Stations Access Error.</span>''')
+			sys.exit(0)
 
 		self.api_stations_xml_init()
 		self.station_url = 'http://webservices.ns.nl/ns-api-stations'
@@ -26,30 +27,44 @@ down. Please try again later. The program will now exit.
 
 	# Function to authenticate the developer API
 	def authenticate_developer_api(self):
-		print "[INFO] : Retrieving Station List - Authentication iniatiated.."
-		self.theurl = 'http://webservices.ns.nl/ns-api-stations'
-		self.username = 'krnekhelesh@gmail.com'
-		self.password = 'RaLy9GRBjePqDKTrVt76YmDBuw_r043HwXUe-P4i6xwXmRR8SYz1cg'
+		try:
+			print "[INFO] : Retrieving Station List - Authentication iniatiated.."
+			self.theurl = 'http://webservices.ns.nl'
+			self.username = 'krnekhelesh@gmail.com'
+			self.password = 'RaLy9GRBjePqDKTrVt76YmDBuw_r043HwXUe-P4i6xwXmRR8SYz1cg'
 
-		passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
+			passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
+		except:
+			print "Fail Point 1"
 		# this creates a password manager
-		passman.add_password(None, self.theurl, self.username, self.password)
+		try:
+			passman.add_password(None, self.theurl, self.username, self.password)
+		except:
+			print "Fail Point 2"
 		# because we have put None at the start it will always
 		# use this username/password combination for  urls
 		# for which `theurl` is a super-url
-
-		authhandler = urllib2.HTTPBasicAuthHandler(passman)
+		
+		try:
+			authhandler = urllib2.HTTPBasicAuthHandler(passman)
+		except:
+			print "Fail Point 3"
 		# create the AuthHandler
+		try:
+			opener = urllib2.build_opener(authhandler)
+		except: 
+			print "Fail Point 4"
 
-		opener = urllib2.build_opener(authhandler)
-
-		urllib2.install_opener(opener)
+		try:
+			urllib2.install_opener(opener)
+		except:
+			print "Fail Point 5"
 		# All calls to urllib2.urlopen will now use our handler
 		# Make sure not to include the protocol in with the URL, or
 		# HTTPPasswordMgrWithDefaultRealm will be very confused.
 		# You must (of course) use it when fetching the page though.
 
-		pagehandle = urllib2.urlopen(self.theurl)
+		pagehandle = urllib2.urlopen(self.theurl + '/ns-api-stations')
 		# authentication is now handled automatically for us
 
 	# Function to iniatilize xml related variables
