@@ -62,6 +62,7 @@
           <object class="GtkToolbar" id="toolbar1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_bottom">15</property>
             <property name="toolbar_style">icons</property>
             <property name="show_arrow">False</property>
             <property name="icon_size">4</property>
@@ -76,6 +77,8 @@
                   <object class="GtkLabel" id="name">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">15</property>
+                    <property name="margin_bottom">15</property>
                     <property name="xalign">0</property>
                     <property name="xpad">1</property>
                     <property name="label" translatable="yes">Welcome, user</property>
@@ -94,6 +97,8 @@
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Help</property>
                 <property name="margin_left">15</property>
+                <property name="margin_top">15</property>
+                <property name="margin_bottom">15</property>
                 <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes">toolbutton2</property>
                 <property name="use_underline">True</property>
@@ -111,6 +116,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">About</property>
+                <property name="margin_top">15</property>
+                <property name="margin_bottom">15</property>
                 <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes">toolbutton1</property>
                 <property name="use_underline">True</property>
@@ -129,6 +136,8 @@
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Preferences</property>
                 <property name="margin_right">15</property>
+                <property name="margin_top">15</property>
+                <property name="margin_bottom">15</property>
                 <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes">toolbutton1</property>
                 <property name="use_underline">True</property>
@@ -182,6 +191,7 @@
                   <object class="GtkEntry" id="entry2">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="has_focus">True</property>
                     <property name="margin_left">15</property>
                     <property name="margin_right">15</property>
                     <property name="margin_top">5</property>
@@ -922,6 +932,7 @@
               <object class="GtkLabel" id="departures">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="has_focus">True</property>
                 <property name="label" translatable="yes">Departures</property>
               </object>
               <packing>
@@ -947,6 +958,10 @@
           <object class="GtkStatusbar" id="statusbar1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_left">15</property>
+            <property name="margin_right">15</property>
+            <property name="margin_top">5</property>
+            <property name="margin_bottom">5</property>
             <property name="orientation">vertical</property>
             <property name="spacing">2</property>
           </object>

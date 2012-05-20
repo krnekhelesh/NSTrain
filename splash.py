@@ -16,7 +16,7 @@ class Splash(GObject.GObject):
 		self.window.set_position(Gtk.WindowPosition.CENTER)
 		self.window.set_default_size(500,200)
 		self.window.set_keep_above("false")
-		self.show_splash()
+		#self.show_splash()
 
 	def show_splash(self):
 		self.window.show_all()

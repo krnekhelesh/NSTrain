@@ -10,6 +10,10 @@ class TravelDetails:
 		self.window.set_position(Gtk.WindowPosition.CENTER)
 		self.window.connect("delete-event", self.hide_window2)
 
+		toolbar = builder4.get_object('toolbar1')
+		context = toolbar.get_style_context()
+		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
+
 		# Travel Options
 		self.traveloption_departuretime = []
 		self.traveloption_departuretime.append(builder4.get_object('label1'))

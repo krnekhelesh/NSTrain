@@ -26,7 +26,7 @@ class nstrain:
 		self.splashwindow.show_splash()
 		while Gtk.events_pending():
 			Gtk.main_iteration()
-		sleep(3)
+		#sleep(3)
 
 		# Importing the Glade user interface files and their objects
 		self.builder = Gtk.Builder()
@@ -48,6 +48,10 @@ class nstrain:
 		self.about_dialog = self.builder2.get_object('aboutdialog')
 		self.window = self.builder.get_object('window')
 		self.username = self.builder.get_object('name')
+
+		toolbar = self.builder.get_object('toolbar1')
+		context = toolbar.get_style_context()
+		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
 
 		# Gathering Stations codes (after authentication) and populating the station_store (before the startup wizard)
 		self.stat = NsApiStations(self.splashwindow)
@@ -137,21 +141,6 @@ Hang in there for us please. The program will now quit.
 	# Function to destroy the parent window
 	def destroy(self, window):
 		Gtk.main_quit()
-
-'''
-if __name__ == "__main__":
-	splashscreen = Splash()
-	#If you don't do this, the splash screen will show, but wont render it's contents
-	while Gtk.events_pending():
-		Gtk.main_iteration()
-	#Here you can do all that nasty things that take some time.
-	sleep(3) 
-	app = nstrain()
-	#We don't need splScr anymore.
-	splashscreen.hide_splash()
-	Gtk.main()
-'''
-
 
 def main():
 	app = nstrain()
