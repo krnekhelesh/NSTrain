@@ -27,7 +27,7 @@ class nstrain:
 		self.splashwindow.show_splash()
 		while Gtk.events_pending():
 			Gtk.main_iteration()
-		#sleep(3)
+		sleep(3)
 
 		# Importing the Glade user interface files and their objects
 		self.builder = Gtk.Builder()
