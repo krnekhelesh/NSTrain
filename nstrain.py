@@ -12,6 +12,7 @@ from travelplanner import TravelPlanner
 from dialog import Dialog
 from help import show_uri, get_help_uri
 from splash import Splash
+from preferences import Preferences
 from time import sleep
 
 # Glade UI file paths
@@ -75,6 +76,10 @@ Hang in there for us please. The program will now quit.
 			self.wizard_station_entry.set_completion(self.station_completion)
 			self.wizard_station_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_FIND)
 
+			self.userpref = Preferences(self.station_store)
+			self.prefbutton = self.builder.get_object('preferences')
+			self.prefbutton.connect("clicked", self.userpref.show_window)
+
 			# Check for user_info configuration file. If not present then show the start wizard
 			if os.path.isfile("user_info"):
 				print 
@@ -84,9 +89,9 @@ Hang in there for us please. The program will now quit.
 				self.readname = self.open_user_info.readline()
 				self.readname = self.readname.strip('\n')
 				self.readstation = self.open_user_info.readline()
-				self.readstartion = self.readstation.strip('\n')
+				self.readstation = self.readstation.strip('\n')
 				self.username.set_markup('''Welcome, <b>%s</b>''' % self.readname)
-
+				self.open_user_info.close()
 				try:
 					self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.readstation, self.station_completion)
 				except:

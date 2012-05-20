@@ -78,17 +78,17 @@ Hang in there for us please.
 		self.fromstation_entry = builder.get_object('entry2')
 		self.fromstation_entry.set_completion(station_completion2)
 		self.fromstation_entry.set_placeholder_text("station name")
-		self.fromstation_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_GO_FORWARD)
+		self.fromstation_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_FIND)
 
 		self.viastation_entry = builder.get_object('entry3')
 		self.viastation_entry.set_completion(station_completion3)
 		self.viastation_entry.set_placeholder_text("station name - Optional")
-		self.viastation_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_GO_FORWARD)
+		self.viastation_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_FIND)
 
 		self.tostation_entry = builder.get_object('entry4')
 		self.tostation_entry.set_completion(station_completion4)
 		self.tostation_entry.set_placeholder_text("station name")
-		self.tostation_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_GO_FORWARD)
+		self.tostation_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_FIND)
 
 		t = datetime.time(datetime.now())
 		self.time_hour_entry = builder.get_object('spinbutton1')
@@ -153,6 +153,17 @@ Hang in there for us please.
 			url = url + '&' + 'departure=false'
 
 		url = url + '&' + 'dateTime=%s-%s-%sT%s:%s' % (year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
+
+		try:
+			if os.path.isfile("user_info"):
+				open_user_pref = open("user_info")
+				pref_temp = open_user_pref.readlines()
+				hispeed = pref_temp[2].split('\n')[0]
+				open_user_pref.close()
+				if hispeed:
+					url = url + '&' + 'hslAllowed=true'
+		except:
+			pass
 
 		print "[DEBUG]: search url is %s" % url
 
