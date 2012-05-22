@@ -6,11 +6,12 @@ import sys
 import urllib2
 import xml.dom.minidom
 from datetime import datetime
+from xdg import BaseDirectory
 
-from dialog import Dialog
-from traveldetails import TravelDetails
+from NSTrain_lib.dialog import Dialog
+from NSTrain_lib.traveldetails import TravelDetails
 
-TRAVEL_DETAILS_UI_FILE = "traveldetails.ui"
+TRAVEL_DETAILS_UI_FILE = "data/ui/traveldetails.ui"
 
 class TravelPlanner:
 	def __init__(self, builder, station_store, station_list, splashwindow):
@@ -155,8 +156,8 @@ Hang in there for us please.
 		url = url + '&' + 'dateTime=%s-%s-%sT%s:%s' % (year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
 
 		try:
-			if os.path.isfile("user_info"):
-				open_user_pref = open("user_info")
+			if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
+				open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info")
 				pref_temp = open_user_pref.readlines()
 				hispeed = pref_temp[2].split('\n')[0]
 				open_user_pref.close()

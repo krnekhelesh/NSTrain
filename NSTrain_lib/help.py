@@ -4,7 +4,7 @@ import os
 def get_help_uri(page=None):
 	# help_uri from source tree - default language
 	here = os.path.dirname(__file__)
-	help_uri = os.path.abspath(os.path.join(here, 'help', 'C'))
+	help_uri = os.path.abspath(os.path.join(here, '..','help', 'C'))
 	if not os.path.exists(help_uri):
 		print "[ERROR]: Help File not found"
 

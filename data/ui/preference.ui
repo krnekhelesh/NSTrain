@@ -125,6 +125,7 @@
                         <property name="can_focus">True</property>
                         <property name="margin_right">15</property>
                         <property name="use_action_appearance">False</property>
+                        <property name="active">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>

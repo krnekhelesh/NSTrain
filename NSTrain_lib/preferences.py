@@ -2,8 +2,9 @@
 
 from gi.repository import Gtk
 import os,sys
+from xdg import BaseDirectory
 
-UI_FILE = "preference.ui"
+UI_FILE = "data/ui/preference.ui"
 
 class Preferences:
 	def __init__(self, station_store):
@@ -35,20 +36,20 @@ class Preferences:
 
 		self.cancelbutton = self.builder.get_object('button2')
 		self.cancelbutton.connect("clicked", self.hide_window)
-
 		self.initial_read()
 
 	def initial_read(self):
-		if os.path.isfile("user_info"):
-			open_user_pref = open("user_info", "r")
+		if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
+			open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "r")
 			pref_temp = open_user_pref.readlines()
 			self.name_entry.set_text(pref_temp[0].split('\n')[0])
 			self.station_entry.set_text(pref_temp[1].split('\n')[0])
 			try:
-				if pref_temp[2].split('\n')[0]:
-					self.hispeed.set_active("true")
+				if pref_temp[2].split('\n')[0] == "true":
+					print "setting hispeed to active"
+					self.hispeed.set_active(TRUE)
 				else:
-					self.hispeed.set_active("false")
+					self.hispeed.set_active(FALSE)
 			except:
 				pass
 			open_user_pref.close()
@@ -56,7 +57,7 @@ class Preferences:
 			print "[ERROR]: User Preference File not found...aborting"
 
 	def apply_button_clicked(self, widget):
-		open_user_pref = open("user_info", "w")
+		open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "w")
 		open_user_pref.write(self.name_entry.get_text() + '\n')
 		open_user_pref.write(self.station_entry.get_text() + '\n')
 		if self.hispeed.get_active():
@@ -67,7 +68,7 @@ class Preferences:
 		self.inform.set_label("The settings will be applied on restart!")
 
 	def ok_button_clicked(self, widget):
-		open_user_pref = open("user_info", "w")
+		open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "w")
 		open_user_pref.write(self.name_entry.get_text() + '\n')
 		open_user_pref.write(self.station_entry.get_text() + '\n')
 		if self.hispeed.get_active():
@@ -80,6 +81,7 @@ class Preferences:
 
 	# GTK functions to show and hide the window intelligently
 	def show_window(self, widget):
+		self.initial_read()
 		self.window.show_all()
 
 	def hide_window(self, button):

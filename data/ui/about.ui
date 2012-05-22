@@ -25,8 +25,7 @@ this work, you may distribute the resulting work only under the
 same or similar license to this one.
 </property>
     <property name="authors">Nekhelesh Ramananthan</property>
-    <property name="logo">app-icon.png</property>
-    <property name="license_type">custom</property>
+    <property name="license_type">gpl-3-0</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="aboutdialog-vbox1">
         <property name="can_focus">False</property>

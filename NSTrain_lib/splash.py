@@ -4,13 +4,16 @@ from gi.repository import Gtk, GObject
 import os
 import sys
 
-UI_FILE = "splash.ui"
+UI_FILE = "data/ui/splash.ui"
 
 class Splash(GObject.GObject):
 	def __init__(self):
 		self.builder = Gtk.Builder()
 		self.builder.add_from_file(UI_FILE)
 		self.builder.connect_signals(self)
+
+		self.logo = self.builder.get_object('image1')
+		self.logo.set_from_file('./data/media/app-icon.png')
 
 		self.window = self.builder.get_object('window1')
 		self.window.set_position(Gtk.WindowPosition.CENTER)

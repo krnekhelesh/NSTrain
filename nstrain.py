@@ -1,24 +1,35 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
 # Imports
 from gi.repository import Gtk
 import os, sys
 import urllib2
 import xml.dom.minidom
+from xdg import BaseDirectory
 
-from nsapistations import NsApiStations
-from departuretrains import DepartureTrains
-from travelplanner import TravelPlanner
-from dialog import Dialog
-from help import show_uri, get_help_uri
-from splash import Splash
-from preferences import Preferences
+from NSTrain_lib.nsapistations import NsApiStations
+from NSTrain_lib.departuretrains import DepartureTrains
+from NSTrain_lib.travelplanner import TravelPlanner
+from NSTrain_lib.dialog import Dialog
+from NSTrain_lib.help import show_uri, get_help_uri
+from NSTrain_lib.splash import Splash
+from NSTrain_lib.preferences import Preferences
 from time import sleep
 
 # Glade UI file paths
-MAIN_UI_FILE = "main.ui"
-ABOUT_UI_FILE = "about.ui"
-START_WIZARD_UI_FILE = "startwizard.ui"
+MAIN_UI_FILE = "data/ui/main.ui"
+ABOUT_UI_FILE = "data/ui/about.ui"
+START_WIZARD_UI_FILE = "data/ui/startwizard.ui"
+
+# User Info File (config file)
+if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
+	pass
+else:
+	try:
+		print "[DEBUG]: Trying to create user config folder"
+		os.makedirs(BaseDirectory.xdg_config_dirs[0] + "/NSTrain")
+	except OSError, e:
+		print "[ERROR]: Cannot create user config folder, the folder already exists"
 
 class nstrain:
 	# Iniatialising Function
@@ -43,11 +54,15 @@ class nstrain:
 		self.builder3.connect_signals(self)
 
 		self.start_wizard = self.builder3.get_object('wizard')
+		#self.start_wizard.set_icon_from_file('data/media/app-icon.png')
 		self.start_wizard.connect("destroy", self.destroy)
 		self.name_entry = self.builder3.get_object('entry1')
 		self.wizard_station_entry = self.builder3.get_object('entry2')
+
 		self.about_dialog = self.builder2.get_object('aboutdialog')
+
 		self.window = self.builder.get_object('window')
+		#self.window.set_default_icon_from_file("data/media/app-icon.png")
 		self.username = self.builder.get_object('name')
 
 		toolbar = self.builder.get_object('toolbar1')
@@ -81,11 +96,11 @@ Hang in there for us please. The program will now quit.
 			self.prefbutton.connect("clicked", self.userpref.show_window)
 
 			# Check for user_info configuration file. If not present then show the start wizard
-			if os.path.isfile("user_info"):
+			if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
 				print 
 				print "[INFO] : Start Wizard complete"
 				print
-				self.open_user_info = open("user_info")
+				self.open_user_info = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info")
 				self.readname = self.open_user_info.readline()
 				self.readname = self.readname.strip('\n')
 				self.readstation = self.open_user_info.readline()
@@ -113,7 +128,7 @@ Hang in there for us please. The program will now quit.
 	def finish_start_wizard(self, button):
 		self.writename = self.name_entry.get_text()
 		self.writestation = self.wizard_station_entry.get_text()
-		self.user_info = open("user_info", "w")
+		self.user_info = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "w")
 		self.user_info.write(self.writename + '\n' + self.writestation)
 		self.user_info.close()
 		self.start_wizard.hide()
