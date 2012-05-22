@@ -1,12 +1,10 @@
-
 [Desktop Entry]
 Name=NSTrain
 X-GNOME-FullName=NSTrain
 Comment=Train Scheduler Application
 Categories=GNOME;Utility;
-Exec=nstrain
-Icon=/home/krnekhelesh/PythonApps/GitHub/NSTrain/app-icon
+Path=/opt/NSTrain/
+Exec=/opt/NSTrain/nstrain.py
+Icon=/opt/NSTrain/app-icon.png
 Terminal=false
 Type=Application
-Version=0.3
-Name[en_US]=nstrain
