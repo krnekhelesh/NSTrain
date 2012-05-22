@@ -23,12 +23,28 @@
 <app>NSTrain</app> Help
 </title>
 
-<p>NSTrain is a simple application to get the train schedules for NS Trains. </p>
+<p>NSTrain is a simple application to get the train schedules for NS trains. It comes with two main features which are Travel Planner and Departures. 
+These two features allow you quickly find the required trains for your journey. </p>
+
+<p>The program is distributed under the GPLv3 License. You can read more about the license <link href="http://www.gnu.org/licenses/gpl.html">here</link>.</p>
+
+<note style="important">
+<p>All data shown are retrieved from ns.nl and hence the accuracy of the information solely depends on ns.nl and not on this program. This program simply makes
+them available in a easier manner right from your desktop.</p>
+</note>
 
 <!-- This is the visible index -->
 <section id="contents" style="2column">
 <!-- other pages needs to have a link to index#contents for this to work -->
 <title>Contents</title>
+</section>
+
+<section id="faq" style="2column">
+<title>Frequently Asked Questions</title>
+</section>
+
+<section id="getInvolved" style="2column">
+<title>Get involved</title>
 </section>
 
 <note>

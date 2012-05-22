@@ -5,14 +5,22 @@
 <info>
   <link type="guide" xref="index#contents"/>
   <credit type="author">
-    <name>Your Name</name>
+    <name>Nekhelesh Ramananthan</name>
     <email>Your E-mail</email>
-    <years>2010</years>
+    <years>2012</years>
   </credit>
   <desc>Help using the Preference Dialog</desc>
 </info>
 
 <title>Preferences</title>
-<p>This is the preferences page.</p>
+<p>You can use the preferences to set details such as your name, your preferred station and others to enhance your 
+daily usage of NSTrain. By setting the preferred station, NSTrain shows all trains departing from your preferred station. 
+You can at any time change your preferred station later.</p>
+
+<figure>
+	<title>Preferences</title>
+	<media type="image" mime="image/png" src="figures/preferences.png" width="350" height="220"/>
+	<desc>Preferences Dialog</desc>
+</figure>
 
 </page>

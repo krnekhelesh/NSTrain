@@ -1,0 +1,19 @@
+<page xmlns="http://projectmallard.org/1.0/"
+		type="topic"
+		id="faq1">
+
+<info>
+	<link type="guide" xref="index#faq"/>
+	<credit type="author">
+		<name>Nekhelesh Ramananthan</name>
+		<email>Your E-mail</email>
+		<years>2012</years>
+	</credit>
+	<desc>You cannot reserve tickets using NSTrain.</desc>
+</info>
+
+<title>How can I reserve tickets using this application?</title>
+<p>You cannot reserve train tickets using NSTrain. NSTrain as mentioned before is an application to view train schedules and also help you plan your travel. 
+Its purpose stops there. Any reservations needs to be done online through ns.nl website.</p>
+
+</page>

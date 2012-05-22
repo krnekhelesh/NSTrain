@@ -1,0 +1,22 @@
+<page xmlns="http://projectmallard.org/1.0/"
+		type="topic"
+		id="faq2">
+
+<info>
+	<link type="guide" xref="index#faq"/>
+	<credit type="author">
+		<name>Nekhelesh Ramananthane</name>
+		<email>Your E-mail</email>
+		<years>2012</years>
+	</credit>
+	<desc>At the moment, not really.</desc>
+</info>
+
+<title>Is a Windows/Mac OS/Other OS support planned?</title>
+<p>At the moment, there are no plans to support Windows/Mac OS simply because of the lack of time. Since this is a personal project, 
+I am the only one currently working on it. To support other operating system would be too much work. Although, this program is written 
+in python and uses Gtk. Both Python and Gtk are available for other operating systems. If you are interested you are welcome to do the porting 
+to other systems.</p>
+
+</page>
+

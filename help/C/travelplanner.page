@@ -1,0 +1,44 @@
+<page xmlns="http://projectmallard.org/1.0/"
+		type="topic"
+		id="travelplanner">
+
+<info>
+	<link type="guide" xref="index#contents"/>
+	<credit type="author">
+		<name>Nekhelesh Ramananthan</name>
+		<email>Your E-mail</email>
+		<years>2012</years>
+	</credit>
+	<desc>Help using the Travel Planner Dialog</desc>
+</info>
+
+<title>Travel Planner</title>
+<p>The Travel Planner helps you plan your journey from one point to another. You can see a 
+screenshot of the Travel Planner below. The basic requirements for Travel Planner are the from
+and the to station which are marked by an astrix. The others are optional. NSTrain automatically
+retrieves the current date and time.</p>
+
+<figure>
+	<title>Travel Planner</title>
+	<media type="image" mime="image/png" src="figures/travelplanner.png" width="480" height="420"/>
+	<desc>The Travel Planner Dialog</desc>
+</figure>
+
+<p>By default the time indicated is the departure time. You can choose to set it as the arrival time 
+by selecting the Arrival radio button.</p>
+
+<p>Follow the following steps to plan your journey,</p>
+
+<steps>
+  <item><p>Enter the departure station (from)</p></item>
+  <item><p>Enter the arrival station (to)</p></item>
+  <item><p>Check the time and date</p></item>
+  <item><p>Choose whether you want this to be the departure or the arrival time</p></item>
+  <item><p>Click Search</p></item>
+</steps>
+
+<note>
+<p>You do not need to enter the complete station name. You can rather type the starting few letters and then let NSTrain autofill it for you.</p>
+</note>
+
+</page>

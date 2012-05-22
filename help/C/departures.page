@@ -5,14 +5,32 @@
 <info>
   <link type="guide" xref="index#contents"/>
   <credit type="author">
-    <name>Your Name</name>
+    <name>Nekhelesh Ramananthan</name>
     <email>Your E-mail</email>
-    <years>2010</years>
+    <years>2012</years>
   </credit>
   <desc>Help using the departures feature</desc>
 </info>
 
 <title>Departures Train</title>
-<p>This section shows you how to use the departures train feature of NSTrain.</p>
+<p>This section shows you how to use the departures train feature of NSTrain. The departure train features allows you to see the 
+list of trains departing from a station at that time.</p>
+
+<figure>
+	<title>Departures</title>
+	<media type="image" mime="image/png" src="figures/departures.png" width="480" height="420"/>
+	<desc>Departures</desc>
+</figure>
+
+<p>Follow the following steps to see the trains departing from a station,</p>
+
+<steps>
+  <item><p>Enter the station name</p></item>
+  <item><p>Press enter</p></item>
+</steps>
+
+<note>
+<p>You do not need to enter the complete station name. You can rather type the starting few letters and then let NSTrain autofill it for you.</p>
+</note>
 
 </page>
