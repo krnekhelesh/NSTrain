@@ -1,0 +1,21 @@
+<page xmlns="http://projectmallard.org/1.0/"
+		type="topic"
+		id="faq3">
+
+<info>
+	<link type="guide" xref="index#faq"/>
+	<credit type="author">
+		<name>Nekhelesh Ramananthane</name>
+		<email>Your E-mail</email>
+		<years>2012</years>
+	</credit>
+	<desc>It is a planned feature for future releases.</desc>
+</info>
+
+<title>Why isn't NSTrain available in other languages?</title>
+<p>Currently the infrastructure for multiple language support is not yet built. However, this is something which is on my to-do list. It is intended to provide NSTrain 
+in multiple languages. Work will be iniatiated soon to bring NSTrain in Dutch and French iniatially. This can then expand to other languages if we get support 
+from the community as I only speak a few languages.</p>
+
+</page>
+

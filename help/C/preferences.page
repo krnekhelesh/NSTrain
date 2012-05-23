@@ -9,13 +9,15 @@
     <email>Your E-mail</email>
     <years>2012</years>
   </credit>
-  <desc>Help using the Preference Dialog</desc>
+  <desc>Adjusting NSTrain to your liking</desc>
 </info>
 
 <title>Preferences</title>
 <p>You can use the preferences to set details such as your name, your preferred station and others to enhance your 
 daily usage of NSTrain. By setting the preferred station, NSTrain shows all trains departing from your preferred station. 
 You can at any time change your preferred station later.</p>
+
+<p>By default, NSTrain does not include hi-speed trains in your searches. You need to enable them here to show hi-speed trains.</p>
 
 <figure>
 	<title>Preferences</title>

@@ -9,12 +9,11 @@
     <email>Your E-mail</email>
     <years>2012</years>
   </credit>
-  <desc>Help using the departures feature</desc>
+  <desc>Using the departures feature</desc>
 </info>
 
 <title>Departures Train</title>
-<p>This section shows you how to use the departures train feature of NSTrain. The departure train features allows you to see the 
-list of trains departing from a station at that time.</p>
+<p>The departure train features allows you to see the list of trains departing from a station at that time.</p>
 
 <figure>
 	<title>Departures</title>
