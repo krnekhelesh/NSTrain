@@ -46,9 +46,10 @@ class Preferences:
 			self.station_entry.set_text(pref_temp[1].split('\n')[0])
 			try:
 				if pref_temp[2].split('\n')[0] == "true":
-					print "setting hispeed to active"
+					print "[DEBUG]: setting hispeed to true"
 					self.hispeed.set_active(TRUE)
 				else:
+					print "[DEBUG]: setting hispeed to false"
 					self.hispeed.set_active(FALSE)
 			except:
 				pass
