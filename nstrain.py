@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
-# Imports
+# System Imports
 from gi.repository import Gtk
 import os, sys
 import urllib2
 import xml.dom.minidom
 from xdg import BaseDirectory
 
+# User Imports
 from NSTrain_lib.nsapistations import NsApiStations
 from NSTrain_lib.departuretrains import DepartureTrains
 from NSTrain_lib.travelplanner import TravelPlanner
