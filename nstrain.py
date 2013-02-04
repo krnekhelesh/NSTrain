@@ -55,15 +55,14 @@ class nstrain:
 		self.builder3.connect_signals(self)
 
 		self.start_wizard = self.builder3.get_object('wizard')
-		#self.start_wizard.set_icon_from_file('data/media/app-icon.png')
 		self.start_wizard.connect("destroy", self.destroy)
 		self.name_entry = self.builder3.get_object('entry1')
 		self.wizard_station_entry = self.builder3.get_object('entry2')
+		self.continue_button = self.builder3.get_object('button1')
 
 		self.about_dialog = self.builder2.get_object('aboutdialog')
 
-		self.window = self.builder.get_object('window')
-		#self.window.set_default_icon_from_file("data/media/app-icon.png")
+		self.window = self.builder.get_object('window')		
 		self.username = self.builder.get_object('name')
 
 		toolbar = self.builder.get_object('toolbar1')
@@ -90,8 +89,7 @@ Hang in there for us please. The program will now quit.
 			self.station_completion.set_text_column(0)
 
 			self.wizard_station_entry.set_completion(self.station_completion)
-			self.wizard_station_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_FIND)
-
+			
 			self.userpref = Preferences(self.station_store)
 			self.prefbutton = self.builder.get_object('preferences')
 			self.prefbutton.connect("clicked", self.userpref.show_window)
