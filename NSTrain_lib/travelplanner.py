@@ -108,7 +108,7 @@ Hang in there for us please.
 		self.departure_time_chosen = builder.get_object('radiobutton1')
 		self.arrival_time_chosen = builder.get_object('radiobutton2')
 
-	# Function to check if the input fields are filled appropriately and only then expose the continue button
+	# Function to check if the input fields are filled appropriately and only then expose the plan my travel button
 	def check_travel_planner(self, widget, station_list):
 		self.fromcheck = 0
 		self.tocheck = 0
