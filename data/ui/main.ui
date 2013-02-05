@@ -62,10 +62,10 @@
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">NSTrain</property>
+    <property name="resizable">False</property>
     <property name="window_position">center</property>
-    <property name="default_width">750</property>
-    <property name="default_height">500</property>
     <property name="icon">../media/app-icon.png</property>
+    <property name="has_resize_grip">False</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
@@ -668,6 +668,10 @@
                       <object class="GtkTreeView" id="treeview1">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="has_focus">True</property>
+                        <property name="reorderable">True</property>
+                        <property name="rules_hint">True</property>
+                        <property name="hover_selection">True</property>
                         <child internal-child="selection">
                           <object class="GtkTreeSelection" id="treeview-selection1"/>
                         </child>
@@ -693,6 +697,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Show earlier trains</property>
                         <property name="use_action_appearance">False</property>
                         <property name="label" translatable="yes">Earlier</property>
                         <property name="use_underline">True</property>
@@ -707,6 +712,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Show later trains</property>
                         <property name="use_action_appearance">False</property>
                         <property name="label" translatable="yes">Later</property>
                         <property name="use_underline">True</property>

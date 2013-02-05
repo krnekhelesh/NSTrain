@@ -53,6 +53,7 @@ class nstrain:
 		self.about_dialog = self.builder2.get_object('aboutdialog')
 
 		self.window = self.builder.get_object('window')
+		self.window.set_size_request(650, 475)
 		self.menu_pref = self.builder.get_object('menuitem5')
 		self.main_notebook = self.builder.get_object('notebook1')
 		
