@@ -78,18 +78,12 @@ Hang in there for us please.
 
 		self.fromstation_entry = builder.get_object('entry2')
 		self.fromstation_entry.set_completion(station_completion2)
-		self.fromstation_entry.set_placeholder_text("station name")
-		self.fromstation_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_FIND)
 
 		self.viastation_entry = builder.get_object('entry3')
 		self.viastation_entry.set_completion(station_completion3)
-		self.viastation_entry.set_placeholder_text("station name - Optional")
-		self.viastation_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_FIND)
 
 		self.tostation_entry = builder.get_object('entry4')
 		self.tostation_entry.set_completion(station_completion4)
-		self.tostation_entry.set_placeholder_text("station name")
-		self.tostation_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_FIND)
 
 		t = datetime.time(datetime.now())
 		self.time_hour_entry = builder.get_object('spinbutton1')
