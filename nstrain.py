@@ -52,7 +52,8 @@ class nstrain:
 
 		self.about_dialog = self.builder2.get_object('aboutdialog')
 
-		self.window = self.builder.get_object('window')		
+		self.window = self.builder.get_object('window')
+		self.menu_pref = self.builder.get_object('menuitem5')
 		#self.username = self.builder.get_object('name')
 
 		toolbar = self.builder.get_object('toolbar1')
@@ -83,6 +84,7 @@ Hang in there for us please. The program will now quit.
 			self.userpref = Preferences(self.station_store, self.stat.station_list)
 			self.prefbutton = self.builder.get_object('preferences')
 			self.prefbutton.connect("clicked", self.userpref.show_window)
+			self.menu_pref.connect("activate", self.userpref.show_window)
 
 			# Check for user_info configuration file. If not present then show the start wizard
 			if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
