@@ -5,7 +5,7 @@ NSTrain is a train Scheduler for NS Railways. It provides current train travel i
 
 At the moment, there is no launchpad PPA nor a .deb file. The easiest way to run the application is by,
 + ```git clone git://github.com/krnekhelesh/NSTrain.git```
-+ Then run ```python nstain.py``` from the directory where you cloned the repository into.
++ Then run ```python nstrain.py``` from the directory where you cloned the repository into.
 
 The configuration file used by NSTrain is stored at *~/.config/NSTrain*. Delete that file if you want to start fresh.
 
