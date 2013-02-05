@@ -55,7 +55,7 @@ class Preferences:
 				pass
 			open_user_pref.close()
 		else:
-			print "[ERROR]: User Preference File not found...aborting"
+			print "[ERROR]: User Preference File not found...aborting initial preference reading"
 
 	def apply_button_clicked(self, widget):
 		open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "w")

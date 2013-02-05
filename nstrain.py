@@ -22,16 +22,6 @@ MAIN_UI_FILE = "data/ui/main.ui"
 ABOUT_UI_FILE = "data/ui/about.ui"
 START_WIZARD_UI_FILE = "data/ui/startwizard.ui"
 
-# User Info File (config file)
-if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
-	pass
-else:
-	try:
-		print "[DEBUG]: Trying to create user config folder"
-		os.makedirs(BaseDirectory.xdg_config_dirs[0] + "/NSTrain")
-	except OSError, e:
-		print "[ERROR]: Cannot create user config folder, the folder already exists"
-
 class nstrain:
 	# Iniatialising Function
 	def __init__(self):
@@ -87,7 +77,7 @@ Hang in there for us please. The program will now quit.
 			self.station_completion = self.builder.get_object('completion1')
 			self.station_completion.set_model(self.station_store)
 			self.station_completion.set_text_column(0)
-
+			
 			self.wizard_station_entry.set_completion(self.station_completion)
 			
 			self.userpref = Preferences(self.station_store)
@@ -123,8 +113,24 @@ Hang in there for us please. The program will now quit.
 				self.start_wizard.show_all()
 				self.splashwindow.hide_splash()
 
+	def check_start_wizard_done(self,button):
+		self.check = 0
+		self.writename = self.name_entry.get_text()
+		self.writestation = self.wizard_station_entry.get_text()
+		for stationname in range(len(self.stat.station_list)):
+			if self.writestation == self.stat.station_list[stationname][0]:
+					self.check = 1
+		if self.writename != "" and self.check == 1:
+			self.continue_button.set_sensitive('true');
+
 	# Function to collect start wizard data, write data into a file and close the wizard
 	def finish_start_wizard(self, button):
+		try:
+			print "[DEBUG]: Trying to create user config folder"
+			os.makedirs(BaseDirectory.xdg_config_dirs[0] + "/NSTrain")
+		except OSError, e:
+			print "[ERROR]: Cannot create user config folder, the folder already exists"
+
 		self.writename = self.name_entry.get_text()
 		self.writestation = self.wizard_station_entry.get_text()
 		self.user_info = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "w")

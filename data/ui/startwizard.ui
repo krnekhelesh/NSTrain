@@ -137,6 +137,7 @@
             <property name="invisible_char">•</property>
             <property name="secondary_icon_name">edit-find-symbolic</property>
             <property name="placeholder_text">Enter preferred departure station</property>
+            <signal name="changed" handler="check_start_wizard_done" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
