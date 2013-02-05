@@ -30,6 +30,7 @@ class Preferences:
 		self.cancelbutton.connect("clicked", self.hide_window)
 		self.initial_read()
 
+	# Function to read the user preference when the preference dialog is open and at program start.
 	def initial_read(self):
 		if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
 			open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "r")
@@ -49,6 +50,8 @@ class Preferences:
 		else:
 			print "[ERROR]: User Preference File not found...aborting initial preference reading"
 
+	# Function to write the user name preference on the fly i.e as it is inputted by the user. It reads
+	# the file and then writes only the new name while still writing the other old fields.
 	def name_entry_otf(self, entry):
 		if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
 			open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "r")
@@ -69,6 +72,9 @@ class Preferences:
 		else:
 			print "[ERROR]: User Preference File not found...aborting name entry write"
 
+	# Function to write the station name preference on the fly i.e as it is inputted by the user.
+	# However before reading or writing into the file, it checks the validity of the station input
+	# given by the user to avoid unnecessary file operations.
 	def station_entry_otf(self, entry, station_list):
 		self.check = 0
 		self.writestation = self.station_entry.get_text()
@@ -97,6 +103,7 @@ class Preferences:
 		else:
 			self.check = 0
 
+	# Function to write the hispeed toggle option on the fly i.e as it is changed by the user.
 	def hispeed_check_button_toggled(self, widget):
 		if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
 			open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "r")
