@@ -198,6 +198,7 @@
                 <property name="label" translatable="yes">Travel Planner</property>
                 <property name="use_underline">True</property>
                 <property name="icon_name">find-location-symbolic</property>
+                <signal name="toggled" handler="show_travelplanner" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -217,6 +218,7 @@
                 <property name="use_underline">True</property>
                 <property name="icon_name">emblem-shared-symbolic</property>
                 <property name="group">toolbutton1</property>
+                <signal name="toggled" handler="show_departures" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

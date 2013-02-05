@@ -54,6 +54,9 @@ class nstrain:
 
 		self.window = self.builder.get_object('window')
 		self.menu_pref = self.builder.get_object('menuitem5')
+		self.main_notebook = self.builder.get_object('notebook1')
+		self.toolbar_travelplanner = self.builder.get_object('toolbutton1')
+		self.toolbar_departures = self.builder.get_object('toolbutton2')
 		
 		toolbar = self.builder.get_object('toolbar1')
 		context = toolbar.get_style_context()
@@ -156,6 +159,12 @@ Hang in there for us please. The program will now quit.
 		self.station_store = Gtk.ListStore(str, str)
 		for stationname in range(len(self.stat.station_list)):
 			self.station_store.append([self.stat.station_list[stationname][0], self.stat.station_list[stationname][1]])
+
+	def show_travelplanner(self, button):
+		self.main_notebook.set_current_page(0)
+
+	def show_departures(self, button):
+		self.main_notebook.set_current_page(1)
 
 	# Function to display the about dialog
 	def about_function(self, window):
