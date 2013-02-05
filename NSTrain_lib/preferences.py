@@ -13,6 +13,7 @@ class Preferences:
 		self.builder.connect_signals(self)
 
 		self.window = self.builder.get_object('window1')
+		self.window.set_size_request(550, 130)
 		self.window.set_position(Gtk.WindowPosition.CENTER)
 		self.window.connect("delete-event", self.hide_window2)
 
