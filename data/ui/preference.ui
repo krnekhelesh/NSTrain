@@ -43,6 +43,7 @@
                     <property name="invisible_char">•</property>
                     <property name="invisible_char_set">True</property>
                     <property name="placeholder_text">Enter your name</property>
+                    <signal name="changed" handler="name_entry_otf" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>

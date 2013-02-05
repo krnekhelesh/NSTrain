@@ -80,7 +80,7 @@ Hang in there for us please. The program will now quit.
 			
 			self.wizard_station_entry.set_completion(self.station_completion)
 			
-			self.userpref = Preferences(self.station_store)
+			self.userpref = Preferences(self.station_store, self.stat.station_list)
 			self.prefbutton = self.builder.get_object('preferences')
 			self.prefbutton.connect("clicked", self.userpref.show_window)
 
