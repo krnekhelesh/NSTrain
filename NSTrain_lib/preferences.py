@@ -18,7 +18,7 @@ class Preferences:
 
 		self.name_entry = self.builder.get_object('entry1')
 		self.station_entry = self.builder.get_object('entry2')
-		# self.hispeed = self.builder.get_object('switch1')
+		self.hispeed = self.builder.get_object('checkbutton1')
 
 		self.pref_station_completion = self.builder.get_object('entrycompletion1')
 		self.pref_station_completion.set_model(station_store)
@@ -35,18 +35,37 @@ class Preferences:
 			pref_temp = open_user_pref.readlines()
 			self.name_entry.set_text(pref_temp[0].split('\n')[0])
 			self.station_entry.set_text(pref_temp[1].split('\n')[0])
-			# try:
-			# 	if pref_temp[2].split('\n')[0] == "true":
-			# 		print "[DEBUG]: setting hispeed to true"
-			# 		self.hispeed.set_active(TRUE)
-			# 	else:
-			# 		print "[DEBUG]: setting hispeed to false"
-			# 		self.hispeed.set_active(FALSE)
-			# except:
-			# 	pass
+			try:
+				if pref_temp[2].split('\n')[0] == "true":
+					print "[DEBUG]: setting hispeed to true"
+					self.hispeed.set_active( True )
+				else:
+					print "[DEBUG]: setting hispeed to false"
+					self.hispeed.set_active( False )
+			except:
+				pass
 			open_user_pref.close()
 		else:
 			print "[ERROR]: User Preference File not found...aborting initial preference reading"
+
+	def hispeed_check_button_toggled(self, widget):
+		if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
+			open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "r")
+			pref_temp = open_user_pref.readlines()
+			self.name_entry.set_text(pref_temp[0].split('\n')[0])
+			self.station_entry.set_text(pref_temp[1].split('\n')[0])
+			open_user_pref.close()
+
+			open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "w")
+			open_user_pref.write(self.name_entry.get_text() + '\n')
+			open_user_pref.write(self.station_entry.get_text() + '\n')
+			if self.hispeed.get_active():
+				open_user_pref.write("true" + '\n')
+			else:
+				open_user_pref.write("false" + '\n')
+			open_user_pref.close()
+		else:
+			print "[ERROR]: User Preference File not found...aborting hispeed toggle write"
 
 	def apply_button_clicked(self, widget):
 		open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "w")
