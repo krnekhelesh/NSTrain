@@ -44,7 +44,7 @@ class nstrain:
 		self.builder3.add_from_file(START_WIZARD_UI_FILE)
 		self.builder3.connect_signals(self)
 
-		self.start_wizard = self.builder3.get_object('wizard')
+		self.start_wizard = self.builder3.get_object('welcome_wizard')
 		self.start_wizard.connect("destroy", self.destroy)
 		self.name_entry = self.builder3.get_object('entry1')
 		self.wizard_station_entry = self.builder3.get_object('entry2')
@@ -113,6 +113,7 @@ Hang in there for us please. The program will now quit.
 				self.start_wizard.show_all()
 				self.splashwindow.hide_splash()
 
+	# Function to check if the input fields are filled appropriately and only then expose the continue button
 	def check_start_wizard_done(self,button):
 		self.check = 0
 		self.writename = self.name_entry.get_text()
@@ -121,7 +122,10 @@ Hang in there for us please. The program will now quit.
 			if self.writestation == self.stat.station_list[stationname][0]:
 					self.check = 1
 		if self.writename != "" and self.check == 1:
-			self.continue_button.set_sensitive('true');
+			self.continue_button.set_sensitive( True );
+		else:
+			self.check = 0
+			self.continue_button.set_sensitive( False );
 
 	# Function to collect start wizard data, write data into a file and close the wizard
 	def finish_start_wizard(self, button):
