@@ -48,6 +48,7 @@ class TravelPlanner:
 		#	print "[Meldings] %s" % self.travelplanner_list[i][0]
 
 		self.searchbutton = builder.get_object('button3')
+		self.searchbutton.set_sensitive( False )
 		self.searchbutton.connect("clicked", self.on_search_clicked, station_list)
 
 		if self.travelplanner_list == []:
@@ -78,12 +79,14 @@ Hang in there for us please.
 
 		self.fromstation_entry = builder.get_object('entry2')
 		self.fromstation_entry.set_completion(station_completion2)
+		self.fromstation_entry.connect("changed", self.check_travel_planner, station_list)
 
 		self.viastation_entry = builder.get_object('entry3')
 		self.viastation_entry.set_completion(station_completion3)
 
 		self.tostation_entry = builder.get_object('entry4')
 		self.tostation_entry.set_completion(station_completion4)
+		self.tostation_entry.connect("changed", self.check_travel_planner, station_list)
 
 		t = datetime.time(datetime.now())
 		self.time_hour_entry = builder.get_object('spinbutton1')
@@ -104,6 +107,29 @@ Hang in there for us please.
 
 		self.departure_time_chosen = builder.get_object('radiobutton1')
 		self.arrival_time_chosen = builder.get_object('radiobutton2')
+
+	# Function to check if the input fields are filled appropriately and only then expose the continue button
+	def check_travel_planner(self, widget, station_list):
+		self.fromcheck = 0
+		self.tocheck = 0
+
+		self.fromstation_name_entry = self.fromstation_entry.get_text()
+		self.tostation_name_entry = self.tostation_entry.get_text()
+		
+		for stationname in range(len(station_list)):
+			if self.fromstation_name_entry == station_list[stationname][0]:
+					self.fromcheck = 1
+			if self.tostation_name_entry == station_list[stationname][0]:
+					self.tocheck = 1
+		
+		if self.fromcheck == 1 and self.tocheck == 1:
+			self.searchbutton.set_sensitive( True );
+		elif self.fromcheck != 1:
+			self.fromcheck = 0
+			self.searchbutton.set_sensitive( False );
+		else:
+			self.tocheck = 0
+			self.searchbutton.set_sensitive( False );
 
 	# Function to show the travel plans when the search button is clicked. (first get the inputs, processes it into a url and then get the travel plans)
 	def on_search_clicked(self, widget, station_list):
