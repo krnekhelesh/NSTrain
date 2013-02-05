@@ -19,7 +19,6 @@ class DepartureTrains:
 		self.station_entry = builder.get_object('entry1')
 		self.station_entry.set_text("Enter departure station")
 		self.station_entry.set_completion(station_completion)
-		self.station_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_FIND)
 		self.station_entry.connect("activate", self.get_departure_station_entry, station_list)
 		
 		self.next_deptrain_button = builder.get_object('button1')
