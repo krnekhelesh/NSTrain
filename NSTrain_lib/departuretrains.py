@@ -17,32 +17,27 @@ class DepartureTrains:
 			print "[ERROR]: Empty departure train list %s" % self.train_list
 
 		self.station_entry = builder.get_object('entry1')
-		self.station_entry.set_text("Enter departure station")
 		self.station_entry.set_completion(station_completion)
 		self.station_entry.connect("activate", self.get_departure_station_entry, station_list)
+
+		self.deptrain_store = Gtk.ListStore(str, str, str)		
+		self.deptrain_tree = builder.get_object('treeview1')		
+		self.deptrain_tree.set_model(self.deptrain_store)
+		self.timecolumn = Gtk.TreeViewColumn("Time", Gtk.CellRendererText(), markup=0)
+		self.tocolumn = Gtk.TreeViewColumn("To", Gtk.CellRendererText(), markup=1)
+		self.trackcolumn = Gtk.TreeViewColumn("Track", Gtk.CellRendererText(), text=2)
+		self.deptrain_tree.append_column(self.timecolumn)
+		self.deptrain_tree.append_column(self.tocolumn)
+		self.deptrain_tree.append_column(self.trackcolumn)
+
+		for i in range(0, 5):
+			self.deptrain_store.append(["Time","Train","Track"])
+			#print "deptrain store appending with Time, Train, Track..."
 		
-		self.next_deptrain_button = builder.get_object('button1')
-		self.prev_deptrain_button = builder.get_object('button2')
+		self.next_deptrain_button = builder.get_object('toolbutton5')
+		self.prev_deptrain_button = builder.get_object('toolbutton4')
 		self.next_deptrain_button.connect("clicked", self.next_departure)
 		self.prev_deptrain_button.connect("clicked", self.prev_departure)
-
-		self.time0 = builder.get_object('label5')
-		self.time1 = builder.get_object('label8')
-		self.time2 = builder.get_object('label11')
-		self.time3 = builder.get_object('label14')
-		self.time4 = builder.get_object('label17')
-
-		self.deptrain0 = builder.get_object('label6')
-		self.deptrain1 = builder.get_object('label9')
-		self.deptrain2 = builder.get_object('label12')
-		self.deptrain3 = builder.get_object('label15')
-		self.deptrain4 = builder.get_object('label18')
-
-		self.track0 = builder.get_object('label7')
-		self.track1 = builder.get_object('label10')
-		self.track2 = builder.get_object('label13')
-		self.track3 = builder.get_object('label16')
-		self.track4 = builder.get_object('label19')
 
 		self.pagelabel = builder.get_object('label20')
 
@@ -106,42 +101,36 @@ class DepartureTrains:
 			self.time_value1.append(self.train_list[self.start+time][1].split('T'))
 			self.time_value2.append(self.time_value1[time][1].split('+'))
 			if self.train_list[self.start+time][6] != "0":
-				self.time_actualvalue.append('''%s
+				#self.time_actualvalue.append(self.time_value2[time][0] + "\n" + self.train_list[self.start+time][6])
+				self.time_actualvalue.append('''%s 
 <span foreground="red">%s</span>''' % (self.time_value2[time][0], self.train_list[self.start+time][6]))
 			else:
 				self.time_actualvalue.append('''%s''' % (self.time_value2[time][0]))
 
-		self.time0.set_markup(self.time_actualvalue[0])
-		self.time1.set_markup(self.time_actualvalue[1])
-		self.time2.set_markup(self.time_actualvalue[2])
-		self.time3.set_markup(self.time_actualvalue[3])
-		self.time4.set_markup(self.time_actualvalue[4])
+		for i in range(0, 5):
+			self.deptrain_store[i][0] = self.time_actualvalue[i]
 
 	# Function to manipulate the train string
 	def get_departure_train(self):
 		self.deptrain_value = []
 		for train in range(self.start, self.end):
+			#self.deptrain_value.append(self.train_list[train][2] + "\n" + self.train_list[train][3] + "\n" + self.train_list[train][7])
 			self.deptrain_value.append('''<span weight="bold">%s</span>
 %s
 %s''' % (self.train_list[train][2],self.train_list[train][3],self.train_list[train][7]))
+			#print deptrain_value[train]
 
-		self.deptrain0.set_markup(self.deptrain_value[0])
-		self.deptrain1.set_markup(self.deptrain_value[1])
-		self.deptrain2.set_markup(self.deptrain_value[2])
-		self.deptrain3.set_markup(self.deptrain_value[3])
-		self.deptrain4.set_markup(self.deptrain_value[4])
+		for i in range(0, 5):
+			self.deptrain_store[i][1] = self.deptrain_value[i]
 
 	# Function to manipulate the track string
 	def get_departure_track(self):
 		self.track_value = []
 		for track in range(self.start, self.end):
 			self.track_value.append(self.train_list[track][4])
-			
-		self.track0.set_label(self.track_value[0])
-		self.track1.set_label(self.track_value[1])
-		self.track2.set_label(self.track_value[2])
-		self.track3.set_label(self.track_value[3])
-		self.track4.set_label(self.track_value[4])
+
+		for i in range(0, 5):
+			self.deptrain_store[i][2] = self.track_value[i]
 
 	# Function to display more results 
 	def next_departure(self, button):
