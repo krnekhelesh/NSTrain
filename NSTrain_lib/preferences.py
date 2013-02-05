@@ -128,9 +128,11 @@ class Preferences:
 		self.initial_read()
 		self.window.show_all()
 
+	# Function used by close button
 	def hide_window(self, button):
 		self.window.hide()
 
+	# Function used by window close (x) button
 	def hide_window2(self, window, event):
 		self.window.hide()
 		return True
