@@ -18,21 +18,12 @@ class Preferences:
 
 		self.name_entry = self.builder.get_object('entry1')
 		self.station_entry = self.builder.get_object('entry2')
-		self.hispeed = self.builder.get_object('switch1')
-		self.inform = self.builder.get_object('label6')
-		self.inform.set_label("")
+		# self.hispeed = self.builder.get_object('switch1')
 
 		self.pref_station_completion = self.builder.get_object('entrycompletion1')
 		self.pref_station_completion.set_model(station_store)
 		self.pref_station_completion.set_text_column(0)
 		self.station_entry.set_completion(self.pref_station_completion)
-		self.station_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_FIND)
-
-		self.applybutton = self.builder.get_object('button3')
-		self.applybutton.connect("clicked", self.apply_button_clicked)
-
-		self.okbutton = self.builder.get_object('button1')
-		self.okbutton.connect("clicked", self.ok_button_clicked)
 
 		self.cancelbutton = self.builder.get_object('button2')
 		self.cancelbutton.connect("clicked", self.hide_window)
@@ -44,15 +35,15 @@ class Preferences:
 			pref_temp = open_user_pref.readlines()
 			self.name_entry.set_text(pref_temp[0].split('\n')[0])
 			self.station_entry.set_text(pref_temp[1].split('\n')[0])
-			try:
-				if pref_temp[2].split('\n')[0] == "true":
-					print "[DEBUG]: setting hispeed to true"
-					self.hispeed.set_active(TRUE)
-				else:
-					print "[DEBUG]: setting hispeed to false"
-					self.hispeed.set_active(FALSE)
-			except:
-				pass
+			# try:
+			# 	if pref_temp[2].split('\n')[0] == "true":
+			# 		print "[DEBUG]: setting hispeed to true"
+			# 		self.hispeed.set_active(TRUE)
+			# 	else:
+			# 		print "[DEBUG]: setting hispeed to false"
+			# 		self.hispeed.set_active(FALSE)
+			# except:
+			# 	pass
 			open_user_pref.close()
 		else:
 			print "[ERROR]: User Preference File not found...aborting initial preference reading"
@@ -61,24 +52,22 @@ class Preferences:
 		open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "w")
 		open_user_pref.write(self.name_entry.get_text() + '\n')
 		open_user_pref.write(self.station_entry.get_text() + '\n')
-		if self.hispeed.get_active():
-			open_user_pref.write("true" + '\n')
-		else:
-			open_user_pref.write("false" + '\n')
+		# if self.hispeed.get_active():
+		# 	open_user_pref.write("true" + '\n')
+		# else:
+		# 	open_user_pref.write("false" + '\n')
 		open_user_pref.close()
-		self.inform.set_label("The settings will be applied on restart!")
 
 	def ok_button_clicked(self, widget):
 		open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "w")
 		open_user_pref.write(self.name_entry.get_text() + '\n')
 		open_user_pref.write(self.station_entry.get_text() + '\n')
-		if self.hispeed.get_active():
-			open_user_pref.write("true" + '\n')
-		else:
-			open_user_pref.write("false" + '\n')
+		# if self.hispeed.get_active():
+		# 	open_user_pref.write("true" + '\n')
+		# else:
+		# 	open_user_pref.write("false" + '\n')
 		open_user_pref.close()
 		self.window.hide()
-		self.inform.set_label("")
 
 	# GTK functions to show and hide the window intelligently
 	def show_window(self, widget):
@@ -87,7 +76,6 @@ class Preferences:
 
 	def hide_window(self, button):
 		self.window.hide()
-		self.inform.set_label("")
 
 	def hide_window2(self, window, event):
 		self.window.hide()

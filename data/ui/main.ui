@@ -51,6 +51,7 @@
     <property name="window_position">center</property>
     <property name="default_width">750</property>
     <property name="default_height">500</property>
+    <property name="icon">../media/app-icon.png</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
