@@ -54,8 +54,7 @@ class nstrain:
 
 		self.window = self.builder.get_object('window')
 		self.menu_pref = self.builder.get_object('menuitem5')
-		#self.username = self.builder.get_object('name')
-
+		
 		toolbar = self.builder.get_object('toolbar1')
 		context = toolbar.get_style_context()
 		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
@@ -96,7 +95,6 @@ Hang in there for us please. The program will now quit.
 				self.readname = self.readname.strip('\n')
 				self.readstation = self.open_user_info.readline()
 				self.readstation = self.readstation.strip('\n')
-				#self.username.set_markup('''Welcome, <b>%s</b>''' % self.readname)
 				self.open_user_info.close()
 				try:
 					self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.readstation, self.station_completion)
@@ -151,7 +149,6 @@ Hang in there for us please. The program will now quit.
 			self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.splashwindow)
 		except:
 			print "[ERROR]: Travel planner failed"
-		#self.username.set_markup('''Welcome, <b>%s</b>''' % self.writename)
 		self.window.show_all()
 
 	# Function to populate station model
