@@ -55,8 +55,6 @@ class nstrain:
 		self.window = self.builder.get_object('window')
 		self.menu_pref = self.builder.get_object('menuitem5')
 		self.main_notebook = self.builder.get_object('notebook1')
-		self.toolbar_travelplanner = self.builder.get_object('toolbutton1')
-		self.toolbar_departures = self.builder.get_object('toolbutton2')
 		
 		toolbar = self.builder.get_object('toolbar1')
 		context = toolbar.get_style_context()
