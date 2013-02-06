@@ -13,7 +13,7 @@ class TravelDetails:
 		self.builder4.connect_signals(self)
 
 		self.window = self.builder4.get_object('window1')
-		self.window.set_size_request(850, 425)
+		self.window.set_size_request(850, 325)
 		self.window.set_position(Gtk.WindowPosition.CENTER)
 		self.window.connect("delete-event", self.hide_window2)
 
@@ -296,7 +296,7 @@ class TravelDetails:
 
 	# Function to set the title, date and time which are shown at the top
 	def set_traveloption_title(self, fromstation, tostation, year, month, day, hour, minute):
-		self.title1.set_text(fromstation + ' -> ' + tostation)
+		self.title1.set_text(fromstation + " to " + tostation)
 		if hour < 10:
 			hour = "0%s" % hour
 		if minute < 10:
