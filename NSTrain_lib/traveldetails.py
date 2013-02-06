@@ -21,8 +21,14 @@ class TravelDetails:
 		context = toolbar.get_style_context()
 		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
 
+		self.start = 0
+		self.end = 5
+		self.startpage = 1
+		self.endpage = 10
+		self.local_travelplanner_list = []
+
 		# Travel Option Store
-		self.traveloption_store = Gtk.ListStore(str, str, str, str)		
+		self.traveloption_store = Gtk.ListStore(str, str, str, str, int)		
 		self.traveloption_tree = self.builder4.get_object('treeview2')		
 		self.traveloption_tree.set_model(self.traveloption_store)
 
@@ -42,13 +48,17 @@ class TravelDetails:
 		self.traveltimecolumn.set_expand(True)
 		self.traveltimecolumn.set_alignment(0.5)
 
+		self.rowcolumn = Gtk.TreeViewColumn(" Row Index ", Gtk.CellRendererText(), text=4)
+		self.rowcolumn.set_visible(False)
+
 		self.traveloption_tree.append_column(self.departuretimecolumn)
 		self.traveloption_tree.append_column(self.arrivaltimecolumn)
 		self.traveloption_tree.append_column(self.transfercolumn)
 		self.traveloption_tree.append_column(self.traveltimecolumn)
+		self.traveloption_tree.append_column(self.rowcolumn)
 
 		for i in range(0, 5):
-			self.traveloption_store.append(["Dep", "Arrival", "Transfer", "Travel"])
+			self.traveloption_store.append(["Dep", "Arrival", "Transfer", "Travel", 0])
 		
 		# Travel Stop Store
 		self.travelstop_time0 = self.builder4.get_object('label21')
@@ -81,12 +91,6 @@ class TravelDetails:
 		self.prev_traveloption_button = self.builder4.get_object('toolbutton3')
 		self.prev_traveloption_button.connect("clicked", self.prev_traveloption)
 
-		self.start = 0
-		self.end = 5
-		self.startpage = 1
-		self.endpage = 10
-		self.local_travelplanner_list = []
-
 		self.closebutton = self.builder4.get_object('button10')
 		self.closebutton.connect("clicked", self.hide_window)
 
@@ -100,10 +104,16 @@ class TravelDetails:
 		self.get_traveloption(self.local_travelplanner_list, self.start, self.startpage, self.endpage)
 		self.show_window()
 
-	# # Function to display the currently chosen travel option
-	# def choose_traveloption(self, button, button_number):
-	# 	index  = button_number + self.start
-	# 	self.get_travelstop(self.travelplanner_list, index)
+	# Function to display the currently chosen travel option
+	def choose_traveloption(self, widget):
+		selection = self.traveloption_tree.get_selection()
+		selection.set_mode(Gtk.SelectionMode.BROWSE)
+		traveloption_model, traveloption_iter = selection.get_selected()
+		if traveloption_iter != None:
+			button_number = traveloption_model[traveloption_iter][4]
+			index  = button_number + self.start
+			print "Option:%d Index:%d " % (button_number, index)
+			self.get_travelstop(self.local_travelplanner_list, index)
 
 	# Function to display the next 5 travel options
 	def next_traveloption(self, button):
@@ -130,6 +140,7 @@ class TravelDetails:
 		self.pagelabel.set_text("%s of %s" % (startpage, endpage))
 
 		for i in range(self.size):
+			self.traveloption_store[i][4] = i
 			time_value1 = travelplanner_list[i+start][5].split('T')
 			time_value2 = time_value1[1].split('+')
 			time_value3 = time_value2[0].split(':')
