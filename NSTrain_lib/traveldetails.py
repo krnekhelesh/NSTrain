@@ -14,34 +14,62 @@ class TravelDetails:
 		context = toolbar.get_style_context()
 		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
 
-		# Travel Options
-		self.traveloption_departuretime = []
-		self.traveloption_departuretime.append(builder4.get_object('label1'))
-		self.traveloption_departuretime.append(builder4.get_object('label5'))
-		self.traveloption_departuretime.append(builder4.get_object('label9'))
-		self.traveloption_departuretime.append(builder4.get_object('label13'))
-		self.traveloption_departuretime.append(builder4.get_object('label17'))
+		self.traveloption_store = Gtk.ListStore(str, str, str, str)		
+		self.traveloption_tree = builder4.get_object('treeview2')		
+		self.traveloption_tree.set_model(self.traveloption_store)
 
-		self.traveloption_arrivaltime = []
-		self.traveloption_arrivaltime.append(builder4.get_object('label2'))
-		self.traveloption_arrivaltime.append(builder4.get_object('label6'))
-		self.traveloption_arrivaltime.append(builder4.get_object('label10'))
-		self.traveloption_arrivaltime.append(builder4.get_object('label14'))
-		self.traveloption_arrivaltime.append(builder4.get_object('label18'))
+		self.departuretimecolumn = Gtk.TreeViewColumn(" Departure Time", Gtk.CellRendererText(), markup=0)
+		self.departuretimecolumn.set_expand(True)
+		self.departuretimecolumn.set_alignment(0.5)
 
-		self.traveloption_stops = []
-		self.traveloption_stops.append(builder4.get_object('label3'))
-		self.traveloption_stops.append(builder4.get_object('label7'))
-		self.traveloption_stops.append(builder4.get_object('label11'))
-		self.traveloption_stops.append(builder4.get_object('label15'))
-		self.traveloption_stops.append(builder4.get_object('label19'))
+		self.arrivaltimecolumn = Gtk.TreeViewColumn(" Arrival Time", Gtk.CellRendererText(), markup=1)
+		self.arrivaltimecolumn.set_expand(True)
+		self.arrivaltimecolumn.set_alignment(0.5)
 
-		self.traveloption_traveltime = []
-		self.traveloption_traveltime.append(builder4.get_object('label4'))
-		self.traveloption_traveltime.append(builder4.get_object('label8'))
-		self.traveloption_traveltime.append(builder4.get_object('label12'))
-		self.traveloption_traveltime.append(builder4.get_object('label16'))
-		self.traveloption_traveltime.append(builder4.get_object('label20'))
+		self.transfercolumn = Gtk.TreeViewColumn(" Transfers Time", Gtk.CellRendererText(), markup=2)
+		self.transfercolumn.set_expand(True)
+		self.transfercolumn.set_alignment(0.5)
+
+		self.traveltimecolumn = Gtk.TreeViewColumn(" Travel Time", Gtk.CellRendererText(), markup=3)
+		self.traveltimecolumn.set_expand(True)
+		self.traveltimecolumn.set_alignment(0.5)
+
+		self.traveloption_tree.append_column(self.departuretimecolumn)
+		self.traveloption_tree.append_column(self.arrivaltimecolumn)
+		self.traveloption_tree.append_column(self.transfercolumn)
+		self.traveloption_tree.append_column(self.traveltimecolumn)
+
+		for i in range(0, 5):
+			self.traveloption_store.append(["Dep", "Arrival", "Transfer", "Travel"])
+
+		# # Travel Options
+		# self.traveloption_departuretime = []
+		# self.traveloption_departuretime.append(builder4.get_object('label1'))
+		# self.traveloption_departuretime.append(builder4.get_object('label5'))
+		# self.traveloption_departuretime.append(builder4.get_object('label9'))
+		# self.traveloption_departuretime.append(builder4.get_object('label13'))
+		# self.traveloption_departuretime.append(builder4.get_object('label17'))
+
+		# self.traveloption_arrivaltime = []
+		# self.traveloption_arrivaltime.append(builder4.get_object('label2'))
+		# self.traveloption_arrivaltime.append(builder4.get_object('label6'))
+		# self.traveloption_arrivaltime.append(builder4.get_object('label10'))
+		# self.traveloption_arrivaltime.append(builder4.get_object('label14'))
+		# self.traveloption_arrivaltime.append(builder4.get_object('label18'))
+
+		# self.traveloption_stops = []
+		# self.traveloption_stops.append(builder4.get_object('label3'))
+		# self.traveloption_stops.append(builder4.get_object('label7'))
+		# self.traveloption_stops.append(builder4.get_object('label11'))
+		# self.traveloption_stops.append(builder4.get_object('label15'))
+		# self.traveloption_stops.append(builder4.get_object('label19'))
+
+		# self.traveloption_traveltime = []
+		# self.traveloption_traveltime.append(builder4.get_object('label4'))
+		# self.traveloption_traveltime.append(builder4.get_object('label8'))
+		# self.traveloption_traveltime.append(builder4.get_object('label12'))
+		# self.traveloption_traveltime.append(builder4.get_object('label16'))
+		# self.traveloption_traveltime.append(builder4.get_object('label20'))
 		
 		self.travelstop_time0 = builder4.get_object('label21')
 		self.travelstop_time1 = builder4.get_object('label25')
@@ -61,7 +89,8 @@ class TravelDetails:
 
 		self.travelstop_warning = builder4.get_object('label38')
 
-		self.size = len(self.traveloption_departuretime)
+		#self.size = len(self.traveloption_departuretime)
+		self.size = 5
 
 		self.title1 = builder4.get_object('label60')
 		self.title2 = builder4.get_object('label61')
@@ -86,9 +115,11 @@ class TravelDetails:
 				delay_text = "%s" % travelplanner_list[i+start][11]
 			
 			if travelplanner_list[i+start][4] == "true":
-				self.traveloption_departuretime[i].set_markup('''<span foreground="#5c5ce6e61f1f">%s</span> <span foreground="red">%s</span>''' % (time, delay_text))
+				# self.traveloption_departuretime[i].set_markup('''<span foreground="#5c5ce6e61f1f">%s</span> <span foreground="red">%s</span>''' % (time, delay_text))
+				self.traveloption_store[i][0] = '''<span foreground="#5c5ce6e61f1f">%s</span> <span foreground="red">%s</span>''' % (time, delay_text)
 			else:
-				self.traveloption_departuretime[i].set_markup('''%s <span foreground="red">%s</span>''' % (time, delay_text))
+				# self.traveloption_departuretime[i].set_markup('''%s <span foreground="red">%s</span>''' % (time, delay_text))
+				self.traveloption_store[i][0] = '''%s <span foreground="red">%s</span>''' % (time, delay_text)
 
 		for i in range(self.size):
 			time_value1 = travelplanner_list[i+start][7].split('T')
@@ -102,17 +133,23 @@ class TravelDetails:
 				delay_text = "%s" % travelplanner_list[i+start][12]
 			
 			if travelplanner_list[i+start][4] == "true":
-				self.traveloption_arrivaltime[i].set_markup('''<span foreground="#5c5ce6e61f1f">%s</span> <span foreground="red">%s</span>''' % (time, delay_text))
+				# self.traveloption_arrivaltime[i].set_markup('''<span foreground="#5c5ce6e61f1f">%s</span> <span foreground="red">%s</span>''' % (time, delay_text))
+				self.traveloption_store[i][1] = '''<span foreground="#5c5ce6e61f1f">%s</span> <span foreground="red">%s</span>''' % (time, delay_text)
 			else:
-				self.traveloption_arrivaltime[i].set_markup('''%s <span foreground="red">%s</span>''' % (time, delay_text))
+				# self.traveloption_arrivaltime[i].set_markup('''%s <span foreground="red">%s</span>''' % (time, delay_text))
+				self.traveloption_store[i][1] = '''%s <span foreground="red">%s</span>''' % (time, delay_text)
 
 		for i in range(self.size):
 			if travelplanner_list[i+start][4] == "true":
-				self.traveloption_traveltime[i].set_markup('''<span foreground="#5c5ce6e61f1f">%s</span>''' % travelplanner_list[i+start][2])
-				self.traveloption_stops[i].set_markup('''<span foreground="#5c5ce6e61f1f">%s</span>''' % travelplanner_list[i+start][1])
+				# self.traveloption_traveltime[i].set_markup('''<span foreground="#5c5ce6e61f1f">%s</span>''' % travelplanner_list[i+start][2])
+				# self.traveloption_stops[i].set_markup('''<span foreground="#5c5ce6e61f1f">%s</span>''' % travelplanner_list[i+start][1])
+				self.traveloption_store[i][3] = '''<span foreground="#5c5ce6e61f1f">%s</span>''' % travelplanner_list[i+start][2]
+				self.traveloption_store[i][2] = '''<span foreground="#5c5ce6e61f1f">%s</span>''' % travelplanner_list[i+start][1]
 			else:
-				self.traveloption_traveltime[i].set_text(travelplanner_list[i+start][2])
-				self.traveloption_stops[i].set_text(travelplanner_list[i+start][1])
+				# self.traveloption_traveltime[i].set_text(travelplanner_list[i+start][2])
+				# self.traveloption_stops[i].set_text(travelplanner_list[i+start][1])
+				self.traveloption_store[i][3] = travelplanner_list[i+start][2]
+				self.traveloption_store[i][2] = travelplanner_list[i+start][1]
 
 	# Function to display the travel stosp of the current travel option after a bit of formatting
 	def get_travelstop(self, travelplanner_list, index):

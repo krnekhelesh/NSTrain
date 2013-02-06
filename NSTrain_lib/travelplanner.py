@@ -24,20 +24,20 @@ class TravelPlanner:
 		self.builder4.add_from_file(TRAVEL_DETAILS_UI_FILE)
 		self.builder4.connect_signals(self)
 
-		self.next_traveloption_button = self.builder4.get_object('button8')
+		self.next_traveloption_button = self.builder4.get_object('toolbutton4')
 		self.next_traveloption_button.connect("clicked", self.next_traveloption)
-		self.prev_traveloption_button = self.builder4.get_object('button7')
+		self.prev_traveloption_button = self.builder4.get_object('toolbutton3')
 		self.prev_traveloption_button.connect("clicked", self.prev_traveloption)
 
-		self.choose_traveloption_button = []
-		self.choose_traveloption_button.append(self.builder4.get_object('button1'))
-		self.choose_traveloption_button.append(self.builder4.get_object('button2'))
-		self.choose_traveloption_button.append(self.builder4.get_object('button3'))
-		self.choose_traveloption_button.append(self.builder4.get_object('button4'))
-		self.choose_traveloption_button.append(self.builder4.get_object('button5'))
+		# self.choose_traveloption_button = []
+		# self.choose_traveloption_button.append(self.builder4.get_object('button1'))
+		# self.choose_traveloption_button.append(self.builder4.get_object('button2'))
+		# self.choose_traveloption_button.append(self.builder4.get_object('button3'))
+		# self.choose_traveloption_button.append(self.builder4.get_object('button4'))
+		# self.choose_traveloption_button.append(self.builder4.get_object('button5'))
 		
-		for i in range(len(self.choose_traveloption_button)):
-			self.choose_traveloption_button[i].connect("clicked", self.choose_traveloption, i)
+		# for i in range(len(self.choose_traveloption_button)):
+		# 	self.choose_traveloption_button[i].connect("clicked", self.choose_traveloption, i)
 
 		self.statustext = builder.get_object('label26')
 		self.statusflag = 0
