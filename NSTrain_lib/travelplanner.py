@@ -18,17 +18,7 @@ class TravelPlanner:
 		travelplanner_xml = self.get_travelplanner_xml(self.travelplanner_url)
 		self.handle_travelplanner_xml(travelplanner_xml)
 
-		# self.choose_traveloption_button = []
-		# self.choose_traveloption_button.append(self.builder4.get_object('button1'))
-		# self.choose_traveloption_button.append(self.builder4.get_object('button2'))
-		# self.choose_traveloption_button.append(self.builder4.get_object('button3'))
-		# self.choose_traveloption_button.append(self.builder4.get_object('button4'))
-		# self.choose_traveloption_button.append(self.builder4.get_object('button5'))
-
 		self.travel = TravelDetails()
-		
-		# for i in range(len(self.choose_traveloption_button)):
-		# 	self.choose_traveloption_button[i].connect("clicked", self.choose_traveloption, i)
 
 		self.statustext = builder.get_object('label26')
 		self.statusflag = 0
