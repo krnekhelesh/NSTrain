@@ -137,7 +137,6 @@
             <property name="invisible_char">•</property>
             <property name="secondary_icon_name">edit-find-symbolic</property>
             <property name="placeholder_text">Enter preferred departure station</property>
-            <signal name="changed" handler="check_start_wizard_done" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -160,7 +159,6 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="has_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="has_tooltip">True</property>
                 <property name="tooltip_text" translatable="yes">Stop the Wizard and close the program</property>
@@ -178,8 +176,8 @@
                 <property name="label" translatable="yes">Continue</property>
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
+                <property name="has_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
                 <signal name="clicked" handler="finish_start_wizard" swapped="no"/>

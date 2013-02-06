@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 from gi.repository import Gtk
+from gi.repository.Gdk import Color
 import os
 import sys
 import urllib2
@@ -27,7 +28,7 @@ class TravelPlanner:
 		#	print "[Meldings] %s" % self.travelplanner_list[i][0]
 
 		self.searchbutton = builder.get_object('button3')
-		self.searchbutton.set_sensitive( False )
+		self.searchbutton.set_sensitive( True )
 		self.searchbutton.connect("clicked", self.on_search_clicked, station_list)
 
 		if self.travelplanner_list == []:
@@ -58,14 +59,14 @@ Hang in there for us please.
 
 		self.fromstation_entry = builder.get_object('entry2')
 		self.fromstation_entry.set_completion(station_completion2)
-		self.fromstation_entry.connect("changed", self.check_travel_planner, station_list)
+		# self.fromstation_entry.connect("changed", self.check_travel_planner, station_list)
 
 		self.viastation_entry = builder.get_object('entry3')
 		self.viastation_entry.set_completion(station_completion3)
 
 		self.tostation_entry = builder.get_object('entry4')
 		self.tostation_entry.set_completion(station_completion4)
-		self.tostation_entry.connect("changed", self.check_travel_planner, station_list)
+		# self.tostation_entry.connect("changed", self.check_travel_planner, station_list)
 
 		t = datetime.time(datetime.now())
 		self.time_hour_entry = builder.get_object('spinbutton1')
@@ -88,10 +89,12 @@ Hang in there for us please.
 		self.arrival_time_chosen = builder.get_object('radiobutton2')
 
 	# Function to check if the input fields are filled appropriately and only then expose the plan my travel button
-	def check_travel_planner(self, widget, station_list):
+	def check_travel_planner(self, station_list):
 		self.fromcheck = 0
 		self.tocheck = 0
 
+		COLOR_INVALID = Color(50000, 0, 0) # A dark red color
+				
 		self.fromstation_name_entry = self.fromstation_entry.get_text()
 		self.tostation_name_entry = self.tostation_entry.get_text()
 		
@@ -101,93 +104,97 @@ Hang in there for us please.
 			if self.tostation_name_entry == station_list[stationname][0]:
 					self.tocheck = 1
 		
-		if self.fromcheck == 1 and self.tocheck == 1:
-			self.searchbutton.set_sensitive( True );
-		elif self.fromcheck != 1:
-			self.fromcheck = 0
-			self.searchbutton.set_sensitive( False );
+		if self.fromcheck != 1:
+			self.fromstation_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
 		else:
-			self.tocheck = 0
-			self.searchbutton.set_sensitive( False );
+			self.fromstation_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
+
+		if self.tocheck != 1:
+			self.tostation_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
+		else:
+			self.tostation_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
+
+		if self.fromcheck == 1 and self.tocheck == 1:
+			return 1
+		else:
+			return 0
 
 	# Function to show the travel plans when the search button is clicked. (first get the inputs, processes it into a url and then get the travel plans)
 	def on_search_clicked(self, widget, station_list):
-		flag = 0
+		self.travel_flag = self.check_travel_planner(station_list)
 
-		fromstation_name_entry = self.fromstation_entry.get_text()
-		viastation_name_entry = self.viastation_entry.get_text()
-		tostation_name_entry = self.tostation_entry.get_text()
-		time_hour_name_entry = self.time_hour_entry.get_value_as_int()
-		time_minute_name_entry = self.time_minute_entry.get_value_as_int()
-		year_name_entry = self.year_entry.get_value_as_int()
-		month_name_entry = self.month_entry.get_value_as_int()
-		day_name_entry = self.date_entry.get_value_as_int()
+		if self.travel_flag == 1:
+			flag = 0
 
-		fromstation_code = "INIT"
-		tostation_code = "INIT"
-		viastation_code = "INIT"
+			fromstation_name_entry = self.fromstation_entry.get_text()
+			viastation_name_entry = self.viastation_entry.get_text()
+			tostation_name_entry = self.tostation_entry.get_text()
+			time_hour_name_entry = self.time_hour_entry.get_value_as_int()
+			time_minute_name_entry = self.time_minute_entry.get_value_as_int()
+			year_name_entry = self.year_entry.get_value_as_int()
+			month_name_entry = self.month_entry.get_value_as_int()
+			day_name_entry = self.date_entry.get_value_as_int()
 
-		for stationname in range(len(station_list)):
-			if fromstation_name_entry == station_list[stationname][0]:
-				fromstation_code = station_list[stationname][1]
-			if tostation_name_entry == station_list[stationname][0]:
-				tostation_code = station_list[stationname][1]
-			if viastation_name_entry == station_list[stationname][0]:
-				viastation_code = station_list[stationname][1]
+			fromstation_code = "INIT"
+			tostation_code = "INIT"
+			viastation_code = "INIT"
 
-		basic_url = 'http://webservices.ns.nl/ns-api-treinplanner?'
-		url = basic_url
+			for stationname in range(len(station_list)):
+				if fromstation_name_entry == station_list[stationname][0]:
+					fromstation_code = station_list[stationname][1]
+				if tostation_name_entry == station_list[stationname][0]:
+					tostation_code = station_list[stationname][1]
+				if viastation_name_entry == station_list[stationname][0]:
+					viastation_code = station_list[stationname][1]
 
-		if fromstation_code != "INIT":
-			url = url + 'fromStation=%s' % fromstation_code
+			basic_url = 'http://webservices.ns.nl/ns-api-treinplanner?'
+			url = basic_url
 
-		if tostation_code != "INIT":
-			url = url + '&' + 'toStation=%s'% tostation_code
+			if fromstation_code != "INIT":
+				url = url + 'fromStation=%s' % fromstation_code
 
-		if viastation_code != "INIT":
-			url = url + '&' + 'viaStation=%s' % viastation_code
+			if tostation_code != "INIT":
+				url = url + '&' + 'toStation=%s'% tostation_code
 
-		if self.departure_time_chosen.get_active():
-			url = url + '&' + 'departure=true'
-		else:
-			url = url + '&' + 'departure=false'
+			if viastation_code != "INIT":
+				url = url + '&' + 'viaStation=%s' % viastation_code
 
-		url = url + '&' + 'dateTime=%s-%s-%sT%s:%s' % (year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
+			if self.departure_time_chosen.get_active():
+				url = url + '&' + 'departure=true'
+			else:
+				url = url + '&' + 'departure=false'
 
-		try:
-			if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
-				open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info")
-				pref_temp = open_user_pref.readlines()
-				hispeed = pref_temp[2].split('\n')[0]
-				open_user_pref.close()
-				if hispeed:
-					url = url + '&' + 'hslAllowed=true'
-		except:
-			pass
+			url = url + '&' + 'dateTime=%s-%s-%sT%s:%s' % (year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
 
-		print "[DEBUG]: search url is %s" % url
-
-		# ensuring that these two inputs are valid since they are required for the API call
-		if fromstation_code != "INIT" and tostation_code != "INIT" and self.statusflag == 0:
 			try:
-				travelplanner_xml = self.get_travelplanner_xml(url)
-				self.handle_travelplanner_xml(travelplanner_xml)
-				flag = 2
+				if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
+					open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info")
+					pref_temp = open_user_pref.readlines()
+					hispeed = pref_temp[2].split('\n')[0]
+					open_user_pref.close()
+					if hispeed:
+						url = url + '&' + 'hslAllowed=true'
 			except:
-				print "[ERROR]: Wierd website API error...excuse me"
-				flag = 1
+				pass
 
-		# If and only when the data is gathered properly, then proceed to show them to the user
-		if flag == 2:
-			self.travel.final_traveloption(self.travelplanner_list, fromstation_name_entry, tostation_name_entry, year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
-			# self.start = 0
-			# self.end = 5
-			# self.startpage = 1
-			# self.endpage = len(self.travelplanner_list)/5
-			# self.travel.set_traveloption_title(fromstation_name_entry, tostation_name_entry, year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
-			# self.travel.get_traveloption(self.travelplanner_list, self.start, self.startpage, self.endpage)
-			# self.travel.show_window()
+			print "[DEBUG]: search url is %s" % url
 
+			# ensuring that these two inputs are valid since they are required for the API call
+			if fromstation_code != "INIT" and tostation_code != "INIT" and self.statusflag == 0:
+				try:
+					travelplanner_xml = self.get_travelplanner_xml(url)
+					self.handle_travelplanner_xml(travelplanner_xml)
+					flag = 2
+				except:
+					print "[ERROR]: Wierd website API error...excuse me"
+					flag = 1
+
+			# If and only when the data is gathered properly, then proceed to show them to the user
+			if flag == 2:
+				self.travel.final_traveloption(self.travelplanner_list, fromstation_name_entry, tostation_name_entry, year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
+
+		else:
+			pass		
 
 	# Function to iniatilize xml related variables
 	def travelplanner_xml_init(self):

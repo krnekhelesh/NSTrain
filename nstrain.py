@@ -2,6 +2,7 @@
 
 # System Imports
 from gi.repository import Gtk
+from gi.repository.Gdk import Color
 import os, sys
 import urllib2
 import xml.dom.minidom
@@ -21,6 +22,8 @@ from time import sleep
 MAIN_UI_FILE = "data/ui/main.ui"
 ABOUT_UI_FILE = "data/ui/about.ui"
 START_WIZARD_UI_FILE = "data/ui/startwizard.ui"
+
+COLOR_INVALID = Color(50000, 0, 0) # A dark red color
 
 class nstrain:
 	# Iniatialising Function
@@ -116,42 +119,57 @@ Hang in there for us please. The program will now quit.
 				self.splashwindow.hide_splash()
 
 	# Function to check if the input fields are filled appropriately and only then expose the continue button
-	def check_start_wizard_done(self,button):
+	def check_start_wizard_done(self):
 		self.check = 0
 		self.writename = self.name_entry.get_text()
 		self.writestation = self.wizard_station_entry.get_text()
 		for stationname in range(len(self.stat.station_list)):
 			if self.writestation == self.stat.station_list[stationname][0]:
-					self.check = 1
-		if self.writename != "" and self.check == 1:
-			self.continue_button.set_sensitive( True );
+				self.check = 1
+
+		if self.check != 1:
+			self.wizard_station_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
 		else:
-			self.check = 0
-			self.continue_button.set_sensitive( False );
+			self.wizard_station_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
+
+		if self.writename == "" or self.writename == "Enter your name":
+			self.name_entry.set_text("Enter your name")
+			self.name_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
+		else:
+			self.name_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
+
+		if self.writename != "" and self.check == 1 and self.writename != "Enter your name":
+			return 1
+		else:
+			return 0
 
 	# Function to collect start wizard data, write data into a file and close the wizard
 	def finish_start_wizard(self, button):
-		try:
-			print "[DEBUG]: Trying to create user config folder"
-			os.makedirs(BaseDirectory.xdg_config_dirs[0] + "/NSTrain")
-		except OSError, e:
-			print "[ERROR]: Cannot create user config folder, the folder already exists"
+		self.start_flag = self.check_start_wizard_done()
+		if self.start_flag == 1:
+			try:
+				print "[DEBUG]: Trying to create user config folder"
+				os.makedirs(BaseDirectory.xdg_config_dirs[0] + "/NSTrain")
+			except OSError, e:
+				print "[ERROR]: Cannot create user config folder, the folder already exists"
 
-		self.writename = self.name_entry.get_text()
-		self.writestation = self.wizard_station_entry.get_text()
-		self.user_info = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "w")
-		self.user_info.write(self.writename + '\n' + self.writestation)
-		self.user_info.close()
-		self.start_wizard.hide()
-		try:
-			self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.writestation, self.station_completion)
-		except:
-			print "[ERROR]: Departure failed"
-		try:
-			self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.splashwindow)
-		except:
-			print "[ERROR]: Travel planner failed"
-		self.window.show_all()
+			self.writename = self.name_entry.get_text()
+			self.writestation = self.wizard_station_entry.get_text()
+			self.user_info = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "w")
+			self.user_info.write(self.writename + '\n' + self.writestation)
+			self.user_info.close()
+			self.start_wizard.hide()
+			try:
+				self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.writestation, self.station_completion)
+			except:
+				print "[ERROR]: Departure failed"
+			try:
+				self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.splashwindow)
+			except:
+				print "[ERROR]: Travel planner failed"
+			self.window.show_all()
+		else:
+			pass
 
 	# Function to populate station model
 	def station_model_populate(self):
