@@ -59,7 +59,7 @@ class nstrain:
 		self.window.set_size_request(650, 475)
 		self.menu_pref = self.builder.get_object('menuitem5')
 		self.main_notebook = self.builder.get_object('notebook1')
-		
+
 		toolbar = self.builder.get_object('toolbar1')
 		context = toolbar.get_style_context()
 		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
