@@ -5,6 +5,6 @@ Comment=Train Scheduler Application
 Categories=GNOME;Utility;
 Path=/opt/NSTrain/
 Exec=/opt/NSTrain/nstrain.py
-Icon=/opt/NSTrain/app-icon.png
+Icon=/opt/NSTrain/data/media/app-icon.png
 Terminal=false
 Type=Application
