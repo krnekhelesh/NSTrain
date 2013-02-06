@@ -11,8 +11,6 @@ from xdg import BaseDirectory
 from NSTrain_lib.dialog import Dialog
 from NSTrain_lib.traveldetails import TravelDetails
 
-TRAVEL_DETAILS_UI_FILE = "data/ui/traveldetails.ui"
-
 class TravelPlanner:
 	def __init__(self, builder, station_store, station_list, splashwindow):
 		self.travelplanner_xml_init()
@@ -20,29 +18,20 @@ class TravelPlanner:
 		travelplanner_xml = self.get_travelplanner_xml(self.travelplanner_url)
 		self.handle_travelplanner_xml(travelplanner_xml)
 
-		self.builder4 = Gtk.Builder()
-		self.builder4.add_from_file(TRAVEL_DETAILS_UI_FILE)
-		self.builder4.connect_signals(self)
-
-		self.next_traveloption_button = self.builder4.get_object('toolbutton4')
-		self.next_traveloption_button.connect("clicked", self.next_traveloption)
-		self.prev_traveloption_button = self.builder4.get_object('toolbutton3')
-		self.prev_traveloption_button.connect("clicked", self.prev_traveloption)
-
 		# self.choose_traveloption_button = []
 		# self.choose_traveloption_button.append(self.builder4.get_object('button1'))
 		# self.choose_traveloption_button.append(self.builder4.get_object('button2'))
 		# self.choose_traveloption_button.append(self.builder4.get_object('button3'))
 		# self.choose_traveloption_button.append(self.builder4.get_object('button4'))
 		# self.choose_traveloption_button.append(self.builder4.get_object('button5'))
+
+		self.travel = TravelDetails()
 		
 		# for i in range(len(self.choose_traveloption_button)):
 		# 	self.choose_traveloption_button[i].connect("clicked", self.choose_traveloption, i)
 
 		self.statustext = builder.get_object('label26')
 		self.statusflag = 0
-
-		self.travel = TravelDetails(self.builder4)
 
 		#for i in range(len(self.travelplanner_list)):
 		#	print "[Meldings] %s" % self.travelplanner_list[i][0]
@@ -200,38 +189,15 @@ Hang in there for us please.
 
 		# If and only when the data is gathered properly, then proceed to show them to the user
 		if flag == 2:
-			self.start = 0
-			self.end = 5
-			self.startpage = 1
-			self.endpage = len(self.travelplanner_list)/5
-			self.travel.set_traveloption_title(fromstation_name_entry, tostation_name_entry, year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
-			self.travel.get_traveloption(self.travelplanner_list, self.start, self.startpage, self.endpage)
-			self.travel.show_window()
+			self.travel.final_traveloption(self.travelplanner_list, fromstation_name_entry, tostation_name_entry, year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
+			# self.start = 0
+			# self.end = 5
+			# self.startpage = 1
+			# self.endpage = len(self.travelplanner_list)/5
+			# self.travel.set_traveloption_title(fromstation_name_entry, tostation_name_entry, year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
+			# self.travel.get_traveloption(self.travelplanner_list, self.start, self.startpage, self.endpage)
+			# self.travel.show_window()
 
-	# Function to display the currently chosen travel option
-	def choose_traveloption(self, button, button_number):
-		index  = button_number + self.start
-		self.travel.get_travelstop(self.travelplanner_list, index)
-
-	# Function to display the next 5 travel options
-	def next_traveloption(self, button):
-		if self.end+5 <= len(self.travelplanner_list):
-			self.start = self.start + 5
-			self.end = self.end + 5
-			self.startpage = self.startpage + 1
-			self.travel.get_traveloption(self.travelplanner_list, self.start, self.startpage, self.endpage)
-		else:
-			print "[ERROR]: Exceeded maximum length of traveloption_list"
-
-	# Function to display the previous 5 travel options
-	def prev_traveloption(self, button):
-		if self.start-5 >= 0:
-			self.start = self.start - 5
-			self.end = self.end - 5
-			self.startpage = self.startpage - 1
-			self.travel.get_traveloption(self.travelplanner_list, self.start, self.startpage, self.endpage)
-		else:
-			print "[ERROR]: Below zero index..."
 
 	# Function to iniatilize xml related variables
 	def travelplanner_xml_init(self):

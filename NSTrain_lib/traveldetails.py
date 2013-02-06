@@ -3,19 +3,27 @@
 from gi.repository import Gtk
 import os,sys
 
-class TravelDetails:
-	def __init__(self, builder4):
+TRAVEL_DETAILS_UI_FILE = "data/ui/traveldetails.ui"
 
-		self.window = builder4.get_object('window1')
+class TravelDetails:
+	def __init__(self):
+
+		self.builder4 = Gtk.Builder()
+		self.builder4.add_from_file(TRAVEL_DETAILS_UI_FILE)
+		self.builder4.connect_signals(self)
+
+		self.window = self.builder4.get_object('window1')
+		self.window.set_size_request(850, 425)
 		self.window.set_position(Gtk.WindowPosition.CENTER)
 		self.window.connect("delete-event", self.hide_window2)
 
-		toolbar = builder4.get_object('toolbar1')
+		toolbar = self.builder4.get_object('toolbar1')
 		context = toolbar.get_style_context()
 		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
 
+		# Travel Option Store
 		self.traveloption_store = Gtk.ListStore(str, str, str, str)		
-		self.traveloption_tree = builder4.get_object('treeview2')		
+		self.traveloption_tree = self.builder4.get_object('treeview2')		
 		self.traveloption_tree.set_model(self.traveloption_store)
 
 		self.departuretimecolumn = Gtk.TreeViewColumn(" Departure Time", Gtk.CellRendererText(), markup=0)
@@ -41,63 +49,81 @@ class TravelDetails:
 
 		for i in range(0, 5):
 			self.traveloption_store.append(["Dep", "Arrival", "Transfer", "Travel"])
-
-		# # Travel Options
-		# self.traveloption_departuretime = []
-		# self.traveloption_departuretime.append(builder4.get_object('label1'))
-		# self.traveloption_departuretime.append(builder4.get_object('label5'))
-		# self.traveloption_departuretime.append(builder4.get_object('label9'))
-		# self.traveloption_departuretime.append(builder4.get_object('label13'))
-		# self.traveloption_departuretime.append(builder4.get_object('label17'))
-
-		# self.traveloption_arrivaltime = []
-		# self.traveloption_arrivaltime.append(builder4.get_object('label2'))
-		# self.traveloption_arrivaltime.append(builder4.get_object('label6'))
-		# self.traveloption_arrivaltime.append(builder4.get_object('label10'))
-		# self.traveloption_arrivaltime.append(builder4.get_object('label14'))
-		# self.traveloption_arrivaltime.append(builder4.get_object('label18'))
-
-		# self.traveloption_stops = []
-		# self.traveloption_stops.append(builder4.get_object('label3'))
-		# self.traveloption_stops.append(builder4.get_object('label7'))
-		# self.traveloption_stops.append(builder4.get_object('label11'))
-		# self.traveloption_stops.append(builder4.get_object('label15'))
-		# self.traveloption_stops.append(builder4.get_object('label19'))
-
-		# self.traveloption_traveltime = []
-		# self.traveloption_traveltime.append(builder4.get_object('label4'))
-		# self.traveloption_traveltime.append(builder4.get_object('label8'))
-		# self.traveloption_traveltime.append(builder4.get_object('label12'))
-		# self.traveloption_traveltime.append(builder4.get_object('label16'))
-		# self.traveloption_traveltime.append(builder4.get_object('label20'))
 		
-		self.travelstop_time0 = builder4.get_object('label21')
-		self.travelstop_time1 = builder4.get_object('label25')
-		self.travelstop_time2 = builder4.get_object('label29')
+		# Travel Stop Store
+		self.travelstop_time0 = self.builder4.get_object('label21')
+		self.travelstop_time1 = self.builder4.get_object('label25')
+		self.travelstop_time2 = self.builder4.get_object('label29')
 
-		self.travelstop_station0 = builder4.get_object('label22')
-		self.travelstop_station1 = builder4.get_object('label26')
-		self.travelstop_station2 = builder4.get_object('label30')
+		self.travelstop_station0 = self.builder4.get_object('label22')
+		self.travelstop_station1 = self.builder4.get_object('label26')
+		self.travelstop_station2 = self.builder4.get_object('label30')
 
-		self.travelstop_platform0 = builder4.get_object('label23')
-		self.travelstop_platform1 = builder4.get_object('label27')
-		self.travelstop_platform2 = builder4.get_object('label31')
+		self.travelstop_platform0 = self.builder4.get_object('label23')
+		self.travelstop_platform1 = self.builder4.get_object('label27')
+		self.travelstop_platform2 = self.builder4.get_object('label31')
 
-		self.travelstop_traintype0 = builder4.get_object('label24')
-		self.travelstop_traintype1 = builder4.get_object('label28')
-		self.travelstop_traintype2 = builder4.get_object('label32')
+		self.travelstop_traintype0 = self.builder4.get_object('label24')
+		self.travelstop_traintype1 = self.builder4.get_object('label28')
+		self.travelstop_traintype2 = self.builder4.get_object('label32')
 
-		self.travelstop_warning = builder4.get_object('label38')
+		self.travelstop_warning = self.builder4.get_object('label38')
 
 		#self.size = len(self.traveloption_departuretime)
 		self.size = 5
 
-		self.title1 = builder4.get_object('label60')
-		self.title2 = builder4.get_object('label61')
-		self.pagelabel = builder4.get_object('label36')
+		self.title1 = self.builder4.get_object('label60')
+		self.title2 = self.builder4.get_object('label61')
+		self.pagelabel = self.builder4.get_object('label36')
 
-		self.closebutton = builder4.get_object('button10')
+		self.next_traveloption_button = self.builder4.get_object('toolbutton4')
+		self.next_traveloption_button.connect("clicked", self.next_traveloption)
+		self.prev_traveloption_button = self.builder4.get_object('toolbutton3')
+		self.prev_traveloption_button.connect("clicked", self.prev_traveloption)
+
+		self.start = 0
+		self.end = 5
+		self.startpage = 1
+		self.endpage = 10
+		self.local_travelplanner_list = []
+
+		self.closebutton = self.builder4.get_object('button10')
 		self.closebutton.connect("clicked", self.hide_window)
+
+	def final_traveloption(self, travelplanner_list, fromstation_name_entry, tostation_name_entry, year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry):
+		self.start = 0
+		self.end = 5
+		self.startpage = 1
+		self.local_travelplanner_list = list(travelplanner_list)
+		self.endpage = len(self.local_travelplanner_list)/5
+		self.set_traveloption_title(fromstation_name_entry, tostation_name_entry, year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
+		self.get_traveloption(self.local_travelplanner_list, self.start, self.startpage, self.endpage)
+		self.show_window()
+
+	# # Function to display the currently chosen travel option
+	# def choose_traveloption(self, button, button_number):
+	# 	index  = button_number + self.start
+	# 	self.get_travelstop(self.travelplanner_list, index)
+
+	# Function to display the next 5 travel options
+	def next_traveloption(self, button):
+		if self.end+5 <= len(self.local_travelplanner_list):
+			self.start = self.start + 5
+			self.end = self.end + 5
+			self.startpage = self.startpage + 1
+			self.get_traveloption(self.local_travelplanner_list, self.start, self.startpage, self.endpage)
+		else:
+			print "[ERROR]: Exceeded maximum length of traveloption_list"
+
+	# Function to display the previous 5 travel options
+	def prev_traveloption(self, button):
+		if self.start-5 >= 0:
+			self.start = self.start - 5
+			self.end = self.end - 5
+			self.startpage = self.startpage - 1
+			self.get_traveloption(self.local_travelplanner_list, self.start, self.startpage, self.endpage)
+		else:
+			print "[ERROR]: Below zero index..."
 
 	# Function to display the current 5 travel options (on the left) after a bit of formatting
 	def get_traveloption(self, travelplanner_list, start, startpage, endpage):
@@ -115,10 +141,8 @@ class TravelDetails:
 				delay_text = "%s" % travelplanner_list[i+start][11]
 			
 			if travelplanner_list[i+start][4] == "true":
-				# self.traveloption_departuretime[i].set_markup('''<span foreground="#5c5ce6e61f1f">%s</span> <span foreground="red">%s</span>''' % (time, delay_text))
 				self.traveloption_store[i][0] = '''<span foreground="#5c5ce6e61f1f">%s</span> <span foreground="red">%s</span>''' % (time, delay_text)
 			else:
-				# self.traveloption_departuretime[i].set_markup('''%s <span foreground="red">%s</span>''' % (time, delay_text))
 				self.traveloption_store[i][0] = '''%s <span foreground="red">%s</span>''' % (time, delay_text)
 
 		for i in range(self.size):
@@ -133,21 +157,15 @@ class TravelDetails:
 				delay_text = "%s" % travelplanner_list[i+start][12]
 			
 			if travelplanner_list[i+start][4] == "true":
-				# self.traveloption_arrivaltime[i].set_markup('''<span foreground="#5c5ce6e61f1f">%s</span> <span foreground="red">%s</span>''' % (time, delay_text))
 				self.traveloption_store[i][1] = '''<span foreground="#5c5ce6e61f1f">%s</span> <span foreground="red">%s</span>''' % (time, delay_text)
 			else:
-				# self.traveloption_arrivaltime[i].set_markup('''%s <span foreground="red">%s</span>''' % (time, delay_text))
 				self.traveloption_store[i][1] = '''%s <span foreground="red">%s</span>''' % (time, delay_text)
 
 		for i in range(self.size):
 			if travelplanner_list[i+start][4] == "true":
-				# self.traveloption_traveltime[i].set_markup('''<span foreground="#5c5ce6e61f1f">%s</span>''' % travelplanner_list[i+start][2])
-				# self.traveloption_stops[i].set_markup('''<span foreground="#5c5ce6e61f1f">%s</span>''' % travelplanner_list[i+start][1])
 				self.traveloption_store[i][3] = '''<span foreground="#5c5ce6e61f1f">%s</span>''' % travelplanner_list[i+start][2]
 				self.traveloption_store[i][2] = '''<span foreground="#5c5ce6e61f1f">%s</span>''' % travelplanner_list[i+start][1]
 			else:
-				# self.traveloption_traveltime[i].set_text(travelplanner_list[i+start][2])
-				# self.traveloption_stops[i].set_text(travelplanner_list[i+start][1])
 				self.traveloption_store[i][3] = travelplanner_list[i+start][2]
 				self.traveloption_store[i][2] = travelplanner_list[i+start][1]
 
