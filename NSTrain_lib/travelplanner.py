@@ -59,14 +59,12 @@ Hang in there for us please.
 
 		self.fromstation_entry = builder.get_object('entry2')
 		self.fromstation_entry.set_completion(station_completion2)
-		# self.fromstation_entry.connect("changed", self.check_travel_planner, station_list)
 
 		self.viastation_entry = builder.get_object('entry3')
 		self.viastation_entry.set_completion(station_completion3)
 
 		self.tostation_entry = builder.get_object('entry4')
 		self.tostation_entry.set_completion(station_completion4)
-		# self.tostation_entry.connect("changed", self.check_travel_planner, station_list)
 
 		t = datetime.time(datetime.now())
 		self.time_hour_entry = builder.get_object('spinbutton1')
@@ -106,13 +104,21 @@ Hang in there for us please.
 		
 		if self.fromcheck != 1:
 			self.fromstation_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
+			self.fromstation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "emblem-important-symbolic")
+			if self.fromstation_name_entry == "":
+				self.fromstation_entry.set_text("Departure Station")
 		else:
 			self.fromstation_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
+			self.fromstation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, None)
 
 		if self.tocheck != 1:
 			self.tostation_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
+			self.tostation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "emblem-important-symbolic")
+			if self.tostation_name_entry == "":
+				self.tostation_entry.set_text("Arrival Station")
 		else:
 			self.tostation_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
+			self.tostation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, None)
 
 		if self.fromcheck == 1 and self.tocheck == 1:
 			return 1

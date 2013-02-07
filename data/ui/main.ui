@@ -309,7 +309,6 @@
                     <property name="margin_right">15</property>
                     <property name="margin_top">5</property>
                     <property name="invisible_char">•</property>
-                    <property name="secondary_icon_name">edit-find-symbolic</property>
                     <property name="placeholder_text">Departure Station</property>
                   </object>
                   <packing>
@@ -343,7 +342,6 @@
                     <property name="margin_right">15</property>
                     <property name="margin_top">5</property>
                     <property name="invisible_char">•</property>
-                    <property name="secondary_icon_name">edit-find-symbolic</property>
                     <property name="placeholder_text">Via Station (Optional)</property>
                   </object>
                   <packing>
@@ -377,7 +375,6 @@
                     <property name="margin_right">15</property>
                     <property name="margin_top">5</property>
                     <property name="invisible_char">•</property>
-                    <property name="secondary_icon_name">edit-find-symbolic</property>
                     <property name="placeholder_text">Arrival Station</property>
                   </object>
                   <packing>
@@ -646,7 +643,6 @@
                     <property name="margin_right">15</property>
                     <property name="margin_top">10</property>
                     <property name="invisible_char">•</property>
-                    <property name="secondary_icon_name">edit-find-symbolic</property>
                     <property name="placeholder_text">Departure Station</property>
                   </object>
                   <packing>

@@ -135,7 +135,6 @@
             <property name="margin_right">15</property>
             <property name="margin_top">5</property>
             <property name="invisible_char">•</property>
-            <property name="secondary_icon_name">edit-find-symbolic</property>
             <property name="placeholder_text">Enter preferred departure station</property>
           </object>
           <packing>
