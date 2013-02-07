@@ -58,8 +58,8 @@
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">           0.5
-"Heroic Beta"</property>
+                <property name="label" translatable="yes">0.6 Alpha
+</property>
               </object>
               <packing>
                 <property name="expand">False</property>
