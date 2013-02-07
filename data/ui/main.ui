@@ -190,7 +190,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="margin_left">15</property>
-                <property name="margin_right">5</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="use_action_appearance">False</property>
@@ -210,6 +209,8 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">5</property>
+                <property name="margin_right">5</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="use_action_appearance">False</property>
@@ -237,7 +238,6 @@
               </object>
               <packing>
                 <property name="expand">True</property>
-                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>
@@ -304,7 +304,6 @@
                   <object class="GtkEntry" id="entry2">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="has_focus">True</property>
                     <property name="margin_left">15</property>
                     <property name="margin_right">15</property>
                     <property name="margin_top">5</property>
