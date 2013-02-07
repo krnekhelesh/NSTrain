@@ -123,6 +123,11 @@ class Preferences:
 			open_user_pref.close()
 		else:
 			print "[ERROR]: User Preference File not found...aborting hispeed toggle write"
+	
+	# GTK function used by unity quicklist to show preference window
+	def quick_show_window(self):
+		self.initial_read()
+		self.window.show_all()
 
 	# GTK functions to show and hide the window intelligently
 	def show_window(self, widget):

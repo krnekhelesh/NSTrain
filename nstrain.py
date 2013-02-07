@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 # System Imports
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 from gi.repository.Gdk import Color
+from gi.repository import Unity, Dbusmenu
 import os, sys
 import urllib2
 import xml.dom.minidom
@@ -59,10 +60,39 @@ class nstrain:
 		self.window.set_size_request(650, 475)
 		self.menu_pref = self.builder.get_object('menuitem5')
 		self.main_notebook = self.builder.get_object('notebook1')
+		self.toolbar_travelplanner = self.builder.get_object('toolbutton1')
+		self.toolbar_departures = self.builder.get_object('toolbutton2')
 
 		toolbar = self.builder.get_object('toolbar1')
 		context = toolbar.get_style_context()
 		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
+
+		# Unity Dynamic Lists
+		self.launcher = Unity.LauncherEntry.get_for_desktop_id("nstrain.desktop")
+		self.quicklist = Dbusmenu.Menuitem.new()
+
+		self.travelplanner_menu_item = Dbusmenu.Menuitem.new()
+		self.travelplanner_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Travel Planner")
+		self.travelplanner_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
+		self.travelplanner_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, False)
+		self.travelplanner_menu_item.connect('item_activated', self.quick_show, "Travelplanner")
+
+		self.departures_menu_item = Dbusmenu.Menuitem.new()
+		self.departures_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Departures")
+		self.departures_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
+		self.departures_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, False)
+		self.departures_menu_item.connect('item_activated', self.quick_show, "Departures")
+
+		self.preferences_menu_item = Dbusmenu.Menuitem.new()
+		self.preferences_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Preferences")
+		self.preferences_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
+		self.preferences_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, False)
+		self.preferences_menu_item.connect('item_activated', self.quick_show, "Preferences")
+
+		self.quicklist.child_append(self.travelplanner_menu_item)
+		self.quicklist.child_append(self.departures_menu_item)
+		self.quicklist.child_append(self.preferences_menu_item)
+		self.launcher.set_property("quicklist", self.quicklist)	
 
 		# Gathering Stations codes (after authentication) and populating the station_store (before the startup wizard)
 		self.stat = NsApiStations(self.splashwindow)
@@ -109,6 +139,9 @@ Hang in there for us please. The program will now quit.
 					self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.splashwindow)
 				except:
 					print "[ERROR]: Travel planner failed"
+				self.travelplanner_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
+				self.departures_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
+				self.preferences_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
 				self.window.show_all()
 				self.splashwindow.hide_splash()
 			else:
@@ -159,6 +192,9 @@ Hang in there for us please. The program will now quit.
 			self.user_info.write(self.writename + '\n' + self.writestation)
 			self.user_info.close()
 			self.start_wizard.hide()
+			self.travelplanner_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
+			self.departures_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
+			self.preferences_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)			
 			try:
 				self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.writestation, self.station_completion)
 			except:
@@ -182,6 +218,20 @@ Hang in there for us please. The program will now quit.
 
 	def show_departures(self, button):
 		self.main_notebook.set_current_page(1)
+
+	def quick_show(self, menu_item, obj, button_id):
+		if button_id == "Departures":
+			self.main_notebook.set_current_page(1)
+			self.toolbar_departures.set_active(True)
+			self.toolbar_travelplanner.set_active(False)
+
+		if button_id == "Travelplanner":
+			self.main_notebook.set_current_page(0)
+			self.toolbar_travelplanner.set_active(True)
+			self.toolbar_departures.set_active(False)
+			
+		if button_id == "Preferences":
+			self.userpref.quick_show_window()
 
 	# Function to display the about dialog
 	def about_function(self, window):
