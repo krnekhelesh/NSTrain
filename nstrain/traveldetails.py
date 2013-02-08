@@ -86,6 +86,9 @@ class TravelDetails:
 		self.travelstop_tree.append_column(self.platformcolumn)
 		self.travelstop_tree.append_column(self.traintypecolumn)
 
+		self.travelstop_selection = self.travelstop_tree.get_selection()
+		self.travelstop_selection.set_mode(Gtk.SelectionMode.NONE)
+
 		for i in range(0, 3):
 			self.travelstop_store.append(["Time", "Station", "Platform", "TrainType"])
 
