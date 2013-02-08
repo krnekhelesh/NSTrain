@@ -253,6 +253,16 @@ Hang in there for us please. The program will now quit.
 	def help_function(self, button):
 		show_uri(self, "ghelp:%s" % get_help_uri())
 
+	# Function to display report bug webpage on launchpad
+	def report_issue(self, button):
+		link = "https://bugs.launchpad.net/nstrain/+filebug"
+		Gtk.show_uri(None, link, 0)
+
+	# Function to display ask a question webpage on launchpad
+	def get_help_online(self, button):
+		link = "https://answers.launchpad.net/nstrain/+addquestion"
+		Gtk.show_uri(None, link, 0)
+
 	# Function to destroy the parent window
 	def destroy(self, window):
 		Gtk.main_quit()

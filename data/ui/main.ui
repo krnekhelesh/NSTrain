@@ -95,6 +95,7 @@
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <accelerator key="q" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                         <signal name="activate" handler="destroy" swapped="no"/>
                       </object>
                     </child>
@@ -140,7 +141,7 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkImageMenuItem" id="menuitem3">
-                        <property name="label" translatable="yes">Help</property>
+                        <property name="label" translatable="yes">Contents</property>
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -148,6 +149,33 @@
                         <property name="use_stock">False</property>
                         <accelerator key="F1" signal="activate"/>
                         <signal name="activate" handler="help_function" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem1">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="menuitem8">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Get Help Online...</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="get_help_online" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="menuitem7">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Report An Issue...</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="report_issue" swapped="no"/>
                       </object>
                     </child>
                     <child>
