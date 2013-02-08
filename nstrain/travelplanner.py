@@ -9,8 +9,8 @@ import xml.dom.minidom
 from datetime import datetime
 from xdg import BaseDirectory
 
-from NSTrain_lib.dialog import Dialog
-from NSTrain_lib.traveldetails import TravelDetails
+from nstrain.dialog import Dialog
+from nstrain.traveldetails import TravelDetails
 
 class TravelPlanner:
 	def __init__(self, builder, station_store, station_list, splashwindow):

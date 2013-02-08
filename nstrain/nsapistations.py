@@ -5,7 +5,7 @@ import os, sys
 import urllib2
 import xml.dom.minidom
 
-from NSTrain_lib.dialog import Dialog
+from nstrain.dialog import Dialog
 
 class NsApiStations:
 	def __init__(self, splashwindow):

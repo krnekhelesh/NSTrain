@@ -10,13 +10,13 @@ import xml.dom.minidom
 from xdg import BaseDirectory
 
 # User Imports
-from NSTrain_lib.nsapistations import NsApiStations
-from NSTrain_lib.departuretrains import DepartureTrains
-from NSTrain_lib.travelplanner import TravelPlanner
-from NSTrain_lib.dialog import Dialog
-from NSTrain_lib.help import show_uri, get_help_uri
-from NSTrain_lib.splash import Splash
-from NSTrain_lib.preferences import Preferences
+from nstrain.nsapistations import NsApiStations
+from nstrain.departuretrains import DepartureTrains
+from nstrain.travelplanner import TravelPlanner
+from nstrain.dialog import Dialog
+from nstrain.help import show_uri, get_help_uri
+from nstrain.splash import Splash
+from nstrain.preferences import Preferences
 from time import sleep
 
 # Glade UI file paths
