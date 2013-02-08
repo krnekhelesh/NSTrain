@@ -24,6 +24,7 @@ MAIN_UI_FILE = "data/ui/main.ui"
 ABOUT_UI_FILE = "data/ui/about.ui"
 START_WIZARD_UI_FILE = "data/ui/startwizard.ui"
 
+# Color used to invalidate user input
 COLOR_INVALID = Color(50000, 0, 0) # A dark red color
 
 class nstrain:
