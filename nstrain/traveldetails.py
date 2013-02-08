@@ -32,21 +32,17 @@ class TravelDetails:
 		self.traveloption_tree = self.builder4.get_object('treeview2')		
 		self.traveloption_tree.set_model(self.traveloption_store)
 
-		self.departuretimecolumn = Gtk.TreeViewColumn(" Departure Time", Gtk.CellRendererText(), markup=0)
+		self.departuretimecolumn = Gtk.TreeViewColumn("Departure Time", Gtk.CellRendererText(), markup=0)
 		self.departuretimecolumn.set_expand(True)
-		self.departuretimecolumn.set_alignment(0.5)
 
-		self.arrivaltimecolumn = Gtk.TreeViewColumn(" Arrival Time", Gtk.CellRendererText(), markup=1)
+		self.arrivaltimecolumn = Gtk.TreeViewColumn("Arrival Time", Gtk.CellRendererText(), markup=1)
 		self.arrivaltimecolumn.set_expand(True)
-		self.arrivaltimecolumn.set_alignment(0.5)
 
-		self.transfercolumn = Gtk.TreeViewColumn(" Transfers Time", Gtk.CellRendererText(), markup=2)
+		self.transfercolumn = Gtk.TreeViewColumn("Transfers", Gtk.CellRendererText(), markup=2)
 		self.transfercolumn.set_expand(True)
-		self.transfercolumn.set_alignment(0.5)
 
-		self.traveltimecolumn = Gtk.TreeViewColumn(" Travel Time", Gtk.CellRendererText(), markup=3)
+		self.traveltimecolumn = Gtk.TreeViewColumn("Travel Time", Gtk.CellRendererText(), markup=3)
 		self.traveltimecolumn.set_expand(True)
-		self.traveltimecolumn.set_alignment(0.5)
 
 		self.rowcolumn = Gtk.TreeViewColumn(" Row Index ", Gtk.CellRendererText(), text=4)
 		self.rowcolumn.set_visible(False)
@@ -67,19 +63,15 @@ class TravelDetails:
 
 		self.timecolumn = Gtk.TreeViewColumn("Time", Gtk.CellRendererText(), markup=0)
 		self.timecolumn.set_expand(True)
-		self.timecolumn.set_alignment(0.5)
 
 		self.stationcolumn = Gtk.TreeViewColumn("Station", Gtk.CellRendererText(), markup=1)
 		self.stationcolumn.set_expand(True)
-		self.stationcolumn.set_alignment(0.5)
 
 		self.platformcolumn = Gtk.TreeViewColumn("Platform", Gtk.CellRendererText(), markup=2)
 		self.platformcolumn.set_expand(True)
-		self.platformcolumn.set_alignment(0.5)
 
 		self.traintypecolumn = Gtk.TreeViewColumn("Train Type", Gtk.CellRendererText(), markup=3)
 		self.traintypecolumn.set_expand(True)
-		self.traintypecolumn.set_alignment(0.5)
 
 		self.travelstop_tree.append_column(self.timecolumn)
 		self.travelstop_tree.append_column(self.stationcolumn)
