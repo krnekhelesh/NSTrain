@@ -3,9 +3,10 @@ NSTrain
 
 NSTrain is a train Scheduler for NS Railways. It provides current train travel information. NPlease note that this application is my own personal project and is in no way officially affliated with NS. 
 
-At the moment, there is no launchpad PPA nor a .deb file. The easiest way to run the application is by,
-+ ```git clone git://github.com/krnekhelesh/NSTrain.git```
-+ Then run ```python nstrain.py``` from the directory where you cloned the repository into.
+The easiest way to run NSTrain is by adding the PPA and then installing it from there. The PPA support both Ubuntu 12.04 (Precise) and Ubuntu 12.10 (Quantal).
+
++ ```sudo add-apt-repository ppa:nik90/nstrain && sudo apt-get update && sudo apt-get install nstrain```
++ Search for nstrain in the Unity dash and run it.
 
 The configuration file used by NSTrain is stored at *~/.config/NSTrain*. Delete that file if you want to start fresh.
 
