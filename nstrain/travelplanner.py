@@ -65,6 +65,10 @@ Hang in there for us please.
 
 		self.tostation_entry = builder.get_object('entry4')
 		self.tostation_entry.set_completion(station_completion4)
+		self.tostation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "mail-send-receive-symbolic")
+		self.tostation_entry.set_icon_activatable(Gtk.EntryIconPosition.SECONDARY, True)
+		self.tostation_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, "Swap from and to stations")
+		self.tostation_entry.connect("icon-press", self.transfer_station)
 
 		t = datetime.time(datetime.now())
 		self.time_hour_entry = builder.get_object('spinbutton1')
@@ -86,6 +90,11 @@ Hang in there for us please.
 		self.departure_time_chosen = builder.get_object('radiobutton1')
 		self.arrival_time_chosen = builder.get_object('radiobutton2')
 
+	def transfer_station(self, entry, position, user_data):
+		self.temp_name = self.fromstation_entry.get_text()
+		self.fromstation_entry.set_text(self.tostation_entry.get_text())
+		self.tostation_entry.set_text(self.temp_name)
+
 	# Function to check if the input fields are filled appropriately and only then expose the plan my travel button
 	def check_travel_planner(self, station_list):
 		self.fromcheck = 0
@@ -105,20 +114,26 @@ Hang in there for us please.
 		if self.fromcheck != 1:
 			self.fromstation_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
 			self.fromstation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "emblem-important-symbolic")
+			self.fromstation_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, "Incorrect station name")
 			if self.fromstation_name_entry == "":
 				self.fromstation_entry.set_text("Departure Station")
 		else:
 			self.fromstation_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
 			self.fromstation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, None)
+			self.fromstation_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, None)
 
 		if self.tocheck != 1:
 			self.tostation_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
 			self.tostation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "emblem-important-symbolic")
+			self.tostation_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, "Incorrect station name")
+			self.tostation_entry.set_icon_activatable(Gtk.EntryIconPosition.SECONDARY, False)
 			if self.tostation_name_entry == "":
 				self.tostation_entry.set_text("Arrival Station")
 		else:
 			self.tostation_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
-			self.tostation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, None)
+			self.tostation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "mail-send-receive-symbolic")
+			self.tostation_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, "Swap from and to stations")
+			self.tostation_entry.set_icon_activatable(Gtk.EntryIconPosition.SECONDARY, True)
 
 		if self.fromcheck == 1 and self.tocheck == 1:
 			return 1
