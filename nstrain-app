@@ -166,17 +166,21 @@ Hang in there for us please. The program will now quit.
 				self.wizard_station_entry.set_text("Enter preferred departure station")
 			self.wizard_station_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
 			self.wizard_station_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "emblem-important-symbolic")
+			self.wizard_station_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, "Incorrect station name")
 		else:
 			self.wizard_station_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
 			self.wizard_station_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, None)
+			self.wizard_station_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, None)
 
 		if self.writename == "" or self.writename == "Enter your name":
 			self.name_entry.set_text("Enter your name")
 			self.name_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
 			self.name_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "emblem-important-symbolic")
+			self.name_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, "Enter name")
 		else:
 			self.name_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
 			self.name_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, None)
+			self.name_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, None)
 
 		if self.writename != "" and self.check == 1 and self.writename != "Enter your name":
 			return 1
