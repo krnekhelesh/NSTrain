@@ -62,7 +62,6 @@
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">NSTrain</property>
-    <property name="resizable">False</property>
     <property name="window_position">center</property>
     <property name="icon">../media/app-icon.png</property>
     <property name="has_resize_grip">False</property>
@@ -212,12 +211,13 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="toolbar_style">both-horiz</property>
+            <property name="show_arrow">False</property>
             <child>
               <object class="GtkRadioToolButton" id="toolbutton1">
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">15</property>
+                <property name="margin_left">20</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="use_action_appearance">False</property>
@@ -273,7 +273,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_right">15</property>
+                <property name="margin_right">25</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="use_action_appearance">False</property>
@@ -289,7 +289,7 @@
             </child>
           </object>
           <packing>
-            <property name="expand">True</property>
+            <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
@@ -309,8 +309,7 @@
                 <property name="can_focus">False</property>
                 <property name="margin_left">15</property>
                 <property name="margin_right">15</property>
-                <property name="margin_top">15</property>
-                <property name="margin_bottom">15</property>
+                <property name="margin_top">10</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="label21">
@@ -333,7 +332,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="margin_left">15</property>
-                    <property name="margin_right">15</property>
                     <property name="margin_top">5</property>
                     <property name="invisible_char">•</property>
                     <property name="placeholder_text">Departure Station</property>
@@ -366,7 +364,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="margin_left">15</property>
-                    <property name="margin_right">15</property>
                     <property name="margin_top">5</property>
                     <property name="invisible_char">•</property>
                     <property name="placeholder_text">Via Station (Optional)</property>
@@ -399,7 +396,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="margin_left">15</property>
-                    <property name="margin_right">15</property>
                     <property name="margin_top">5</property>
                     <property name="invisible_char">•</property>
                     <property name="placeholder_text">Arrival Station</property>
@@ -432,14 +428,13 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">15</property>
-                    <property name="margin_right">15</property>
                     <property name="margin_top">5</property>
+                    <property name="spacing">15</property>
                     <child>
                       <object class="GtkSpinButton" id="spinbutton3">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="tooltip_text" translatable="yes">year</property>
-                        <property name="margin_right">15</property>
                         <property name="invisible_char">•</property>
                         <property name="xalign">0.5</property>
                         <property name="placeholder_text">yyyy</property>
@@ -459,7 +454,6 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="tooltip_text" translatable="yes">month</property>
-                        <property name="margin_right">15</property>
                         <property name="invisible_char">•</property>
                         <property name="xalign">0.5</property>
                         <property name="placeholder_text">mm</property>
@@ -522,14 +516,13 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">15</property>
-                    <property name="margin_right">15</property>
                     <property name="margin_top">5</property>
+                    <property name="spacing">15</property>
                     <child>
                       <object class="GtkSpinButton" id="spinbutton1">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="tooltip_text" translatable="yes">hour</property>
-                        <property name="margin_right">15</property>
                         <property name="invisible_char">•</property>
                         <property name="xalign">0.5</property>
                         <property name="adjustment">adjustment1</property>
@@ -573,6 +566,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_top">15</property>
+                    <property name="spacing">10</property>
                     <child>
                       <object class="GtkRadioButton" id="radiobutton1">
                         <property name="label" translatable="yes">Departure</property>
@@ -585,7 +579,7 @@
                         <property name="draw_indicator">True</property>
                       </object>
                       <packing>
-                        <property name="expand">True</property>
+                        <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">0</property>
                       </packing>
@@ -603,7 +597,7 @@
                         <property name="group">radiobutton1</property>
                       </object>
                       <packing>
-                        <property name="expand">True</property>
+                        <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">1</property>
                       </packing>
@@ -619,7 +613,6 @@
                   <object class="GtkButtonBox" id="buttonbox1">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_right">15</property>
                     <property name="margin_top">15</property>
                     <property name="layout_style">end</property>
                     <child>
@@ -633,14 +626,14 @@
                         <property name="use_action_appearance">False</property>
                       </object>
                       <packing>
-                        <property name="expand">True</property>
+                        <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">11</property>
                   </packing>
@@ -661,14 +654,15 @@
               <object class="GtkBox" id="box2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">15</property>
+                <property name="margin_right">15</property>
+                <property name="margin_top">10</property>
+                <property name="margin_bottom">15</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkEntry" id="entry1">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="margin_left">15</property>
-                    <property name="margin_right">15</property>
-                    <property name="margin_top">10</property>
                     <property name="invisible_char">•</property>
                     <property name="placeholder_text">Departure Station</property>
                   </object>
@@ -682,8 +676,6 @@
                   <object class="GtkScrolledWindow" id="scrolledwindow1">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="margin_left">15</property>
-                    <property name="margin_right">15</property>
                     <property name="margin_top">10</property>
                     <property name="shadow_type">in</property>
                     <property name="min_content_height">200</property>
@@ -711,8 +703,6 @@
                   <object class="GtkToolbar" id="toolbar2">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">15</property>
-                    <property name="margin_right">15</property>
                     <property name="toolbar_style">icons</property>
                     <property name="icon_size">1</property>
                     <child>
@@ -814,26 +804,9 @@
             </child>
           </object>
           <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkStatusbar" id="statusbar1">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_left">15</property>
-            <property name="margin_right">15</property>
-            <property name="margin_top">5</property>
-            <property name="margin_bottom">5</property>
-            <property name="orientation">vertical</property>
-            <property name="spacing">2</property>
-          </object>
-          <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">3</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>

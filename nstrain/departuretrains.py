@@ -26,15 +26,15 @@ class DepartureTrains:
 
 		self.timecolumn = Gtk.TreeViewColumn("Time", Gtk.CellRendererText(), markup=0)
 		self.timecolumn.set_expand(True)
-		self.timecolumn.set_alignment(0.5)
+		# self.timecolumn.set_alignment(0.5)
 
 		self.tocolumn = Gtk.TreeViewColumn("To", Gtk.CellRendererText(), markup=1)
 		self.tocolumn.set_expand(True)
-		self.tocolumn.set_alignment(0.5)		
+		# self.tocolumn.set_alignment(0.5)		
 		
 		self.trackcolumn = Gtk.TreeViewColumn("Track", Gtk.CellRendererText(), text=2)
 		self.trackcolumn.set_expand(True)
-		self.trackcolumn.set_alignment(0.5)
+		# self.trackcolumn.set_alignment(0.5)
 
 		self.deptrain_tree.append_column(self.timecolumn)
 		self.deptrain_tree.append_column(self.tocolumn)

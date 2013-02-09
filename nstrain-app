@@ -24,8 +24,12 @@ MAIN_UI_FILE = "data/ui/main.ui"
 ABOUT_UI_FILE = "data/ui/about.ui"
 START_WIZARD_UI_FILE = "data/ui/startwizard.ui"
 
-# Color used to invalidate user input
+# CONSTANTS
 COLOR_INVALID = Color(50000, 0, 0) # A dark red color
+TRAVELPLANNER_WIDTH = 450
+TRAVELPLANNER_HEIGHT = 450
+DEPARTURES_WIDTH = 600
+DEPARTURES_HEIGTH = 475
 
 class nstrain:
 	# Iniatialising Function
@@ -58,7 +62,10 @@ class nstrain:
 		self.about_dialog = self.builder2.get_object('aboutdialog')
 
 		self.window = self.builder.get_object('window')
-		self.window.set_size_request(650, 475)
+		# self.window.set_size_request(650, 475)
+		# self.window.set_size_request(400, 475)
+		self.window.set_default_size(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
+
 		self.menu_pref = self.builder.get_object('menuitem5')
 		self.main_notebook = self.builder.get_object('notebook1')
 		self.toolbar_travelplanner = self.builder.get_object('toolbutton1')
@@ -225,18 +232,23 @@ Hang in there for us please. The program will now quit.
 			self.station_store.append([self.stat.station_list[stationname][0], self.stat.station_list[stationname][1]])
 
 	def show_travelplanner(self, button):
+		self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
 		self.main_notebook.set_current_page(0)
 
 	def show_departures(self, button):
+		self.window.resize(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
+		# self.window.set_position(Gtk.WindowPosition.CENTER)
 		self.main_notebook.set_current_page(1)
 
 	def quick_show(self, menu_item, obj, button_id):
 		if button_id == "Departures":
+			self.window.resize(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
 			self.main_notebook.set_current_page(1)
 			self.toolbar_departures.set_active(True)
 			self.toolbar_travelplanner.set_active(False)
 
 		if button_id == "Travelplanner":
+			self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
 			self.main_notebook.set_current_page(0)
 			self.toolbar_travelplanner.set_active(True)
 			self.toolbar_departures.set_active(False)
