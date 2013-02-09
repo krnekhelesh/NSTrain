@@ -21,6 +21,11 @@ class TravelDetails:
 		context = toolbar.get_style_context()
 		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
 
+		details_toolbar = self.builder4.get_object('toolbar2')
+		dep_context = details_toolbar.get_style_context()
+		dep_context.add_class(Gtk.STYLE_CLASS_INLINE_TOOLBAR)
+		details_toolbar.set_name('DetailsTool')
+
 		self.start = 0
 		self.end = 5
 		self.startpage = 1

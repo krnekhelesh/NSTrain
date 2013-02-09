@@ -62,8 +62,7 @@ class nstrain:
 		self.about_dialog = self.builder2.get_object('aboutdialog')
 
 		self.window = self.builder.get_object('window')
-		# self.window.set_size_request(650, 475)
-		# self.window.set_size_request(400, 475)
+		self.window.set_name('MyWindow')
 		self.window.set_default_size(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
 
 		self.menu_pref = self.builder.get_object('menuitem5')
@@ -72,9 +71,69 @@ class nstrain:
 		self.toolbar_departures = self.builder.get_object('toolbutton2')
 
 		toolbar = self.builder.get_object('toolbar1')
+		toolbar.set_name('MyMainToolbar')
 		context = toolbar.get_style_context()
 		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
 
+		style_provider = Gtk.CssProvider()
+		#background: #3E3D3A;
+		css = """
+		.primary-toolbar.toolbar GtkToolButton,
+		.primary-toolbar.toolbar .button {
+			-GtkToolbar-button-relief: none;
+		    border-radius: 0 3px 3px 0;
+		    border-style: solid;
+		    padding: 1px;
+		    border-width: 1px 1px 1px 0;
+    		-unico-inner-stroke-width: 1px;
+			-unico-outer-stroke-width: 1px;
+		}
+
+		.primary-toolbar.toolbar .button *:active,
+		.primary-toolbar.toolbar GtkToolButton .button:active {
+			background-image: -gtk-gradient (linear, left top, left bottom,
+                                     		from (shade (@dark_bg_color, 0.9)),
+                                     		to (shade (@dark_bg_color, 0.95)));
+
+		    text-shadow: 0 -1 shade (@dark_bg_color, 0.6);
+		    -unico-outer-stroke-width: 1px 0 1px 0;
+		    -unico-outer-stroke-gradient: -gtk-gradient (linear, left top, left bottom,
+		                                                 from (alpha (shade (@bg_color, 0.05), 0.01)),
+		                                                 to (alpha (shade (@bg_color, 0.05), 0.03)));
+		}
+
+		.primary-toolbar.toolbar .button:nth-child(first),
+		.primary-toolbar.toolbar GtkToolButton:nth-child(first) .button {
+		    border-radius: 3px 0 0 3px;
+		    border-width: 1px 0 1px 1px;
+		    -unico-outer-stroke-width: 1px 0 1px 1px;
+		}
+
+		.primary-toolbar.toolbar .button:nth-child(last),
+		.primary-toolbar.toolbar GtkToolButton:nth-child(last) .button {
+		    border-radius: 3px 3px 3px 3px;
+		    border-width: 1px 1px 1px 1px;
+		    -unico-outer-stroke-width: 1px 1px 1px 1px;
+		}
+
+		#DepTool GtkButton {
+			border-radius: 1px 1px 1px 1px;			
+			border-width: 1px 1px 1px 1px;
+		}
+
+		#DetailsTool GtkButton {
+			border-radius: 1px 1px 1px 1px;			
+			border-width: 1px 1px 1px 1px;
+		}
+		"""
+		style_provider.load_from_data(css)
+
+		Gtk.StyleContext.add_provider_for_screen(
+		    Gdk.Screen.get_default(), 
+		    style_provider,     
+		    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+		)
+		
 		# Unity Dynamic Lists
 		self.launcher = Unity.LauncherEntry.get_for_desktop_id("nstrain.desktop")
 		self.quicklist = Dbusmenu.Menuitem.new()
@@ -237,7 +296,6 @@ Hang in there for us please. The program will now quit.
 
 	def show_departures(self, button):
 		self.window.resize(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
-		# self.window.set_position(Gtk.WindowPosition.CENTER)
 		self.main_notebook.set_current_page(1)
 
 	def quick_show(self, menu_item, obj, button_id):

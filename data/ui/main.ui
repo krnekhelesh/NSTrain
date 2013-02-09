@@ -237,7 +237,6 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">5</property>
                 <property name="margin_right">5</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
@@ -704,6 +703,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="toolbar_style">icons</property>
+                    <property name="show_arrow">False</property>
                     <property name="icon_size">1</property>
                     <child>
                       <object class="GtkToolButton" id="toolbutton4">
@@ -725,7 +725,8 @@
                       <object class="GtkToolButton" id="toolbutton5">
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can_focus">True</property>
+                        <property name="has_focus">True</property>
                         <property name="tooltip_text" translatable="yes">Show later trains</property>
                         <property name="use_action_appearance">False</property>
                         <property name="label" translatable="yes">Later</property>
@@ -744,30 +745,16 @@
                         <property name="can_focus">False</property>
                         <property name="use_action_appearance">False</property>
                         <child>
-                          <placeholder/>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="homogeneous">True</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkToolItem" id="toolbutton7">
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_action_appearance">False</property>
-                        <child>
                           <object class="GtkLabel" id="label20">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="xalign">1</property>
                             <property name="label" translatable="yes">0 of 0</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="homogeneous">True</property>
                       </packing>
                     </child>

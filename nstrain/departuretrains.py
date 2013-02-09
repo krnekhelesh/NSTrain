@@ -16,6 +16,11 @@ class DepartureTrains:
 		if self.train_list == []:
 			print "[ERROR]: Empty departure train list %s" % self.train_list
 
+		departure_toolbar = builder.get_object('toolbar2')
+		dep_context = departure_toolbar.get_style_context()
+		dep_context.add_class(Gtk.STYLE_CLASS_INLINE_TOOLBAR)
+		departure_toolbar.set_name('DepTool')
+
 		self.station_entry = builder.get_object('entry1')
 		self.station_entry.set_completion(station_completion)
 		self.station_entry.connect("activate", self.get_departure_station_entry, station_list)
@@ -26,15 +31,12 @@ class DepartureTrains:
 
 		self.timecolumn = Gtk.TreeViewColumn("Time", Gtk.CellRendererText(), markup=0)
 		self.timecolumn.set_expand(True)
-		# self.timecolumn.set_alignment(0.5)
 
 		self.tocolumn = Gtk.TreeViewColumn("To", Gtk.CellRendererText(), markup=1)
 		self.tocolumn.set_expand(True)
-		# self.tocolumn.set_alignment(0.5)		
 		
 		self.trackcolumn = Gtk.TreeViewColumn("Track", Gtk.CellRendererText(), text=2)
 		self.trackcolumn.set_expand(True)
-		# self.trackcolumn.set_alignment(0.5)
 
 		self.deptrain_tree.append_column(self.timecolumn)
 		self.deptrain_tree.append_column(self.tocolumn)
