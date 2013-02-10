@@ -69,9 +69,10 @@ class nstrain:
 		self.main_notebook = self.builder.get_object('notebook1')
 		self.toolbar_travelplanner = self.builder.get_object('toolbutton1')
 		self.toolbar_departures = self.builder.get_object('toolbutton2')
+		self.toolbar_preference = self.builder.get_object('preferences')
+		self.toolbar_custom = self.builder.get_object('toolbutton3')
 
 		toolbar = self.builder.get_object('toolbar1')
-		toolbar.set_name('MyMainToolbar')
 		context = toolbar.get_style_context()
 		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
 
@@ -185,6 +186,16 @@ Hang in there for us please. The program will now quit.
 			self.prefbutton = self.builder.get_object('preferences')
 			self.prefbutton.connect("clicked", self.userpref.show_window)
 			self.menu_pref.connect("activate", self.userpref.show_window)
+
+			if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/application_state"):
+				pass
+			else:
+				self.toolbar_travelplanner.set_visible_horizontal(False)
+				self.toolbar_departures.set_visible_horizontal(False)
+				self.toolbar_preference.set_visible_horizontal(False)
+				self.toolbar_custom.set_visible_horizontal(False)
+				self.main_notebook.set_current_page(2)
+				self.window.set_default_size(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT-250)
 
 			# Check for user_info configuration file. If not present then show the start wizard
 			if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
