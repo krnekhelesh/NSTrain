@@ -35,10 +35,10 @@ class nstrain:
 	# Iniatialising Function
 	def __init__(self):
 		self.splashwindow = Splash()
-		self.splashwindow.show_splash()
-		while Gtk.events_pending():
-			Gtk.main_iteration()
-		sleep(3)
+		# self.splashwindow.show_splash()
+		# while Gtk.events_pending():
+		# 	Gtk.main_iteration()
+		# sleep(3)
 
 		# Importing the Glade user interface files and their objects
 		self.builder = Gtk.Builder()
@@ -162,9 +162,8 @@ class nstrain:
 		self.launcher.set_property("quicklist", self.quicklist)	
 
 		# Gathering Stations codes (after authentication) and populating the station_store (before the startup wizard)
-		self.stat = NsApiStations(self.splashwindow)
+		self.stat = NsApiStations()
 		if self.stat.station_list == []:
-			self.splashwindow.hide_splash()
 			print "[ERROR]: Station list %s" % self.stat.station_list
 			show_dialog = Dialog()
 			show_dialog.error_dialog("Oops!","API Error", '''It seems that the website ns.nl has changed the API required to access the data.
@@ -203,20 +202,18 @@ Hang in there for us please. The program will now quit.
 				except:
 					print "[ERROR]: Departure failed"
 				try:
-					self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.splashwindow)
+					self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list)
 				except:
 					print "[ERROR]: Travel planner failed"
 				self.travelplanner_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
 				self.departures_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
 				self.preferences_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
 				self.window.show_all()
-				self.splashwindow.hide_splash()
 			else:
 				print 
 				print "[INFO] : Start Wizard starting"
 				print
 				self.start_wizard.show_all()
-				self.splashwindow.hide_splash()
 
 	# Function to check if the input fields are filled appropriately and only then expose the continue button
 	def check_start_wizard_done(self):
