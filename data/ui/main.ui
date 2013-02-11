@@ -225,7 +225,6 @@
                 <property name="label" translatable="yes">Travel Planner</property>
                 <property name="use_underline">True</property>
                 <property name="icon_name">find-location-symbolic</property>
-                <signal name="toggled" handler="show_travelplanner" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -246,7 +245,6 @@
                 <property name="use_underline">True</property>
                 <property name="icon_name">emblem-shared-symbolic</property>
                 <property name="group">toolbutton1</property>
-                <signal name="toggled" handler="show_departures" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -265,25 +263,6 @@
               </object>
               <packing>
                 <property name="expand">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="preferences">
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_right">25</property>
-                <property name="margin_top">10</property>
-                <property name="margin_bottom">10</property>
-                <property name="use_action_appearance">False</property>
-                <property name="is_important">True</property>
-                <property name="label" translatable="yes">Preferences</property>
-                <property name="use_underline">True</property>
-                <property name="icon_name">emblem-system-symbolic</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
               </packing>
             </child>
           </object>
@@ -868,7 +847,6 @@
                             <property name="use_action_appearance">False</property>
                             <property name="relief">none</property>
                             <property name="xalign">0</property>
-                            <signal name="clicked" handler="welcome_show_travelplanner" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>

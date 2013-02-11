@@ -32,119 +32,7 @@ class nstrain:
 	def __init__(self):
 		self.stat = NsApiStations()
 
-		self.builder = Gtk.Builder()
-		self.builder.add_from_file(MAIN_UI_FILE)
-		self.builder.connect_signals(self)
-
-		self.builder2 = Gtk.Builder()
-		self.builder2.add_from_file(ABOUT_UI_FILE)
-		self.builder2.connect_signals(self)
-
-		self.about_dialog = self.builder2.get_object('aboutdialog')
-
-		self.window = self.builder.get_object('window')
-		self.window.set_name('MyWindow')
-		self.window.set_default_size(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
-
-		self.menu_pref = self.builder.get_object('menuitem5')
-		self.main_notebook = self.builder.get_object('notebook1')
-		self.toolbar_travelplanner = self.builder.get_object('toolbutton1')
-		self.toolbar_departures = self.builder.get_object('toolbutton2')
-		self.toolbar_preference = self.builder.get_object('preferences')
-		self.toolbar_custom = self.builder.get_object('toolbutton3')
-
-		toolbar = self.builder.get_object('toolbar1')
-		context = toolbar.get_style_context()
-		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
-
-		style_provider = Gtk.CssProvider()
-		#background: #3E3D3A;
-		css = """
-		.primary-toolbar.toolbar GtkToolButton,
-		.primary-toolbar.toolbar .button {
-			-GtkToolbar-button-relief: none;
-		    border-radius: 0 3px 3px 0;
-		    border-style: solid;
-		    padding: 1px;
-		    border-width: 1px 1px 1px 0;
-    		-unico-inner-stroke-width: 1px;
-			-unico-outer-stroke-width: 1px;
-		}
-
-		.primary-toolbar.toolbar .button *:active,
-		.primary-toolbar.toolbar GtkToolButton .button:active {
-			background-image: -gtk-gradient (linear, left top, left bottom,
-                                     		from (shade (@dark_bg_color, 0.9)),
-                                     		to (shade (@dark_bg_color, 0.95)));
-
-		    text-shadow: 0 -1 shade (@dark_bg_color, 0.6);
-		    -unico-outer-stroke-width: 1px 0 1px 0;
-		    -unico-outer-stroke-gradient: -gtk-gradient (linear, left top, left bottom,
-		                                                 from (alpha (shade (@bg_color, 0.05), 0.01)),
-		                                                 to (alpha (shade (@bg_color, 0.05), 0.03)));
-		}
-
-		.primary-toolbar.toolbar .button:nth-child(first),
-		.primary-toolbar.toolbar GtkToolButton:nth-child(first) .button {
-		    border-radius: 3px 0 0 3px;
-		    border-width: 1px 0 1px 1px;
-		    -unico-outer-stroke-width: 1px 0 1px 1px;
-		}
-
-		.primary-toolbar.toolbar .button:nth-child(last),
-		.primary-toolbar.toolbar GtkToolButton:nth-child(last) .button {
-		    border-radius: 3px 3px 3px 3px;
-		    border-width: 1px 1px 1px 1px;
-		    -unico-outer-stroke-width: 1px 1px 1px 1px;
-		}
-
-		#DepTool GtkButton {
-			border-radius: 1px 1px 1px 1px;			
-			border-width: 1px 1px 1px 1px;
-		}
-
-		#DetailsTool GtkButton {
-			border-radius: 1px 1px 1px 1px;			
-			border-width: 1px 1px 1px 1px;
-		}
-		"""
-		style_provider.load_from_data(css)
-
-		Gtk.StyleContext.add_provider_for_screen(
-		    Gdk.Screen.get_default(), 
-		    style_provider,     
-		    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-		)
-		
-		# Unity Dynamic Lists
-		self.launcher = Unity.LauncherEntry.get_for_desktop_id("nstrain.desktop")
-		self.quicklist = Dbusmenu.Menuitem.new()
-
-		self.travelplanner_menu_item = Dbusmenu.Menuitem.new()
-		self.travelplanner_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Travel Planner")
-		self.travelplanner_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
-		self.travelplanner_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, False)
-		self.travelplanner_menu_item.connect('item_activated', self.quick_show, "Travelplanner")
-
-		self.departures_menu_item = Dbusmenu.Menuitem.new()
-		self.departures_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Departures")
-		self.departures_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
-		self.departures_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, False)
-		self.departures_menu_item.connect('item_activated', self.quick_show, "Departures")
-
-		self.preferences_menu_item = Dbusmenu.Menuitem.new()
-		self.preferences_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Preferences")
-		self.preferences_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
-		self.preferences_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, False)
-		self.preferences_menu_item.connect('item_activated', self.quick_show, "Preferences")
-
-		self.quicklist.child_append(self.travelplanner_menu_item)
-		self.quicklist.child_append(self.departures_menu_item)
-		self.quicklist.child_append(self.preferences_menu_item)
-		self.launcher.set_property("quicklist", self.quicklist)	
-
 		# Gathering Stations codes (after authentication) and populating the station_store (before the startup wizard)
-		# self.stat = NsApiStations()
 		if self.stat.station_list == []:
 			print "[ERROR]: Station list %s" % self.stat.station_list
 			show_dialog = Dialog()
@@ -155,25 +43,136 @@ Hang in there for us please. The program will now quit.
 
 <span style="italic">Error Info: Empty Station List %s</span>''' % self.stat.station_list)
 			sys.exit(0)
-		else:
+		else:			
+
+			self.builder = Gtk.Builder()
+			self.builder.add_from_file(MAIN_UI_FILE)
+			self.builder.connect_signals(self)
+
+			self.builder2 = Gtk.Builder()
+			self.builder2.add_from_file(ABOUT_UI_FILE)
+			self.builder2.connect_signals(self)
+
+			self.about_dialog = self.builder2.get_object('aboutdialog')
+
+			self.window = self.builder.get_object('window')
+			self.window.set_name('MyWindow')
+			self.window.set_default_size(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
+
+			self.main_notebook = self.builder.get_object('notebook1')
+			self.toolbar_travelplanner = self.builder.get_object('toolbutton1')
+			self.toolbar_travelplanner.connect("toggled", self.toolbar_show, "TravelPlanner")
+			self.toolbar_departures = self.builder.get_object('toolbutton2')
+			self.toolbar_departures.connect("toggled", self.toolbar_show, "Departures")
+			self.toolbar_custom = self.builder.get_object('toolbutton3')
+
+			toolbar = self.builder.get_object('toolbar1')
+			context = toolbar.get_style_context()
+			context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
+
+			self.welcome_travelplanner = self.builder.get_object('button1')
+			self.welcome_travelplanner.connect("clicked", self.welcome_show, "TravelPlanner")
+			self.welcome_departures = self.builder.get_object('button2')
+			self.welcome_departures.connect("clicked", self.welcome_show, "Departures")
+
+			style_provider = Gtk.CssProvider()
+			#background: #3E3D3A;
+			css = """
+			.primary-toolbar.toolbar GtkToolButton,
+			.primary-toolbar.toolbar .button {
+				-GtkToolbar-button-relief: none;
+			    border-radius: 0 3px 3px 0;
+			    border-style: solid;
+			    padding: 1px;
+			    border-width: 1px 1px 1px 0;
+	    		-unico-inner-stroke-width: 1px;
+				-unico-outer-stroke-width: 1px;
+			}
+
+			.primary-toolbar.toolbar .button *:active,
+			.primary-toolbar.toolbar GtkToolButton .button:active {
+				background-image: -gtk-gradient (linear, left top, left bottom,
+	                                     		from (shade (@dark_bg_color, 0.9)),
+	                                     		to (shade (@dark_bg_color, 0.95)));
+
+			    text-shadow: 0 -1 shade (@dark_bg_color, 0.6);
+			    -unico-outer-stroke-width: 1px 0 1px 0;
+			    -unico-outer-stroke-gradient: -gtk-gradient (linear, left top, left bottom,
+			                                                 from (alpha (shade (@bg_color, 0.05), 0.01)),
+			                                                 to (alpha (shade (@bg_color, 0.05), 0.03)));
+			}
+
+			.primary-toolbar.toolbar .button:nth-child(first),
+			.primary-toolbar.toolbar GtkToolButton:nth-child(first) .button {
+			    border-radius: 3px 0 0 3px;
+			    border-width: 1px 0 1px 1px;
+			    -unico-outer-stroke-width: 1px 0 1px 1px;
+			}
+
+			.primary-toolbar.toolbar .button:nth-child(last),
+			.primary-toolbar.toolbar GtkToolButton:nth-child(last) .button {
+			    border-radius: 3px 3px 3px 3px;
+			    border-width: 1px 1px 1px 1px;
+			    -unico-outer-stroke-width: 1px 1px 1px 1px;
+			}
+
+			#DepTool GtkButton {
+				border-radius: 1px 1px 1px 1px;			
+				border-width: 1px 1px 1px 1px;
+			}
+
+			#DetailsTool GtkButton {
+				border-radius: 1px 1px 1px 1px;			
+				border-width: 1px 1px 1px 1px;
+			}
+			"""
+			style_provider.load_from_data(css)
+
+			Gtk.StyleContext.add_provider_for_screen(
+			    Gdk.Screen.get_default(), 
+			    style_provider,     
+			    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+			)
+			
+			# Unity Dynamic Lists
+			self.launcher = Unity.LauncherEntry.get_for_desktop_id("nstrain.desktop")
+			self.quicklist = Dbusmenu.Menuitem.new()
+
+			self.travelplanner_menu_item = Dbusmenu.Menuitem.new()
+			self.travelplanner_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Travel Planner")
+			self.travelplanner_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
+			self.travelplanner_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
+			self.travelplanner_menu_item.connect('item_activated', self.quick_show, "Travelplanner")
+
+			self.departures_menu_item = Dbusmenu.Menuitem.new()
+			self.departures_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Departures")
+			self.departures_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
+			self.departures_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
+			self.departures_menu_item.connect('item_activated', self.quick_show, "Departures")
+
+			self.overview_menu_item = Dbusmenu.Menuitem.new()
+			self.overview_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Overview")
+			self.overview_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
+			self.overview_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
+			self.overview_menu_item.connect('item_activated', self.quick_show, "Overview")
+
+			self.quicklist.child_append(self.travelplanner_menu_item)
+			self.quicklist.child_append(self.departures_menu_item)
+			self.quicklist.child_append(self.overview_menu_item)
+			self.launcher.set_property("quicklist", self.quicklist)	
+
 			self.station_model_populate()
 			self.station_completion = self.builder.get_object('completion1')
 			self.station_completion.set_model(self.station_store)
 			self.station_completion.set_text_column(0)
 
-			self.toolbar_travelplanner.set_visible_horizontal(False)
-			self.toolbar_departures.set_visible_horizontal(False)
-			self.toolbar_preference.set_visible_horizontal(False)
-			self.toolbar_custom.set_visible_horizontal(False)
+			self.toolbar_visible(False)
 			self.main_notebook.set_current_page(2)
 			self.window.set_default_size(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT-250)
 
 			self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.station_completion)
 			self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list)
 
-			self.travelplanner_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
-			self.departures_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
-			self.preferences_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
 			self.window.show_all()
 
 	# Function to populate station model
@@ -182,37 +181,54 @@ Hang in there for us please. The program will now quit.
 		for stationname in range(len(self.stat.station_list)):
 			self.station_store.append([self.stat.station_list[stationname][0], self.stat.station_list[stationname][1]])
 
-	def welcome_show_travelplanner(self, button):
-		self.toolbar_travelplanner.set_visible_horizontal(True)
-		self.toolbar_departures.set_visible_horizontal(True)
-		self.toolbar_preference.set_visible_horizontal(True)
-		self.toolbar_custom.set_visible_horizontal(True)
-		self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
-		self.main_notebook.set_current_page(0)
+	def toolbar_visible(self, state):
+		self.toolbar_travelplanner.set_visible_horizontal(state)
+		self.toolbar_departures.set_visible_horizontal(state)
+		self.toolbar_custom.set_visible_horizontal(state)
 
-	def show_travelplanner(self, button):
-		self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
-		self.main_notebook.set_current_page(0)
+	def welcome_show(self, button, button_id):
+		if button_id == "TravelPlanner":
+			self.toolbar_visible(True)
+			self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
+			self.toolbar_travelplanner.set_active(True)
+			self.toolbar_departures.set_active(False)
+			self.main_notebook.set_current_page(0)
 
-	def show_departures(self, button):
-		self.window.resize(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
-		self.main_notebook.set_current_page(1)
+		if button_id == "Departures":
+			self.toolbar_visible(True)
+			self.window.resize(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
+			self.toolbar_departures.set_active(True)
+			self.toolbar_travelplanner.set_active(False)
+			self.main_notebook.set_current_page(1)
 
-	def quick_show(self, menu_item, obj, button_id):
+	def toolbar_show(self, button, button_id):
+		if button_id == "TravelPlanner":
+			self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
+			self.main_notebook.set_current_page(0)
+			
 		if button_id == "Departures":
 			self.window.resize(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
 			self.main_notebook.set_current_page(1)
+
+	def quick_show(self, menu_item, obj, button_id):
+		if button_id == "Departures":
+			self.toolbar_visible(True)
+			self.window.resize(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
 			self.toolbar_departures.set_active(True)
 			self.toolbar_travelplanner.set_active(False)
+			self.main_notebook.set_current_page(1)			
 
 		if button_id == "Travelplanner":
+			self.toolbar_visible(True)
 			self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
-			self.main_notebook.set_current_page(0)
 			self.toolbar_travelplanner.set_active(True)
 			self.toolbar_departures.set_active(False)
+			self.main_notebook.set_current_page(0)			
 			
-		if button_id == "Preferences":
-			self.userpref.quick_show_window()
+		if button_id == "Overview":
+			self.toolbar_visible(False)
+			self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT-250)
+			self.main_notebook.set_current_page(2)
 
 	# Function to display the about dialog
 	def about_function(self, window):
