@@ -166,16 +166,7 @@ class TravelPlanner:
 
 			url = url + '&' + 'dateTime=%s-%s-%sT%s:%s' % (year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
 
-			try:
-				if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
-					open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info")
-					pref_temp = open_user_pref.readlines()
-					hispeed = pref_temp[2].split('\n')[0]
-					open_user_pref.close()
-					if hispeed:
-						url = url + '&' + 'hslAllowed=true'
-			except:
-				pass
+			# url = url + '&' + 'hslAllowed=true'
 
 			print "[DEBUG]: search url is %s" % url
 

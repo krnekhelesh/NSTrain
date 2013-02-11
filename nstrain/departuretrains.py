@@ -7,7 +7,7 @@ import xml.dom.minidom
 
 class DepartureTrains:
 	# Iniatialising Function (first authenticate, get ui objects, load user config)
-	def __init__(self, builder, station_list, user_station, station_completion):
+	def __init__(self, builder, station_list, station_completion):
 		self.departure_xml_init()
 
 		departure_toolbar = builder.get_object('toolbar2')
