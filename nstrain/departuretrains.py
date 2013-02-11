@@ -9,12 +9,6 @@ class DepartureTrains:
 	# Iniatialising Function (first authenticate, get ui objects, load user config)
 	def __init__(self, builder, station_list, user_station, station_completion):
 		self.departure_xml_init()
-		self.departure_url = 'http://webservices.ns.nl/ns-api-avt?station=UT'
-		departure_xml = self.get_departure_xml(self.departure_url)
-		self.handle_departure_xml(departure_xml)
-
-		if self.train_list == []:
-			print "[ERROR]: Empty departure train list %s" % self.train_list
 
 		departure_toolbar = builder.get_object('toolbar2')
 		dep_context = departure_toolbar.get_style_context()
@@ -43,39 +37,17 @@ class DepartureTrains:
 		self.deptrain_tree.append_column(self.trackcolumn)
 
 		for i in range(0, 5):
-			self.deptrain_store.append(["Time","Train","Track"])
-			#print "deptrain store appending with Time, Train, Track..."
+			self.deptrain_store.append(["","",""])
 		
 		self.next_deptrain_button = builder.get_object('toolbutton5')
 		self.prev_deptrain_button = builder.get_object('toolbutton4')
+		self.next_deptrain_button.set_sensitive(False)
+		self.prev_deptrain_button.set_sensitive(False)
 		self.next_deptrain_button.connect("clicked", self.next_departure)
 		self.prev_deptrain_button.connect("clicked", self.prev_departure)
 
 		self.pagelabel = builder.get_object('label20')
-
-		try:
-			print "[INFO] : Trying to load user departure station trains"
-			self.station_entry.set_text("%s" % user_station) 
-			for stationname in range(len(station_list)):
-				if user_station == station_list[stationname][0]:
-					user_station_code = station_list[stationname][1]
-
-			self.user_search_url = 'http://webservices.ns.nl/ns-api-avt?station=%s' % user_station_code
-			user_departure_xml = self.get_departure_xml(self.user_search_url)
-			self.handle_departure_xml(user_departure_xml)
-
-			self.start = 0
-			self.end = 5
-			self.startpage = 1
-			self.endpage = len(self.train_list)/5
-			self.pagelabel.set_text("%s of %s" % (self.startpage, self.endpage))
-			self.get_departure_time()
-			self.get_departure_train()
-			self.get_departure_track()
-			print "[INFO] : Loaded trains departing from user departure station: %s,  %s" % (user_station, user_station_code)
-		except:
-			print "[ERROR]: Invalid user station name!"
-			print "[DEBUG]: User Departure Station Name: %s" % user_station
+		self.pagelabel.set_text("- of -")
 
 	# Function to get the departure input from the entry box and display results properly
 	def get_departure_station_entry(self, entry, station_list):
@@ -101,6 +73,8 @@ class DepartureTrains:
 			self.get_departure_time()
 			self.get_departure_train()
 			self.get_departure_track()
+			self.next_deptrain_button.set_sensitive(True)
+			self.prev_deptrain_button.set_sensitive(True)
 		except:
 			print "[ERROR]: Invalid station name!"
 

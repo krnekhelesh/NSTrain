@@ -15,35 +15,14 @@ from nstrain.traveldetails import TravelDetails
 class TravelPlanner:
 	def __init__(self, builder, station_store, station_list):
 		self.travelplanner_xml_init()
-		self.travelplanner_url = 'http://webservices.ns.nl/ns-api-treinplanner?fromStation=DT&toStation=UT'
-		travelplanner_xml = self.get_travelplanner_xml(self.travelplanner_url)
-		self.handle_travelplanner_xml(travelplanner_xml)
 
 		self.travel = TravelDetails()
 
 		self.statustext = builder.get_object('label26')
-		self.statusflag = 0
-
-		#for i in range(len(self.travelplanner_list)):
-		#	print "[Meldings] %s" % self.travelplanner_list[i][0]
 
 		self.searchbutton = builder.get_object('button3')
 		self.searchbutton.set_sensitive( True )
 		self.searchbutton.connect("clicked", self.on_search_clicked, station_list)
-
-		if self.travelplanner_list == []:
-			# splashwindow.hide_splash()
-			print "[ERROR]: API Error, empty travel_planner list %s" % self.travelplanner_list
-			show_dialog7 = Dialog()
-			show_dialog7.error_dialog("Oops!","API Error", '''It seems that the website ns.nl has changed the API required to access the data.
-This should either be resolved online or by a new version update of NSTrain. 
-
-Hang in there for us please.
-
-<span style="italic">Error Info: Empty Travel Planner List %s</span>''' % self.travelplanner_list)
-			self.statustext.set_markup('''<span foreground="red" weight="bold">Please note that the travel planner is temporarily unavailable. Please try again later</span>''')
-			self.statusflag = 1
-			self.searchbutton.set_label("Search Disabled!")
 
 		station_completion2 = builder.get_object('completion2')
 		station_completion2.set_model(station_store)
@@ -201,7 +180,7 @@ Hang in there for us please.
 			print "[DEBUG]: search url is %s" % url
 
 			# ensuring that these two inputs are valid since they are required for the API call
-			if fromstation_code != "INIT" and tostation_code != "INIT" and self.statusflag == 0:
+			if fromstation_code != "INIT" and tostation_code != "INIT":
 				try:
 					travelplanner_xml = self.get_travelplanner_xml(url)
 					self.handle_travelplanner_xml(travelplanner_xml)
