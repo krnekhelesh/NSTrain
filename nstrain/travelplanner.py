@@ -6,7 +6,7 @@ import os
 import sys
 import urllib2
 import xml.dom.minidom
-from datetime import datetime
+from datetime import datetime, timedelta
 from xdg import BaseDirectory
 
 from nstrain.dialog import Dialog
@@ -49,25 +49,29 @@ class TravelPlanner:
 		self.tostation_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, "Swap from and to stations")
 		self.tostation_entry.connect("icon-press", self.transfer_station)
 
-		t = datetime.time(datetime.now())
-		self.time_hour_entry = builder.get_object('spinbutton1')
-		self.time_hour_entry.set_value(t.hour)
-		
-		self.time_minute_entry = builder.get_object('spinbutton2')
-		self.time_minute_entry.set_value(t.minute)
+		self.traveltime_store = Gtk.ListStore(str)
+		self.traveltime_store.append(["Departure"])
+		self.traveltime_store.append(["Arrival"])
+		self.traveltime = builder.get_object('comboboxtext1')
+		self.traveltime.set_model(self.traveltime_store)
+		self.traveltime.set_active(0)
 
-		d = datetime.date(datetime.now())
-		self.year_entry = builder.get_object('spinbutton3')
-		self.year_entry.set_value(d.year)
+		self.date_store = Gtk.ListStore(str)
+		self.date_store.append(["Today"])
+		self.date_store.append(["Tomorrow"])
+		self.date = builder.get_object('comboboxtext2')
+		self.date.set_entry_text_column(0)		
+		self.date.set_model(self.date_store)
+		self.date.set_active(0)
 
-		self.month_entry = builder.get_object('spinbutton4')
-		self.month_entry.set_value(d.month)
-
-		self.date_entry = builder.get_object('spinbutton5')
-		self.date_entry.set_value(d.day)
-
-		self.departure_time_chosen = builder.get_object('radiobutton1')
-		self.arrival_time_chosen = builder.get_object('radiobutton2')
+		self.time_store = Gtk.ListStore(str)
+		self.time_store.append(["Now"])
+		self.time_store.append(["+ 15 minutes"])
+		self.time_store.append(["+ 30 minutes"])
+		self.time_store.append(["+ 1 hour"])
+		self.time = builder.get_object('comboboxtext3')
+		self.time.set_model(self.time_store)
+		self.time.set_active(0)
 
 	def transfer_station(self, entry, position, user_data):
 		self.temp_name = self.fromstation_entry.get_text()
@@ -125,15 +129,74 @@ class TravelPlanner:
 
 		if self.travel_flag == 1:
 			flag = 0
+			date_list = []
+			time_list = []
 
 			fromstation_name_entry = self.fromstation_entry.get_text()
 			viastation_name_entry = self.viastation_entry.get_text()
 			tostation_name_entry = self.tostation_entry.get_text()
-			time_hour_name_entry = self.time_hour_entry.get_value_as_int()
-			time_minute_name_entry = self.time_minute_entry.get_value_as_int()
-			year_name_entry = self.year_entry.get_value_as_int()
-			month_name_entry = self.month_entry.get_value_as_int()
-			day_name_entry = self.date_entry.get_value_as_int()
+
+			date_tree_iter = self.date.get_active_iter()
+			if date_tree_iter != None:
+				model = self.date.get_model()
+				date_entry = model[date_tree_iter][0]
+				# print date_entry
+			else:
+				entry = self.date.get_child()
+				date_entry = entry.get_text()
+				# print "Entered Date: %s" % date_entry
+
+			d = datetime.date(datetime.now())
+			if date_entry == "Today":				
+				day_name_entry = d.day
+				month_name_entry = d.month
+				year_name_entry = d.year				
+			elif date_entry == "Tomorrow":
+				d_new = d + timedelta(days=1)
+				day_name_entry = d_new.day
+				month_name_entry = d_new.month
+				year_name_entry = d_new.year			
+			else:
+				date_list = date_entry.split('-')
+				year_name_entry = int(date_list[0])
+				month_name_entry = int(date_list[1])
+				day_name_entry = int(date_list[2])
+
+			# print "Precieved Date: %s-%s-%s" % (year_name_entry, month_name_entry, day_name_entry)
+
+			time_tree_iter = self.time.get_active_iter()
+			if time_tree_iter != None:
+				model = self.time.get_model()
+				time_entry = model[time_tree_iter][0]
+				# print time_entry
+			else:
+				entry = self.time.get_child()
+				time_entry = entry.get_text()
+				# print "Entered Time: %s" % date_entry
+
+			t = datetime.time(datetime.now())
+			t_temp = datetime(year_name_entry, month_name_entry, day_name_entry, t.hour, t.minute)
+			if time_entry == "Now":				
+				time_hour_name_entry = t.hour
+				time_minute_name_entry = t.minute
+			elif time_entry == "+ 15 minutes":
+				t_new = t_temp + timedelta(minutes=15)
+				time_hour_name_entry = t_new.hour
+				time_minute_name_entry = t_new.minute
+			elif time_entry == "+ 30 minutes":
+				t_new = t_temp + timedelta(minutes=30)
+				time_hour_name_entry = t_new.hour
+				time_minute_name_entry = t_new.minute
+			elif time_entry == "+ 1 hour":
+				t_new = t_temp + timedelta(hours=1)
+				time_hour_name_entry = t_new.hour
+				time_minute_name_entry = t_new.minute
+			else:
+				time_list = time_entry.split(':')
+				time_hour_name_entry = int(time_list[0])
+				time_minute_name_entry = int(time_list[1])
+
+			# print "Preceived Time: %s:%s" % (time_hour_name_entry, time_minute_name_entry)
 
 			fromstation_code = "INIT"
 			tostation_code = "INIT"
@@ -159,13 +222,18 @@ class TravelPlanner:
 			if viastation_code != "INIT":
 				url = url + '&' + 'viaStation=%s' % viastation_code
 
-			if self.departure_time_chosen.get_active():
+			traveltime_tree_iter = self.traveltime.get_active_iter()
+			model = self.traveltime.get_model()
+			traveltime_type = model[traveltime_tree_iter][0]
+			# print traveltime_type
+
+			if traveltime_type == "Departure":
 				url = url + '&' + 'departure=true'
 			else:
 				url = url + '&' + 'departure=false'
 
 			url = url + '&' + 'dateTime=%s-%s-%sT%s:%s' % (year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
-
+			
 			# url = url + '&' + 'hslAllowed=true'
 
 			print "[DEBUG]: search url is %s" % url

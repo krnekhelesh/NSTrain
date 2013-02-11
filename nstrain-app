@@ -23,9 +23,11 @@ ABOUT_UI_FILE = "data/ui/about.ui"
 # CONSTANTS
 COLOR_INVALID = Color(50000, 0, 0) # A dark red color
 TRAVELPLANNER_WIDTH = 450
-TRAVELPLANNER_HEIGHT = 450
+TRAVELPLANNER_HEIGHT = 300
 DEPARTURES_WIDTH = 600
 DEPARTURES_HEIGTH = 475
+OVERVIEW_WIDTH = 450
+OVERVIEW_HEIGHT = 375
 
 class nstrain:
 	# Iniatialising Function
@@ -168,7 +170,7 @@ Hang in there for us please. The program will now quit.
 
 			self.toolbar_visible(False)
 			self.main_notebook.set_current_page(2)
-			self.window.set_default_size(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT-250)
+			self.window.set_default_size(OVERVIEW_WIDTH, OVERVIEW_HEIGHT)
 
 			self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.station_completion)
 			self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list)
@@ -205,7 +207,7 @@ Hang in there for us please. The program will now quit.
 		if button_id == "TravelPlanner":
 			self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
 			self.main_notebook.set_current_page(0)
-			
+
 		if button_id == "Departures":
 			self.window.resize(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
 			self.main_notebook.set_current_page(1)
@@ -227,7 +229,7 @@ Hang in there for us please. The program will now quit.
 			
 		if button_id == "Overview":
 			self.toolbar_visible(False)
-			self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT-250)
+			self.window.resize(OVERVIEW_WIDTH, OVERVIEW_HEIGHT)
 			self.main_notebook.set_current_page(2)
 
 	# Function to display the about dialog
