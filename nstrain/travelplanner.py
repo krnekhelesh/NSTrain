@@ -222,6 +222,8 @@ class TravelPlanner:
 			if viastation_code != "INIT":
 				url = url + '&' + 'viaStation=%s' % viastation_code
 
+			url = url + '&' + 'previousAdvices=0'
+
 			traveltime_tree_iter = self.traveltime.get_active_iter()
 			model = self.traveltime.get_model()
 			traveltime_type = model[traveltime_tree_iter][0]
