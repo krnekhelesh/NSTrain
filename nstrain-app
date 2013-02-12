@@ -82,44 +82,6 @@ Hang in there for us please. The program will now quit.
 			style_provider = Gtk.CssProvider()
 			#background: #3E3D3A;
 			css = """
-			.primary-toolbar.toolbar GtkToolButton,
-			.primary-toolbar.toolbar .button {
-				-GtkToolbar-button-relief: none;
-			    border-radius: 0 0 0 0;
-			    border-style: solid;
-			    padding: 1px;
-			    border-width: 1px 0px 1px 0;
-	    		-unico-inner-stroke-width: 1px;
-				-unico-outer-stroke-width: 1px;
-			}
-
-			.primary-toolbar.toolbar .button *:active,
-			.primary-toolbar.toolbar GtkToolButton .button:active {
-				background-image: -gtk-gradient (linear, left top, left bottom,
-	                                     		from (shade (@dark_bg_color, 0.9)),
-	                                     		to (shade (@dark_bg_color, 0.95)));
-
-			    text-shadow: 0 -1 shade (@dark_bg_color, 0.6);
-			    -unico-outer-stroke-width: 1px 0 1px 0;
-			    -unico-outer-stroke-gradient: -gtk-gradient (linear, left top, left bottom,
-			                                                 from (alpha (shade (@bg_color, 0.05), 0.01)),
-			                                                 to (alpha (shade (@bg_color, 0.05), 0.03)));
-			}
-
-			.primary-toolbar.toolbar .button:nth-child(first),
-			.primary-toolbar.toolbar GtkToolButton:nth-child(first) .button {
-			    border-radius: 3px 0 0 3px;
-			    border-width: 1px 0 1px 1px;
-			    -unico-outer-stroke-width: 1px 0 1px 1px;
-			}
-
-			.primary-toolbar.toolbar .button:nth-child(last),
-			.primary-toolbar.toolbar GtkToolButton:nth-child(last) .button {
-			    border-radius: 3px 3px 3px 3px;
-			    border-width: 1px 1px 1px 1px;
-			    -unico-outer-stroke-width: 1px 1px 1px 1px;
-			}
-
 			#DepTool GtkButton {
 				border-radius: 1px 1px 1px 1px;			
 				border-width: 1px 1px 1px 1px;
