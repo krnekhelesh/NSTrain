@@ -13,7 +13,7 @@ from nstrain.dialog import Dialog
 from nstrain.traveldetails import TravelDetails
 
 class TravelPlanner:
-	def __init__(self, builder, station_store, station_list):
+	def __init__(self, builder, station_store, station_list, favouriteplan):
 		self.travelplanner_xml_init()
 
 		self.travel = TravelDetails()
@@ -73,10 +73,23 @@ class TravelPlanner:
 		self.time.set_model(self.time_store)
 		self.time.set_active(0)
 
+		self.savetravelplan_button = builder.get_object('button5')
+		self.savetravelplan_button.connect('clicked', self.savetravelplan, favouriteplan, station_list)
+
 	def transfer_station(self, entry, position, user_data):
 		self.temp_name = self.fromstation_entry.get_text()
 		self.fromstation_entry.set_text(self.tostation_entry.get_text())
 		self.tostation_entry.set_text(self.temp_name)
+
+	def savetravelplan(self, button, favouriteplan, station_list):
+		self.saveplan_flag = self.check_travel_planner(station_list)
+
+		fromstation_name_entry = self.fromstation_entry.get_text()
+		viastation_name_entry = self.viastation_entry.get_text()
+		tostation_name_entry = self.tostation_entry.get_text()
+
+		if self.saveplan_flag == 1:
+			favouriteplan.show_window(fromstation_name_entry, tostation_name_entry, viastation_name_entry)
 
 	# Function to check if the input fields are filled appropriately and only then expose the plan my travel button
 	def check_travel_planner(self, station_list):
