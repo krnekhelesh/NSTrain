@@ -21,9 +21,13 @@ class LoadTravelPlan:
 		favourite_toolbar = self.builder.get_object('toolbar1')
 		fav_context = favourite_toolbar.get_style_context()
 		fav_context.add_class(Gtk.STYLE_CLASS_INLINE_TOOLBAR)
+		favourite_toolbar.set_name('FavTool')
 
-		self.load = self.builder.get_object('toolbutton6')
-		self.load.connect("clicked", self.setplandetails)
+		self.toolbar_delete = self.builder.get_object('toolbutton3')
+		self.toolbar_delete.connect("clicked", self.deleteplan)
+
+		self.toolbar_load = self.builder.get_object('toolbutton6')
+		self.toolbar_load.connect("clicked", self.setplandetails)
 
 		self.fav_store = Gtk.ListStore(str, int)
 		self.fav_tree = self.builder.get_object('treeview1')
@@ -38,25 +42,42 @@ class LoadTravelPlan:
 		self.fav_tree.append_column(self.favcolumn)
 		self.fav_tree.append_column(self.favnum)
 
-		for i in range(0,5):
-			self.fav_store.append(["", 0])
+	# Function to delete the current favourite travel plan selected by the user. It then writes the changes to the file
+	def deleteplan(self, button):
+		selection = self.fav_tree.get_selection()
+		selection.set_mode(Gtk.SelectionMode.BROWSE)
+		plan_model, plan_iter = selection.get_selected()
 
-		self.name_entry = self.builder.get_object('entry1')
+		if plan_iter != None:
+			row_index = plan_model[plan_iter][1]
+		
+		self.write_favourite_plan_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/favourite_plans", "w")
+		for i in range(len(self.read_fav)):
+			if i != row_index:
+				self.write_favourite_plan_file.write(self.read_fav[i])
 
+		self.write_favourite_plan_file.close()
+		self.loadplan()
+
+	# Function to read the file and gather the favourite travel plans. It then stores it in a GtkStore.
 	def loadplan(self):
 		self.read_temp = []
-		i = 0
+		self.read_fav = []
+
+		for i in range(len(self.fav_store)):
+			self.fav_store[i][0] = ""
+			self.fav_store[i][1] = 0
 		
 		self.read_favourite_plan_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/favourite_plans", "r")
 		self.read_fav = self.read_favourite_plan_file.readlines()
 		self.read_favourite_plan_file.close()
 
-		#read_temp.append(read_fav[0].split('|')[0])
-
 		for i in range(len(self.read_fav)):
 			self.read_temp.append(self.read_fav[i].split('|'))
 
 		for i in range(len(self.read_temp)):
+			if len(self.fav_store) < len(self.read_temp):
+				self.fav_store.append()
 			if self.read_temp[i][3] != "INIT":
 				self.fav_store[i][0] = ('''<span weight="bold">%s</span>
 %s to %s
@@ -66,6 +87,7 @@ via %s''' % (self.read_temp[i][0], self.read_temp[i][1], self.read_temp[i][2], s
 %s to %s''' % (self.read_temp[i][0], self.read_temp[i][1], self.read_temp[i][2]))
 			self.fav_store[i][1] = i			
 
+	# Function to get the currently selected travel plan and then insert it into the entry fields.
 	def setplandetails(self, button):
 		selection = self.fav_tree.get_selection()
 		selection.set_mode(Gtk.SelectionMode.BROWSE)

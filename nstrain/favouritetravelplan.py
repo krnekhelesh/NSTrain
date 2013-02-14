@@ -33,6 +33,7 @@ class FavouriteTravelPlan:
 		self.viastation = viastation
 		self.window.show_all()
 
+	# Function to gather the entry inputs from the user and save the travel plan to the file
 	def saveplan(self, button):
 		self.name = self.name_entry.get_text()
 		if self.viastation == "":

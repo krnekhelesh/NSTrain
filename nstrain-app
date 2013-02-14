@@ -90,6 +90,11 @@ Hang in there for us please. The program will now quit.
 				border-width: 1px 1px 1px 1px;
 			}
 
+			#FavTool GtkButton {
+				border-radius: 1px 1px 1px 1px;			
+				border-width: 1px 1px 1px 1px;
+			}
+
 			#DetailsTool GtkButton {
 				border-radius: 1px 1px 1px 1px;			
 				border-width: 1px 1px 1px 1px;

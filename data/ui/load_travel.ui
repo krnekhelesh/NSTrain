@@ -10,14 +10,14 @@
         <property name="can_focus">False</property>
         <property name="margin_left">25</property>
         <property name="margin_right">25</property>
-        <property name="margin_top">25</property>
+        <property name="margin_top">15</property>
         <property name="margin_bottom">25</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel" id="label1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_bottom">10</property>
+            <property name="margin_bottom">12</property>
             <property name="xalign">0</property>
             <property name="label" translatable="yes">Your favourite travel plans are listed below. Choose the one you want 
 to use and press load.</property>
@@ -37,6 +37,7 @@ to use and press load.</property>
               <object class="GtkTreeView" id="treeview1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="rules_hint">True</property>
                 <child internal-child="selection">
                   <object class="GtkTreeSelection" id="treeview-selection1"/>
                 </child>
@@ -56,21 +57,6 @@ to use and press load.</property>
             <property name="toolbar_style">icons</property>
             <property name="icon_size">1</property>
             <child>
-              <object class="GtkToolButton" id="toolbutton4">
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="use_action_appearance">False</property>
-                <property name="label" translatable="yes">Add favourite plan</property>
-                <property name="use_underline">True</property>
-                <property name="icon_name">list-add-symbolic</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkToolButton" id="toolbutton3">
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
@@ -82,21 +68,6 @@ to use and press load.</property>
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolItem" id="toolbutton5">
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="use_action_appearance">False</property>
-                <child>
-                  <placeholder/>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">True</property>
                 <property name="homogeneous">True</property>
               </packing>
             </child>

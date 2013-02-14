@@ -15,7 +15,6 @@ from nstrain.traveldetails import TravelDetails
 class TravelPlanner:
 	def __init__(self, builder, station_store, station_list, favouriteplan, loadplan):
 		self.travelplanner_xml_init()
-
 		self.travel = TravelDetails()
 
 		station_completion2 = builder.get_object('completion2')
@@ -70,7 +69,6 @@ class TravelPlanner:
 		self.statustext = builder.get_object('label26')
 
 		self.searchbutton = builder.get_object('button3')
-		self.searchbutton.set_sensitive( True )
 		self.searchbutton.connect("clicked", self.on_search_clicked, station_list)
 
 		self.loadtravelplan_button = builder.get_object('button6')
@@ -86,10 +84,6 @@ class TravelPlanner:
 
 	def loadtravelplan(self, button, loadplan):
 		loadplan.show_window2(self.fromstation_entry, self.tostation_entry, self.viastation_entry)
-		# fromstation, tostation, viastation = loadplan.getplandetails()
-		# self.fromstation_entry.set_text(fromstation)
-		# self.tostation_entry.set_text(tostation)
-		# self.viastation_entry.set_text(viastation)
 
 	def savetravelplan(self, button, favouriteplan, station_list):
 		self.saveplan_flag = self.check_travel_planner(station_list)
