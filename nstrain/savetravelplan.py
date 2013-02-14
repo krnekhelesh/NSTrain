@@ -7,7 +7,7 @@ from xdg import BaseDirectory
 
 UI_FILE = "data/ui/save_travel.ui"
 
-class FavouriteTravelPlan:
+class SaveTravelPlan:
 	def __init__(self):
 		self.builder = Gtk.Builder()
 		self.builder.add_from_file(UI_FILE)

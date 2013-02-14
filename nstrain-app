@@ -15,7 +15,7 @@ from nstrain.departuretrains import DepartureTrains
 from nstrain.travelplanner import TravelPlanner
 from nstrain.dialog import Dialog
 from nstrain.help import show_uri, get_help_uri
-from nstrain.favouritetravelplan import FavouriteTravelPlan
+from nstrain.savetravelplan import SaveTravelPlan
 from nstrain.loadtravelplan import LoadTravelPlan
 
 # Glade UI file paths
@@ -171,11 +171,11 @@ Hang in there for us please. The program will now quit.
 				self.window.set_default_size(OVERVIEW_WIDTH, OVERVIEW_HEIGHT)
 				self.window.set_title("NSTrain - Overview")
 
-			self.favouriteplan = FavouriteTravelPlan()
+			self.saveplan = SaveTravelPlan()
 			self.loadplan = LoadTravelPlan()
 			self.welcome_favourite.connect("clicked", self.loadplan.show_window)
 			self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.station_completion)
-			self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.favouriteplan, self.loadplan)
+			self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.saveplan, self.loadplan)
 
 			self.window.show_all()
 
