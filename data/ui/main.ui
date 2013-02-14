@@ -461,7 +461,7 @@
                     <property name="layout_style">end</property>
                     <child>
                       <object class="GtkButton" id="button5">
-                        <property name="label" translatable="yes">Save Journey</property>
+                        <property name="label" translatable="yes">Save Travel Plan</property>
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -472,6 +472,21 @@
                         <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="button6">
+                        <property name="label" translatable="yes">Load Travel Plan</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_action_appearance">False</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
@@ -487,7 +502,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                   </object>
@@ -871,7 +886,7 @@
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkButton" id="button4">
-                            <property name="label" translatable="yes">Favorite user journeys</property>
+                            <property name="label" translatable="yes">Favorite travel plans</property>
                             <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>

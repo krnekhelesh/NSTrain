@@ -38,7 +38,7 @@ class FavouriteTravelPlan:
 		if self.viastation == "":
 			self.viastation = "INIT"
 		write_favourite_plan_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/favourite_plans", "a")
-		write_favourite_plan_file.write("%s|%s|%s|%s \n" % (self.name, self.fromstation, self.tostation, self.viastation))
+		write_favourite_plan_file.write("%s|%s|%s|%s|\n" % (self.name, self.fromstation, self.tostation, self.viastation))
 		write_favourite_plan_file.close()
 		self.window.hide()
 

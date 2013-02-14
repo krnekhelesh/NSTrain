@@ -16,6 +16,7 @@ from nstrain.travelplanner import TravelPlanner
 from nstrain.dialog import Dialog
 from nstrain.help import show_uri, get_help_uri
 from nstrain.favouritetravelplan import FavouriteTravelPlan
+from nstrain.loadtravelplan import LoadTravelPlan
 
 # Glade UI file paths
 MAIN_UI_FILE = "data/ui/main.ui"
@@ -79,6 +80,7 @@ Hang in there for us please. The program will now quit.
 			self.welcome_travelplanner.connect("clicked", self.welcome_show, "TravelPlanner")
 			self.welcome_departures = self.builder.get_object('button2')
 			self.welcome_departures.connect("clicked", self.welcome_show, "Departures")
+			self.welcome_favourite = self.builder.get_object('button4')
 
 			style_provider = Gtk.CssProvider()
 			#background: #3E3D3A;
@@ -165,8 +167,10 @@ Hang in there for us please. The program will now quit.
 				self.window.set_title("NSTrain - Overview")
 
 			self.favouriteplan = FavouriteTravelPlan()
+			self.loadplan = LoadTravelPlan()
+			self.welcome_favourite.connect("clicked", self.loadplan.show_window)
 			self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.station_completion)
-			self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.favouriteplan)
+			self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.favouriteplan, self.loadplan)
 
 			self.window.show_all()
 

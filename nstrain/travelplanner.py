@@ -13,16 +13,10 @@ from nstrain.dialog import Dialog
 from nstrain.traveldetails import TravelDetails
 
 class TravelPlanner:
-	def __init__(self, builder, station_store, station_list, favouriteplan):
+	def __init__(self, builder, station_store, station_list, favouriteplan, loadplan):
 		self.travelplanner_xml_init()
 
 		self.travel = TravelDetails()
-
-		self.statustext = builder.get_object('label26')
-
-		self.searchbutton = builder.get_object('button3')
-		self.searchbutton.set_sensitive( True )
-		self.searchbutton.connect("clicked", self.on_search_clicked, station_list)
 
 		station_completion2 = builder.get_object('completion2')
 		station_completion2.set_model(station_store)
@@ -73,6 +67,15 @@ class TravelPlanner:
 		self.time.set_model(self.time_store)
 		self.time.set_active(0)
 
+		self.statustext = builder.get_object('label26')
+
+		self.searchbutton = builder.get_object('button3')
+		self.searchbutton.set_sensitive( True )
+		self.searchbutton.connect("clicked", self.on_search_clicked, station_list)
+
+		self.loadtravelplan_button = builder.get_object('button6')
+		self.loadtravelplan_button.connect('clicked', self.loadtravelplan, loadplan)
+
 		self.savetravelplan_button = builder.get_object('button5')
 		self.savetravelplan_button.connect('clicked', self.savetravelplan, favouriteplan, station_list)
 
@@ -80,6 +83,13 @@ class TravelPlanner:
 		self.temp_name = self.fromstation_entry.get_text()
 		self.fromstation_entry.set_text(self.tostation_entry.get_text())
 		self.tostation_entry.set_text(self.temp_name)
+
+	def loadtravelplan(self, button, loadplan):
+		loadplan.show_window2(self.fromstation_entry, self.tostation_entry, self.viastation_entry)
+		# fromstation, tostation, viastation = loadplan.getplandetails()
+		# self.fromstation_entry.set_text(fromstation)
+		# self.tostation_entry.set_text(tostation)
+		# self.viastation_entry.set_text(viastation)
 
 	def savetravelplan(self, button, favouriteplan, station_list):
 		self.saveplan_flag = self.check_travel_planner(station_list)
