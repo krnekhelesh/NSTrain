@@ -8,11 +8,11 @@ import xml.dom.minidom
 from nstrain.dialog import Dialog
 
 class NsApiStations:
-	def __init__(self, splashwindow):
+	def __init__(self):
 		try:
 			self.authenticate_developer_api()
 		except Exception, e:
-			splashwindow.hide_splash()
+			# splashwindow.hide_splash()
 			print "[ERROR]: HTTP Error! NS API Stations Authentication failed!"
 			show_dialog = Dialog()
 			show_dialog.error_dialog("Oops!","HTTP Error 400", '''Unfortunately we have hit a snag. Either your internet or the website ns.nl seems

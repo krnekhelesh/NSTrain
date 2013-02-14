@@ -21,6 +21,11 @@ class TravelDetails:
 		context = toolbar.get_style_context()
 		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
 
+		details_toolbar = self.builder4.get_object('toolbar2')
+		dep_context = details_toolbar.get_style_context()
+		dep_context.add_class(Gtk.STYLE_CLASS_INLINE_TOOLBAR)
+		details_toolbar.set_name('DetailsTool')
+
 		self.start = 0
 		self.end = 5
 		self.startpage = 1
@@ -32,21 +37,17 @@ class TravelDetails:
 		self.traveloption_tree = self.builder4.get_object('treeview2')		
 		self.traveloption_tree.set_model(self.traveloption_store)
 
-		self.departuretimecolumn = Gtk.TreeViewColumn(" Departure Time", Gtk.CellRendererText(), markup=0)
+		self.departuretimecolumn = Gtk.TreeViewColumn("Departure Time", Gtk.CellRendererText(), markup=0)
 		self.departuretimecolumn.set_expand(True)
-		self.departuretimecolumn.set_alignment(0.5)
 
-		self.arrivaltimecolumn = Gtk.TreeViewColumn(" Arrival Time", Gtk.CellRendererText(), markup=1)
+		self.arrivaltimecolumn = Gtk.TreeViewColumn("Arrival Time", Gtk.CellRendererText(), markup=1)
 		self.arrivaltimecolumn.set_expand(True)
-		self.arrivaltimecolumn.set_alignment(0.5)
 
-		self.transfercolumn = Gtk.TreeViewColumn(" Transfers Time", Gtk.CellRendererText(), markup=2)
+		self.transfercolumn = Gtk.TreeViewColumn("Transfers", Gtk.CellRendererText(), markup=2)
 		self.transfercolumn.set_expand(True)
-		self.transfercolumn.set_alignment(0.5)
 
-		self.traveltimecolumn = Gtk.TreeViewColumn(" Travel Time", Gtk.CellRendererText(), markup=3)
+		self.traveltimecolumn = Gtk.TreeViewColumn("Travel Time", Gtk.CellRendererText(), markup=3)
 		self.traveltimecolumn.set_expand(True)
-		self.traveltimecolumn.set_alignment(0.5)
 
 		self.rowcolumn = Gtk.TreeViewColumn(" Row Index ", Gtk.CellRendererText(), text=4)
 		self.rowcolumn.set_visible(False)
@@ -67,43 +68,26 @@ class TravelDetails:
 
 		self.timecolumn = Gtk.TreeViewColumn("Time", Gtk.CellRendererText(), markup=0)
 		self.timecolumn.set_expand(True)
-		self.timecolumn.set_alignment(0.5)
 
 		self.stationcolumn = Gtk.TreeViewColumn("Station", Gtk.CellRendererText(), markup=1)
 		self.stationcolumn.set_expand(True)
-		self.stationcolumn.set_alignment(0.5)
 
 		self.platformcolumn = Gtk.TreeViewColumn("Platform", Gtk.CellRendererText(), markup=2)
 		self.platformcolumn.set_expand(True)
-		self.platformcolumn.set_alignment(0.5)
 
 		self.traintypecolumn = Gtk.TreeViewColumn("Train Type", Gtk.CellRendererText(), markup=3)
 		self.traintypecolumn.set_expand(True)
-		self.traintypecolumn.set_alignment(0.5)
 
 		self.travelstop_tree.append_column(self.timecolumn)
 		self.travelstop_tree.append_column(self.stationcolumn)
 		self.travelstop_tree.append_column(self.platformcolumn)
 		self.travelstop_tree.append_column(self.traintypecolumn)
 
+		self.travelstop_selection = self.travelstop_tree.get_selection()
+		self.travelstop_selection.set_mode(Gtk.SelectionMode.NONE)
+
 		for i in range(0, 3):
 			self.travelstop_store.append(["Time", "Station", "Platform", "TrainType"])
-
-		# self.travelstop_time0 = self.builder4.get_object('label21')
-		# self.travelstop_time1 = self.builder4.get_object('label25')
-		# self.travelstop_time2 = self.builder4.get_object('label29')
-
-		# self.travelstop_station0 = self.builder4.get_object('label22')
-		# self.travelstop_station1 = self.builder4.get_object('label26')
-		# self.travelstop_station2 = self.builder4.get_object('label30')
-
-		# self.travelstop_platform0 = self.builder4.get_object('label23')
-		# self.travelstop_platform1 = self.builder4.get_object('label27')
-		# self.travelstop_platform2 = self.builder4.get_object('label31')
-
-		# self.travelstop_traintype0 = self.builder4.get_object('label24')
-		# self.travelstop_traintype1 = self.builder4.get_object('label28')
-		# self.travelstop_traintype2 = self.builder4.get_object('label32')
 
 		self.travelstop_warning = self.builder4.get_object('label38')
 
@@ -227,11 +211,9 @@ class TravelDetails:
 		time = "%s:%s" % (time3_temp[0], time3_temp[1])
 		if travelplanner_list[index][11] == "0":
 			delay_text = ""
-			# self.travelstop_time0.set_markup('''%s''' % time)
 			self.travelstop_store[0][0] = '''%s''' % time
 		else:
 			delay_text = "%s" % travelplanner_list[index][11]
-			# self.travelstop_time0.set_markup('''%s <span foreground="red">%s</span>''' % (time, delay_text))
 			self.travelstop_store[0][0] = '''%s <span foreground="red">%s</span>''' % (time, delay_text)
 
 		time1_temp = travelplanner_list[index][10][reisdeel_size-1][len(travelplanner_list[index][10][reisdeel_size-1])-1][1].split('T')
@@ -240,25 +222,17 @@ class TravelDetails:
 		time = "%s:%s" % (time3_temp[0], time3_temp[1])
 		if travelplanner_list[index][12] == "0":
 			delay_text = ""
-			# self.travelstop_time2.set_markup('''%s''' % time)
 			self.travelstop_store[2][0] = '''%s''' % time
 		else:
 			delay_text = "%s" % travelplanner_list[index][12]
-			# self.travelstop_time2.set_markup('''%s <span foreground="red">%s</span>''' % (time, delay_text))
 			self.travelstop_store[2][0] = '''%s <span foreground="red">%s</span>''' % (time, delay_text)
 
-		# self.travelstop_station0.set_text(travelplanner_list[index][10][1][0][0])
-		# self.travelstop_station2.set_text(travelplanner_list[index][10][reisdeel_size-1][len(travelplanner_list[index][10][reisdeel_size-1])-1][0])
 		self.travelstop_store[0][1] = travelplanner_list[index][10][1][0][0]
 		self.travelstop_store[2][1] = travelplanner_list[index][10][reisdeel_size-1][len(travelplanner_list[index][10][reisdeel_size-1])-1][0]
 
-		# self.travelstop_platform0.set_text(travelplanner_list[index][10][1][0][2])
-		# self.travelstop_platform2.set_text(travelplanner_list[index][10][reisdeel_size-1][len(travelplanner_list[index][10][reisdeel_size-1])-1][2])
 		self.travelstop_store[0][2] = travelplanner_list[index][10][1][0][2]
 		self.travelstop_store[2][2] = travelplanner_list[index][10][reisdeel_size-1][len(travelplanner_list[index][10][reisdeel_size-1])-1][2]
 
-		# self.travelstop_traintype0.set_text(travelplanner_list[index][10][0][1])
-		# self.travelstop_traintype2.set_text(travelplanner_list[index][10][reisdeel_size-2][1])
 		self.travelstop_store[0][3] = travelplanner_list[index][10][0][1]
 		self.travelstop_store[2][3] = travelplanner_list[index][10][reisdeel_size-2][1]
 
@@ -284,14 +258,10 @@ class TravelDetails:
 					pass
 				else:
 					self.traintype1 = self.traintype1 + travelplanner_list[index][10][i][1]
-
-		# self.travelstop_station1.set_text(self.station1)
+		
 		self.travelstop_store[1][1] = self.station1
-		# self.travelstop_platform1.set_text(self.platform1)
 		self.travelstop_store[1][2] = self.platform1
-		# self.travelstop_time1.set_text(self.time1)
 		self.travelstop_store[1][0] = self.time1
-		# self.travelstop_traintype1.set_text(self.traintype1)
 		self.travelstop_store[1][3] = self.traintype1
 
 	# Function to set the title, date and time which are shown at the top

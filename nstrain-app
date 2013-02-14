@@ -15,89 +15,29 @@ from nstrain.departuretrains import DepartureTrains
 from nstrain.travelplanner import TravelPlanner
 from nstrain.dialog import Dialog
 from nstrain.help import show_uri, get_help_uri
-from nstrain.splash import Splash
-from nstrain.preferences import Preferences
-from time import sleep
+from nstrain.savetravelplan import SaveTravelPlan
+from nstrain.loadtravelplan import LoadTravelPlan
 
 # Glade UI file paths
 MAIN_UI_FILE = "data/ui/main.ui"
 ABOUT_UI_FILE = "data/ui/about.ui"
-START_WIZARD_UI_FILE = "data/ui/startwizard.ui"
 
+# CONSTANTS
 COLOR_INVALID = Color(50000, 0, 0) # A dark red color
+TRAVELPLANNER_WIDTH = 450
+TRAVELPLANNER_HEIGHT = 300
+DEPARTURES_WIDTH = 600
+DEPARTURES_HEIGTH = 475
+OVERVIEW_WIDTH = 450
+OVERVIEW_HEIGHT = 375
 
 class nstrain:
 	# Iniatialising Function
 	def __init__(self):
-		self.splashwindow = Splash()
-		self.splashwindow.show_splash()
-		while Gtk.events_pending():
-			Gtk.main_iteration()
-		sleep(3)
-
-		# Importing the Glade user interface files and their objects
-		self.builder = Gtk.Builder()
-		self.builder.add_from_file(MAIN_UI_FILE)
-		self.builder.connect_signals(self)
-
-		self.builder2 = Gtk.Builder()
-		self.builder2.add_from_file(ABOUT_UI_FILE)
-		self.builder2.connect_signals(self)
-
-		self.builder3 = Gtk.Builder()
-		self.builder3.add_from_file(START_WIZARD_UI_FILE)
-		self.builder3.connect_signals(self)
-
-		self.start_wizard = self.builder3.get_object('welcome_wizard')
-		self.start_wizard.connect("destroy", self.destroy)
-		self.name_entry = self.builder3.get_object('entry1')
-		self.wizard_station_entry = self.builder3.get_object('entry2')
-		self.continue_button = self.builder3.get_object('button1')
-
-		self.about_dialog = self.builder2.get_object('aboutdialog')
-
-		self.window = self.builder.get_object('window')
-		self.window.set_size_request(650, 475)
-		self.menu_pref = self.builder.get_object('menuitem5')
-		self.main_notebook = self.builder.get_object('notebook1')
-		self.toolbar_travelplanner = self.builder.get_object('toolbutton1')
-		self.toolbar_departures = self.builder.get_object('toolbutton2')
-
-		toolbar = self.builder.get_object('toolbar1')
-		context = toolbar.get_style_context()
-		context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
-
-		# Unity Dynamic Lists
-		self.launcher = Unity.LauncherEntry.get_for_desktop_id("nstrain.desktop")
-		self.quicklist = Dbusmenu.Menuitem.new()
-
-		self.travelplanner_menu_item = Dbusmenu.Menuitem.new()
-		self.travelplanner_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Travel Planner")
-		self.travelplanner_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
-		self.travelplanner_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, False)
-		self.travelplanner_menu_item.connect('item_activated', self.quick_show, "Travelplanner")
-
-		self.departures_menu_item = Dbusmenu.Menuitem.new()
-		self.departures_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Departures")
-		self.departures_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
-		self.departures_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, False)
-		self.departures_menu_item.connect('item_activated', self.quick_show, "Departures")
-
-		self.preferences_menu_item = Dbusmenu.Menuitem.new()
-		self.preferences_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Preferences")
-		self.preferences_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
-		self.preferences_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, False)
-		self.preferences_menu_item.connect('item_activated', self.quick_show, "Preferences")
-
-		self.quicklist.child_append(self.travelplanner_menu_item)
-		self.quicklist.child_append(self.departures_menu_item)
-		self.quicklist.child_append(self.preferences_menu_item)
-		self.launcher.set_property("quicklist", self.quicklist)	
+		self.stat = NsApiStations()
 
 		# Gathering Stations codes (after authentication) and populating the station_store (before the startup wizard)
-		self.stat = NsApiStations(self.splashwindow)
 		if self.stat.station_list == []:
-			self.splashwindow.hide_splash()
 			print "[ERROR]: Station list %s" % self.stat.station_list
 			show_dialog = Dialog()
 			show_dialog.error_dialog("Oops!","API Error", '''It seems that the website ns.nl has changed the API required to access the data.
@@ -107,111 +47,137 @@ Hang in there for us please. The program will now quit.
 
 <span style="italic">Error Info: Empty Station List %s</span>''' % self.stat.station_list)
 			sys.exit(0)
-		else:
+		else:			
+
+			self.builder = Gtk.Builder()
+			self.builder.add_from_file(MAIN_UI_FILE)
+			self.builder.connect_signals(self)
+
+			self.builder2 = Gtk.Builder()
+			self.builder2.add_from_file(ABOUT_UI_FILE)
+			self.builder2.connect_signals(self)
+
+			self.about_dialog = self.builder2.get_object('aboutdialog')
+
+			self.window = self.builder.get_object('window')
+			self.window.set_name('MyWindow')
+			self.window.set_default_size(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
+
+			self.main_notebook = self.builder.get_object('notebook1')
+			self.toolbar_travelplanner = self.builder.get_object('toolbutton1')
+			self.toolbar_travelplanner.connect("toggled", self.toolbar_show, "TravelPlanner")
+			self.toolbar_departures = self.builder.get_object('toolbutton2')
+			self.toolbar_departures.connect("toggled", self.toolbar_show, "Departures")
+			self.toolbar_overview = self.builder.get_object('toolbutton7')
+			self.toolbar_overview.connect("toggled", self.toolbar_show, "Overview")
+			self.toolbar_custom = self.builder.get_object('toolbutton3')
+
+			toolbar = self.builder.get_object('toolbar1')
+			context = toolbar.get_style_context()
+			context.add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
+
+			self.welcome_travelplanner = self.builder.get_object('button1')
+			self.welcome_travelplanner.connect("clicked", self.welcome_show, "TravelPlanner")
+			self.welcome_departures = self.builder.get_object('button2')
+			self.welcome_departures.connect("clicked", self.welcome_show, "Departures")
+			self.welcome_favourite = self.builder.get_object('button4')
+
+			style_provider = Gtk.CssProvider()
+			#background: #3E3D3A;
+			css = """
+			#DepTool GtkButton {
+				border-radius: 1px 1px 1px 1px;			
+				border-width: 1px 1px 1px 1px;
+			}
+
+			#FavTool GtkButton {
+				border-radius: 1px 1px 1px 1px;			
+				border-width: 1px 1px 1px 1px;
+			}
+
+			#DetailsTool GtkButton {
+				border-radius: 1px 1px 1px 1px;			
+				border-width: 1px 1px 1px 1px;
+			}
+			"""
+			style_provider.load_from_data(css)
+
+			Gtk.StyleContext.add_provider_for_screen(
+			    Gdk.Screen.get_default(), 
+			    style_provider,     
+			    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+			)
+			
+			# Unity Dynamic Lists
+			self.launcher = Unity.LauncherEntry.get_for_desktop_id("nstrain.desktop")
+			self.quicklist = Dbusmenu.Menuitem.new()
+
+			self.travelplanner_menu_item = Dbusmenu.Menuitem.new()
+			self.travelplanner_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Travel Planner")
+			self.travelplanner_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
+			self.travelplanner_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
+			self.travelplanner_menu_item.connect('item_activated', self.quick_show, "Travelplanner")
+
+			self.departures_menu_item = Dbusmenu.Menuitem.new()
+			self.departures_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Departures")
+			self.departures_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
+			self.departures_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
+			self.departures_menu_item.connect('item_activated', self.quick_show, "Departures")
+
+			self.overview_menu_item = Dbusmenu.Menuitem.new()
+			self.overview_menu_item.property_set (Dbusmenu.MENUITEM_PROP_LABEL, "Overview")
+			self.overview_menu_item.property_set(Dbusmenu.MENUITEM_PROP_TOGGLE_TYPE, Dbusmenu.MENUITEM_TOGGLE_RADIO)
+			self.overview_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
+			self.overview_menu_item.connect('item_activated', self.quick_show, "Overview")
+
+			self.quicklist.child_append(self.travelplanner_menu_item)
+			self.quicklist.child_append(self.departures_menu_item)
+			self.quicklist.child_append(self.overview_menu_item)
+			self.launcher.set_property("quicklist", self.quicklist)	
+
 			self.station_model_populate()
 			self.station_completion = self.builder.get_object('completion1')
 			self.station_completion.set_model(self.station_store)
 			self.station_completion.set_text_column(0)
-			
-			self.wizard_station_entry.set_completion(self.station_completion)
-			
-			self.userpref = Preferences(self.station_store, self.stat.station_list)
-			self.prefbutton = self.builder.get_object('preferences')
-			self.prefbutton.connect("clicked", self.userpref.show_window)
-			self.menu_pref.connect("activate", self.userpref.show_window)
 
-			# Check for user_info configuration file. If not present then show the start wizard
-			if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
-				print 
-				print "[INFO] : Start Wizard complete"
-				print
-				self.open_user_info = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info")
-				self.readname = self.open_user_info.readline()
-				self.readname = self.readname.strip('\n')
-				self.readstation = self.open_user_info.readline()
-				self.readstation = self.readstation.strip('\n')
-				self.open_user_info.close()
-				try:
-					self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.readstation, self.station_completion)
-				except:
-					print "[ERROR]: Departure failed"
-				try:
-					self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.splashwindow)
-				except:
-					print "[ERROR]: Travel planner failed"
-				self.travelplanner_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
-				self.departures_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
-				self.preferences_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
-				self.window.show_all()
-				self.splashwindow.hide_splash()
-			else:
-				print 
-				print "[INFO] : Start Wizard starting"
-				print
-				self.start_wizard.show_all()
-				self.splashwindow.hide_splash()
+			if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/app_state"):
+				read_app_state_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/app_state", "r")
+				app_state_temp = read_app_state_file.readlines()
+				read_app_state_file.close()
+				if app_state_temp[0] == "0":
+					self.toolbar_visible(True)
+					self.main_notebook.set_current_page(0)
+					self.toolbar_travelplanner.set_active(True)
+					self.toolbar_departures.set_active(False)
+					self.toolbar_overview.set_active(False)
+					self.window.set_default_size(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
+					self.window.set_title("NSTrain - Travel Planner")
+				elif app_state_temp[0] == "1":
+					self.toolbar_visible(True)
+					self.main_notebook.set_current_page(1)
+					self.toolbar_travelplanner.set_active(False)
+					self.toolbar_departures.set_active(True)
+					self.toolbar_overview.set_active(False)
+					self.window.set_default_size(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
+					self.window.set_title("NSTrain - Departures")
+				else:
+					self.toolbar_visible(False)
+					self.main_notebook.set_current_page(2)
+					self.window.set_default_size(OVERVIEW_WIDTH, OVERVIEW_HEIGHT)
+					self.window.set_title("NSTrain - Overview")
+			else:		
+				self.toolbar_visible(False)
+				self.main_notebook.set_current_page(2)
+				self.window.set_default_size(OVERVIEW_WIDTH, OVERVIEW_HEIGHT)
+				self.window.set_title("NSTrain - Overview")
 
-	# Function to check if the input fields are filled appropriately and only then expose the continue button
-	def check_start_wizard_done(self):
-		self.check = 0
-		self.writename = self.name_entry.get_text()
-		self.writestation = self.wizard_station_entry.get_text()
-		for stationname in range(len(self.stat.station_list)):
-			if self.writestation == self.stat.station_list[stationname][0]:
-				self.check = 1
+			self.saveplan = SaveTravelPlan()
+			self.loadplan = LoadTravelPlan()
+			self.welcome_favourite.connect("clicked", self.loadplan.show_window)
+			self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.station_completion)
+			self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.saveplan, self.loadplan)
 
-		if self.check != 1:
-			if self.writestation == "":
-				self.wizard_station_entry.set_text("Enter preferred departure station")
-			self.wizard_station_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
-			self.wizard_station_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "emblem-important-symbolic")
-		else:
-			self.wizard_station_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
-			self.wizard_station_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, None)
-
-		if self.writename == "" or self.writename == "Enter your name":
-			self.name_entry.set_text("Enter your name")
-			self.name_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
-			self.name_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "emblem-important-symbolic")
-		else:
-			self.name_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
-			self.name_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, None)
-
-		if self.writename != "" and self.check == 1 and self.writename != "Enter your name":
-			return 1
-		else:
-			return 0
-
-	# Function to collect start wizard data, write data into a file and close the wizard
-	def finish_start_wizard(self, button):
-		self.start_flag = self.check_start_wizard_done()
-		if self.start_flag == 1:
-			try:
-				print "[DEBUG]: Trying to create user config folder"
-				os.makedirs(BaseDirectory.xdg_config_dirs[0] + "/NSTrain")
-			except OSError, e:
-				print "[ERROR]: Cannot create user config folder, the folder already exists"
-
-			self.writename = self.name_entry.get_text()
-			self.writestation = self.wizard_station_entry.get_text()
-			self.user_info = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info", "w")
-			self.user_info.write(self.writename + '\n' + self.writestation)
-			self.user_info.close()
-			self.start_wizard.hide()
-			self.travelplanner_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
-			self.departures_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)
-			self.preferences_menu_item.property_set_bool (Dbusmenu.MENUITEM_PROP_VISIBLE, True)			
-			try:
-				self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.writestation, self.station_completion)
-			except:
-				print "[ERROR]: Departure failed"
-			try:
-				self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.splashwindow)
-			except:
-				print "[ERROR]: Travel planner failed"
 			self.window.show_all()
-		else:
-			pass
 
 	# Function to populate station model
 	def station_model_populate(self):
@@ -219,25 +185,70 @@ Hang in there for us please. The program will now quit.
 		for stationname in range(len(self.stat.station_list)):
 			self.station_store.append([self.stat.station_list[stationname][0], self.stat.station_list[stationname][1]])
 
-	def show_travelplanner(self, button):
-		self.main_notebook.set_current_page(0)
+	def toolbar_visible(self, state):
+		self.toolbar_travelplanner.set_visible_horizontal(state)
+		self.toolbar_departures.set_visible_horizontal(state)
+		self.toolbar_custom.set_visible_horizontal(state)
+		self.toolbar_overview.set_visible_horizontal(state)
 
-	def show_departures(self, button):
-		self.main_notebook.set_current_page(1)
+	def welcome_show(self, button, button_id):
+		if button_id == "TravelPlanner":
+			self.toolbar_visible(True)
+			self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
+			self.toolbar_travelplanner.set_active(True)
+			self.toolbar_departures.set_active(False)
+			self.main_notebook.set_current_page(0)
+			self.window.set_title("NSTrain - Travel Planner")
+
+		if button_id == "Departures":
+			self.toolbar_visible(True)
+			self.window.resize(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
+			self.toolbar_departures.set_active(True)
+			self.toolbar_travelplanner.set_active(False)
+			self.main_notebook.set_current_page(1)
+			self.window.set_title("NSTrain - Departures")
+
+	def toolbar_show(self, button, button_id):
+		if button_id == "TravelPlanner":
+			self.toolbar_visible(True)
+			self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
+			self.main_notebook.set_current_page(0)
+			self.window.set_title("NSTrain - Travel Planner")
+
+		if button_id == "Departures":
+			self.toolbar_visible(True)
+			self.window.resize(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
+			self.main_notebook.set_current_page(1)
+			self.window.set_title("NSTrain - Departures")
+
+		if button_id == "Overview":
+			self.toolbar_visible(False)
+			self.window.resize(OVERVIEW_WIDTH, OVERVIEW_HEIGHT)
+			self.main_notebook.set_current_page(2)
+			self.window.set_title("NSTrain - Overview")
 
 	def quick_show(self, menu_item, obj, button_id):
 		if button_id == "Departures":
-			self.main_notebook.set_current_page(1)
+			self.toolbar_visible(True)
+			self.window.resize(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
 			self.toolbar_departures.set_active(True)
 			self.toolbar_travelplanner.set_active(False)
+			self.main_notebook.set_current_page(1)
+			self.window.set_title("NSTrain - Departures")			
 
 		if button_id == "Travelplanner":
-			self.main_notebook.set_current_page(0)
+			self.toolbar_visible(True)
+			self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
 			self.toolbar_travelplanner.set_active(True)
 			self.toolbar_departures.set_active(False)
+			self.main_notebook.set_current_page(0)
+			self.window.set_title("NSTrain - Travel Planner")			
 			
-		if button_id == "Preferences":
-			self.userpref.quick_show_window()
+		if button_id == "Overview":
+			self.toolbar_visible(False)
+			self.window.resize(OVERVIEW_WIDTH, OVERVIEW_HEIGHT)
+			self.main_notebook.set_current_page(2)
+			self.window.set_title("NSTrain - Overview")
 
 	# Function to display the about dialog
 	def about_function(self, window):
@@ -248,8 +259,21 @@ Hang in there for us please. The program will now quit.
 	def help_function(self, button):
 		show_uri(self, "ghelp:%s" % get_help_uri())
 
+	# Function to display report bug webpage on launchpad
+	def report_issue(self, button):
+		link = "https://bugs.launchpad.net/nstrain/+filebug"
+		Gtk.show_uri(None, link, 0)
+
+	# Function to display ask a question webpage on launchpad
+	def get_help_online(self, button):
+		link = "https://answers.launchpad.net/nstrain/+addquestion"
+		Gtk.show_uri(None, link, 0)
+
 	# Function to destroy the parent window
 	def destroy(self, window):
+		app_state_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/app_state", "w")
+		app_state_file.write(str(self.main_notebook.get_current_page()))
+		app_state_file.close()
 		Gtk.main_quit()
 
 def main():

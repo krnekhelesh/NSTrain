@@ -6,44 +6,16 @@ import os
 import sys
 import urllib2
 import xml.dom.minidom
-from datetime import datetime
+from datetime import datetime, timedelta
 from xdg import BaseDirectory
 
 from nstrain.dialog import Dialog
 from nstrain.traveldetails import TravelDetails
 
 class TravelPlanner:
-	def __init__(self, builder, station_store, station_list, splashwindow):
+	def __init__(self, builder, station_store, station_list, favouriteplan, loadplan):
 		self.travelplanner_xml_init()
-		self.travelplanner_url = 'http://webservices.ns.nl/ns-api-treinplanner?fromStation=DT&toStation=UT'
-		travelplanner_xml = self.get_travelplanner_xml(self.travelplanner_url)
-		self.handle_travelplanner_xml(travelplanner_xml)
-
 		self.travel = TravelDetails()
-
-		self.statustext = builder.get_object('label26')
-		self.statusflag = 0
-
-		#for i in range(len(self.travelplanner_list)):
-		#	print "[Meldings] %s" % self.travelplanner_list[i][0]
-
-		self.searchbutton = builder.get_object('button3')
-		self.searchbutton.set_sensitive( True )
-		self.searchbutton.connect("clicked", self.on_search_clicked, station_list)
-
-		if self.travelplanner_list == []:
-			splashwindow.hide_splash()
-			print "[ERROR]: API Error, empty travel_planner list %s" % self.travelplanner_list
-			show_dialog7 = Dialog()
-			show_dialog7.error_dialog("Oops!","API Error", '''It seems that the website ns.nl has changed the API required to access the data.
-This should either be resolved online or by a new version update of NSTrain. 
-
-Hang in there for us please.
-
-<span style="italic">Error Info: Empty Travel Planner List %s</span>''' % self.travelplanner_list)
-			self.statustext.set_markup('''<span foreground="red" weight="bold">Please note that the travel planner is temporarily unavailable. Please try again later</span>''')
-			self.statusflag = 1
-			self.searchbutton.set_label("Search Disabled!")
 
 		station_completion2 = builder.get_object('completion2')
 		station_completion2.set_model(station_store)
@@ -65,26 +37,63 @@ Hang in there for us please.
 
 		self.tostation_entry = builder.get_object('entry4')
 		self.tostation_entry.set_completion(station_completion4)
+		self.tostation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "mail-send-receive-symbolic")
+		self.tostation_entry.set_icon_activatable(Gtk.EntryIconPosition.SECONDARY, True)
+		self.tostation_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, "Swap from and to stations")
+		self.tostation_entry.connect("icon-press", self.transfer_station)
 
-		t = datetime.time(datetime.now())
-		self.time_hour_entry = builder.get_object('spinbutton1')
-		self.time_hour_entry.set_value(t.hour)
-		
-		self.time_minute_entry = builder.get_object('spinbutton2')
-		self.time_minute_entry.set_value(t.minute)
+		self.traveltime_store = Gtk.ListStore(str)
+		self.traveltime_store.append(["Departure"])
+		self.traveltime_store.append(["Arrival"])
+		self.traveltime = builder.get_object('comboboxtext1')
+		self.traveltime.set_model(self.traveltime_store)
+		self.traveltime.set_active(0)
 
-		d = datetime.date(datetime.now())
-		self.year_entry = builder.get_object('spinbutton3')
-		self.year_entry.set_value(d.year)
+		self.date_store = Gtk.ListStore(str)
+		self.date_store.append(["Today"])
+		self.date_store.append(["Tomorrow"])
+		self.date = builder.get_object('comboboxtext2')
+		self.date.set_entry_text_column(0)		
+		self.date.set_model(self.date_store)
+		self.date.set_active(0)
 
-		self.month_entry = builder.get_object('spinbutton4')
-		self.month_entry.set_value(d.month)
+		self.time_store = Gtk.ListStore(str)
+		self.time_store.append(["Now"])
+		self.time_store.append(["+ 15 minutes"])
+		self.time_store.append(["+ 30 minutes"])
+		self.time_store.append(["+ 1 hour"])
+		self.time = builder.get_object('comboboxtext3')
+		self.time.set_model(self.time_store)
+		self.time.set_active(0)
 
-		self.date_entry = builder.get_object('spinbutton5')
-		self.date_entry.set_value(d.day)
+		self.statustext = builder.get_object('label26')
 
-		self.departure_time_chosen = builder.get_object('radiobutton1')
-		self.arrival_time_chosen = builder.get_object('radiobutton2')
+		self.searchbutton = builder.get_object('button3')
+		self.searchbutton.connect("clicked", self.on_search_clicked, station_list)
+
+		self.loadtravelplan_button = builder.get_object('button6')
+		self.loadtravelplan_button.connect('clicked', self.loadtravelplan, loadplan)
+
+		self.savetravelplan_button = builder.get_object('button5')
+		self.savetravelplan_button.connect('clicked', self.savetravelplan, favouriteplan, station_list)
+
+	def transfer_station(self, entry, position, user_data):
+		self.temp_name = self.fromstation_entry.get_text()
+		self.fromstation_entry.set_text(self.tostation_entry.get_text())
+		self.tostation_entry.set_text(self.temp_name)
+
+	def loadtravelplan(self, button, loadplan):
+		loadplan.show_window2(self.fromstation_entry, self.tostation_entry, self.viastation_entry)
+
+	def savetravelplan(self, button, favouriteplan, station_list):
+		self.saveplan_flag = self.check_travel_planner(station_list)
+
+		fromstation_name_entry = self.fromstation_entry.get_text()
+		viastation_name_entry = self.viastation_entry.get_text()
+		tostation_name_entry = self.tostation_entry.get_text()
+
+		if self.saveplan_flag == 1:
+			favouriteplan.show_window(fromstation_name_entry, tostation_name_entry, viastation_name_entry)
 
 	# Function to check if the input fields are filled appropriately and only then expose the plan my travel button
 	def check_travel_planner(self, station_list):
@@ -105,20 +114,26 @@ Hang in there for us please.
 		if self.fromcheck != 1:
 			self.fromstation_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
 			self.fromstation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "emblem-important-symbolic")
+			self.fromstation_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, "Incorrect station name")
 			if self.fromstation_name_entry == "":
 				self.fromstation_entry.set_text("Departure Station")
 		else:
 			self.fromstation_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
 			self.fromstation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, None)
+			self.fromstation_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, None)
 
 		if self.tocheck != 1:
 			self.tostation_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
 			self.tostation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "emblem-important-symbolic")
+			self.tostation_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, "Incorrect station name")
+			self.tostation_entry.set_icon_activatable(Gtk.EntryIconPosition.SECONDARY, False)
 			if self.tostation_name_entry == "":
 				self.tostation_entry.set_text("Arrival Station")
 		else:
 			self.tostation_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
-			self.tostation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, None)
+			self.tostation_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "mail-send-receive-symbolic")
+			self.tostation_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, "Swap from and to stations")
+			self.tostation_entry.set_icon_activatable(Gtk.EntryIconPosition.SECONDARY, True)
 
 		if self.fromcheck == 1 and self.tocheck == 1:
 			return 1
@@ -131,15 +146,74 @@ Hang in there for us please.
 
 		if self.travel_flag == 1:
 			flag = 0
+			date_list = []
+			time_list = []
 
 			fromstation_name_entry = self.fromstation_entry.get_text()
 			viastation_name_entry = self.viastation_entry.get_text()
 			tostation_name_entry = self.tostation_entry.get_text()
-			time_hour_name_entry = self.time_hour_entry.get_value_as_int()
-			time_minute_name_entry = self.time_minute_entry.get_value_as_int()
-			year_name_entry = self.year_entry.get_value_as_int()
-			month_name_entry = self.month_entry.get_value_as_int()
-			day_name_entry = self.date_entry.get_value_as_int()
+
+			date_tree_iter = self.date.get_active_iter()
+			if date_tree_iter != None:
+				model = self.date.get_model()
+				date_entry = model[date_tree_iter][0]
+				# print date_entry
+			else:
+				entry = self.date.get_child()
+				date_entry = entry.get_text()
+				# print "Entered Date: %s" % date_entry
+
+			d = datetime.date(datetime.now())
+			if date_entry == "Today":				
+				day_name_entry = d.day
+				month_name_entry = d.month
+				year_name_entry = d.year				
+			elif date_entry == "Tomorrow":
+				d_new = d + timedelta(days=1)
+				day_name_entry = d_new.day
+				month_name_entry = d_new.month
+				year_name_entry = d_new.year			
+			else:
+				date_list = date_entry.split('-')
+				year_name_entry = int(date_list[0])
+				month_name_entry = int(date_list[1])
+				day_name_entry = int(date_list[2])
+
+			# print "Precieved Date: %s-%s-%s" % (year_name_entry, month_name_entry, day_name_entry)
+
+			time_tree_iter = self.time.get_active_iter()
+			if time_tree_iter != None:
+				model = self.time.get_model()
+				time_entry = model[time_tree_iter][0]
+				# print time_entry
+			else:
+				entry = self.time.get_child()
+				time_entry = entry.get_text()
+				# print "Entered Time: %s" % date_entry
+
+			t = datetime.time(datetime.now())
+			t_temp = datetime(year_name_entry, month_name_entry, day_name_entry, t.hour, t.minute)
+			if time_entry == "Now":				
+				time_hour_name_entry = t.hour
+				time_minute_name_entry = t.minute
+			elif time_entry == "+ 15 minutes":
+				t_new = t_temp + timedelta(minutes=15)
+				time_hour_name_entry = t_new.hour
+				time_minute_name_entry = t_new.minute
+			elif time_entry == "+ 30 minutes":
+				t_new = t_temp + timedelta(minutes=30)
+				time_hour_name_entry = t_new.hour
+				time_minute_name_entry = t_new.minute
+			elif time_entry == "+ 1 hour":
+				t_new = t_temp + timedelta(hours=1)
+				time_hour_name_entry = t_new.hour
+				time_minute_name_entry = t_new.minute
+			else:
+				time_list = time_entry.split(':')
+				time_hour_name_entry = int(time_list[0])
+				time_minute_name_entry = int(time_list[1])
+
+			# print "Preceived Time: %s:%s" % (time_hour_name_entry, time_minute_name_entry)
 
 			fromstation_code = "INIT"
 			tostation_code = "INIT"
@@ -165,28 +239,26 @@ Hang in there for us please.
 			if viastation_code != "INIT":
 				url = url + '&' + 'viaStation=%s' % viastation_code
 
-			if self.departure_time_chosen.get_active():
+			url = url + '&' + 'previousAdvices=0'
+
+			traveltime_tree_iter = self.traveltime.get_active_iter()
+			model = self.traveltime.get_model()
+			traveltime_type = model[traveltime_tree_iter][0]
+			# print traveltime_type
+
+			if traveltime_type == "Departure":
 				url = url + '&' + 'departure=true'
 			else:
 				url = url + '&' + 'departure=false'
 
 			url = url + '&' + 'dateTime=%s-%s-%sT%s:%s' % (year_name_entry, month_name_entry, day_name_entry, time_hour_name_entry, time_minute_name_entry)
-
-			try:
-				if os.path.isfile(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info"):
-					open_user_pref = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/user_info")
-					pref_temp = open_user_pref.readlines()
-					hispeed = pref_temp[2].split('\n')[0]
-					open_user_pref.close()
-					if hispeed:
-						url = url + '&' + 'hslAllowed=true'
-			except:
-				pass
+			
+			# url = url + '&' + 'hslAllowed=true'
 
 			print "[DEBUG]: search url is %s" % url
 
 			# ensuring that these two inputs are valid since they are required for the API call
-			if fromstation_code != "INIT" and tostation_code != "INIT" and self.statusflag == 0:
+			if fromstation_code != "INIT" and tostation_code != "INIT":
 				try:
 					travelplanner_xml = self.get_travelplanner_xml(url)
 					self.handle_travelplanner_xml(travelplanner_xml)
