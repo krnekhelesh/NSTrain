@@ -271,7 +271,11 @@ Hang in there for us please. The program will now quit.
 
 	# Function to destroy the parent window
 	def destroy(self, window):
-		app_state_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/app_state", "w")
+		try:
+			app_state_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/app_state", "w")
+		except:
+			os.makedirs(BaseDirectory.xdg_config_dirs[0] + "/NSTrain")
+			app_state_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/app_state", "w")			
 		app_state_file.write(str(self.main_notebook.get_current_page()))
 		app_state_file.close()
 		Gtk.main_quit()

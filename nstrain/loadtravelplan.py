@@ -51,13 +51,16 @@ class LoadTravelPlan:
 		if plan_iter != None:
 			row_index = plan_model[plan_iter][1]
 		
-		self.write_favourite_plan_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/favourite_plans", "w")
-		for i in range(len(self.read_fav)):
-			if i != row_index:
-				self.write_favourite_plan_file.write(self.read_fav[i])
+		try:
+			self.write_favourite_plan_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/favourite_plans", "w")
+			for i in range(len(self.read_fav)):
+				if i != row_index:
+					self.write_favourite_plan_file.write(self.read_fav[i])
 
-		self.write_favourite_plan_file.close()
-		self.loadplan()
+			self.write_favourite_plan_file.close()
+			self.loadplan()
+		except:
+			print "[DEBUG]: Cannot delete travel plan since the file does not exist or that there are no plans to delete."
 
 	# Function to read the file and gather the favourite travel plans. It then stores it in a GtkStore.
 	def loadplan(self):
@@ -106,11 +109,17 @@ via %s''' % (self.read_temp[i][0], self.read_temp[i][1], self.read_temp[i][2], s
 		self.fromentry = fromentry
 		self.toentry = toentry
 		self.viaentry = viaentry
-		self.loadplan()
+		try:
+			self.loadplan()
+		except:
+			pass
 		self.window.show_all()
 
 	def show_window(self, button):
-		self.loadplan()
+		try:
+			self.loadplan()
+		except:
+			pass
 		self.window.show_all()
 
 	# Function used by close button
