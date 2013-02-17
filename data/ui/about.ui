@@ -12,7 +12,7 @@
     <property name="icon">../media/app-icon.png</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">NSTrain</property>
-    <property name="version">0.7</property>
+    <property name="version">0.7.1</property>
     <property name="comments" translatable="yes">Netherlands Train Scheduler
 Not officially affliated with NS Railways</property>
     <property name="website">http://krnekhelesh.github.com/NSTrain/</property>
