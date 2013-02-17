@@ -88,7 +88,7 @@ via %s''' % (self.read_temp[i][0], self.read_temp[i][1], self.read_temp[i][2], s
 			else:
 				self.fav_store[i][0] = ('''<span weight="bold">%s</span>
 %s to %s''' % (self.read_temp[i][0], self.read_temp[i][1], self.read_temp[i][2]))
-			self.fav_store[i][1] = i			
+			self.fav_store[i][1] = i	
 
 	# Function to get the currently selected travel plan and then insert it into the entry fields.
 	def setplandetails(self, button):
@@ -115,11 +115,11 @@ via %s''' % (self.read_temp[i][0], self.read_temp[i][1], self.read_temp[i][2], s
 			pass
 		self.window.show_all()
 
-	def show_window(self, button):
+	def show_window(self):
 		try:
 			self.loadplan()
 		except:
-			pass
+			pass		
 		self.window.show_all()
 
 	# Function used by close button
