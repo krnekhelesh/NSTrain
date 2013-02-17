@@ -33,21 +33,54 @@ class SaveTravelPlan:
 		self.viastation = viastation
 		self.window.show_all()
 
+	def benormal(self):
+		self.name_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
+		self.name_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, None)
+		self.name_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, None)
+		self.name_entry.set_text("")
+
+	def checksaveplan(self):
+		COLOR_INVALID = Color(50000, 0, 0) # A dark red color
+
+		if (self.name == "" or self.name == "Travel Plan Name"):
+			self.name_entry.modify_fg(Gtk.StateFlags.NORMAL, COLOR_INVALID)
+			self.name_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, "emblem-important-symbolic")
+			self.name_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, "Missing name")
+			if self.name == "":
+				self.name_entry.set_text("Travel Plan Name")
+			return 0
+		else:
+			self.name_entry.modify_fg(Gtk.StateFlags.NORMAL, None)
+			self.name_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, None)
+			self.name_entry.set_icon_tooltip_text(Gtk.EntryIconPosition.SECONDARY, None)
+			return 1			
+
 	# Function to gather the entry inputs from the user and save the travel plan to the file
 	def saveplan(self, button):
 		self.name = self.name_entry.get_text()
-		if self.viastation == "":
-			self.viastation = "INIT"
-		write_favourite_plan_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/favourite_plans", "a")
-		write_favourite_plan_file.write("%s|%s|%s|%s|\n" % (self.name, self.fromstation, self.tostation, self.viastation))
-		write_favourite_plan_file.close()
-		self.window.hide()
+		self.saveflag = self.checksaveplan()
+
+		if self.saveflag == 1:
+			if self.viastation == "":
+				self.viastation = "INIT"
+			try:
+				write_favourite_plan_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/favourite_plans", "a")
+			except:
+				os.makedirs(BaseDirectory.xdg_config_dirs[0] + "/NSTrain")
+				write_favourite_plan_file = open(BaseDirectory.xdg_config_dirs[0] + "/NSTrain/favourite_plans", "w")
+			write_favourite_plan_file.write("%s|%s|%s|%s|\n" % (self.name, self.fromstation, self.tostation, self.viastation))
+			write_favourite_plan_file.close()
+			self.window.hide()
+		else:
+			pass
 
 	# Function used by close button
 	def hide_window(self, button):
+		self.benormal()
 		self.window.hide()
 
 	# Function used by window close (x) button
 	def hide_window2(self, window, event):
+		self.benormal()
 		self.window.hide()
 		return True
