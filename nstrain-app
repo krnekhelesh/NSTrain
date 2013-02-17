@@ -145,34 +145,24 @@ Hang in there for us please. The program will now quit.
 				app_state_temp = read_app_state_file.readlines()
 				read_app_state_file.close()
 				if app_state_temp[0] == "0":
-					self.toolbar_visible(True)
-					self.main_notebook.set_current_page(0)
-					self.toolbar_travelplanner.set_active(True)
-					self.toolbar_departures.set_active(False)
-					self.toolbar_overview.set_active(False)
-					self.window.set_default_size(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
-					self.window.set_title("NSTrain - Travel Planner")
+					self.show_page("TravelPlanner")
 				elif app_state_temp[0] == "1":
-					self.toolbar_visible(True)
-					self.main_notebook.set_current_page(1)
-					self.toolbar_travelplanner.set_active(False)
-					self.toolbar_departures.set_active(True)
-					self.toolbar_overview.set_active(False)
-					self.window.set_default_size(DEPARTURES_WIDTH, DEPARTURES_HEIGTH)
-					self.window.set_title("NSTrain - Departures")
+					self.show_page("Departures")
 				else:
-					self.toolbar_visible(False)
-					self.main_notebook.set_current_page(2)
-					self.window.set_default_size(OVERVIEW_WIDTH, OVERVIEW_HEIGHT)
-					self.window.set_title("NSTrain - Overview")
+					self.show_page("Overview")
 			else:		
 				self.toolbar_visible(False)
 				self.main_notebook.set_current_page(2)
 				self.window.set_default_size(OVERVIEW_WIDTH, OVERVIEW_HEIGHT)
 				self.window.set_title("NSTrain - Overview")
 
+			# Temp variables for passing to the welcome favourite plan
+			self.fromstation_temp = self.builder.get_object('entry2')		
+			self.viastation_temp = self.builder.get_object('entry3')
+			self.tostation_temp = self.builder.get_object('entry4')
+
 			self.saveplan = SaveTravelPlan()
-			self.loadplan = LoadTravelPlan()
+			self.loadplan = LoadTravelPlan()			
 			self.welcome_favourite.connect("clicked", self.loadfavoriteplan)
 			self.deptrain = DepartureTrains(self.builder, self.stat.station_list, self.station_completion)
 			self.travelplanner = TravelPlanner(self.builder, self.station_store, self.stat.station_list, self.saveplan, self.loadplan)
@@ -180,13 +170,8 @@ Hang in there for us please. The program will now quit.
 			self.window.show_all()
 
 	def loadfavoriteplan(self, button):
-		self.loadplan.show_window()
-		self.toolbar_visible(True)
-		self.window.resize(TRAVELPLANNER_WIDTH, TRAVELPLANNER_HEIGHT)
-		self.toolbar_travelplanner.set_active(True)
-		self.toolbar_departures.set_active(False)
-		self.main_notebook.set_current_page(0)
-		self.window.set_title("NSTrain - Travel Planner")
+		self.loadplan.show_window2(self.fromstation_temp, self.tostation_temp, self.viastation_temp)
+		self.show_page("TravelPlanner")
 
 	# Function to populate station model
 	def station_model_populate(self):

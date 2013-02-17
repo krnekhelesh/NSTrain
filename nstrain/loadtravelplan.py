@@ -115,13 +115,6 @@ via %s''' % (self.read_temp[i][0], self.read_temp[i][1], self.read_temp[i][2], s
 			pass
 		self.window.show_all()
 
-	def show_window(self):
-		try:
-			self.loadplan()
-		except:
-			pass		
-		self.window.show_all()
-
 	# Function used by close button
 	def hide_window(self, button):
 		self.window.hide()
